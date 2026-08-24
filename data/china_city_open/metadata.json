@@ -1,0 +1,51 @@
+{
+  "generated_on": "2026-08-24",
+  "coordinate_reference_system": "OGC:CRS84 / WGS 84 longitude-latitude",
+  "datasets": {
+    "ghsl_china_major_cities": {
+      "files": [
+        "ghsl_china_major_cities.geojson",
+        "ghsl_china_major_cities.csv"
+      ],
+      "records": 11,
+      "source": "European Commission Joint Research Centre, GHSL Urban Centre Database R2024A",
+      "source_page": "https://human-settlement.emergency.copernicus.eu/ghs_ucdb_2024.php",
+      "service": "https://services2.arcgis.com/jUpNdisbWqRpMo35/ArcGIS/rest/services/Urban_Centers_Database_2024_Socioeconomic/FeatureServer/0/query",
+      "selected_ids": [
+        6378,
+        8006,
+        8557,
+        8745,
+        9127,
+        10131,
+        10887,
+        10933,
+        11199,
+        11311,
+        11345
+      ],
+      "reuse": "Free and open reuse with source acknowledgement; consult the GHSL data package for the complete terms.",
+      "attribution": "European Commission, Joint Research Centre (JRC), GHSL UCDB R2024A.",
+      "scope_note": "Urban-centre polygons are morphology- and population-based analytical units, not Chinese administrative boundaries."
+    },
+    "nanjing_osm_public_services": {
+      "files": [
+        "nanjing_osm_public_services.geojson"
+      ],
+      "records": 321,
+      "source": "OpenStreetMap contributors",
+      "source_page": "https://www.openstreetmap.org/copyright",
+      "service": "https://overpass-api.de/api/interpreter",
+      "license": "Open Data Commons Open Database License (ODbL) 1.0",
+      "attribution": "© OpenStreetMap contributors",
+      "bbox_south_west_north_east": [
+        31.99,
+        118.72,
+        32.09,
+        118.87
+      ],
+      "overpass_query": "[out:json][timeout:60];\n(\n  node[amenity~\"^(hospital|clinic|school|kindergarten|library|community_centre)$\"](31.99, 118.72, 32.09, 118.87);\n  node[leisure=\"park\"](31.99, 118.72, 32.09, 118.87);\n  node[railway~\"^(station|halt|subway_entrance)$\"](31.99, 118.72, 32.09, 118.87);\n);\nout tags;\n",
+      "scope_note": "Counts describe mapped nodes returned by this query and date; they are not an official facility census."
+    }
+  }
+}

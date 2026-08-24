@@ -1,6 +1,8 @@
 project:
   type: book
   output-dir: _site
+  resources:
+    - data/**
 
 book:
   title: "数据科学与城市空间研究"
@@ -17,6 +19,14 @@ book:
   reader-mode: true
   chapters:
     - index.qmd
+    - contents.qmd
+    - part: "数据目录与下载"
+      chapters:
+        - data.qmd
+        - data-pages/nanjing-teaching.qmd
+        - data-pages/ghsl-china-cities.qmd
+        - data-pages/osm-nanjing-services.qmd
+        - data-pages/large-open-data.qmd
     - part: "第一部分 城市问题、数据与研究设计"
       chapters:
         - 01-urban-informatics.qmd
@@ -63,4 +73,4 @@ execute:
   message: false
 
 bibliography: references.bib
-lang: zh-CN
+lang: zh

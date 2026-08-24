@@ -1,0 +1,46 @@
+# 全书目录 {.unnumbered}
+
+本页按照学习路径列出全书内容。章节标题、数据说明和案例页面均可直接打开；页面右上角的搜索框可按概念、函数、城市或数据字段检索全文。
+
+## 数据目录与下载 {.unnumbered}
+
+- [数据中心：数据包、来源与下载](data.qmd)
+- [南京生活圈教学数据](data-pages/nanjing-teaching.qmd)
+- [GHSL 中国代表性城市形态区](data-pages/ghsl-china-cities.qmd)
+- [南京 OpenStreetMap 公共服务设施](data-pages/osm-nanjing-services.qmd)
+- [遥感、人口、地形与政府开放数据](data-pages/large-open-data.qmd)
+
+## 第一部分　城市问题、数据与研究设计 {.unnumbered}
+
+1. [城市信息学与城市空间研究](01-urban-informatics.qmd)：城市系统、数字痕迹、计算分析与规划判断
+2. [从城市问题到可研究问题](02-researchable-questions.qmd)：概念、机制、变量、识别对象与研究设计
+3. [城市数据范式与空间证据](03-urban-data-paradigms.qmd)：行政数据、传感数据、平台数据、遥感数据与数据融合
+4. [城市感知、数据生成与质量](04-urban-sensing-data-quality.qmd)：覆盖、选择、位置误差、时间误差与数据审计
+5. [空间、时间与分析尺度](05-space-time-scale.qmd)：空间单元、时间窗口、MAUP、生态谬误与尺度敏感性
+
+## 第二部分　计算工具与空间分析 {.unnumbered}
+
+6. [可重复的计算环境](06-computational-environment.qmd)：Miniconda、Conda、VS Code、Jupyter、ArcGIS Pro 与项目结构
+7. [Python 城市数据工作流](07-python-urban-data.qmd)：Pandas、GeoPandas、字段契约、连接、聚合与质量检查
+8. [ArcGIS Pro 空间分析工作流](08-arcgis-spatial-analysis.qmd)：地理数据库、投影、空间连接、缓冲区、栅格与 ModelBuilder
+9. [地理计算与专题表达](09-geographic-computation-mapping.qmd)：空间操作、分类、符号化、制图设计与可复现输出
+
+## 第三部分　空间关系、网络与智能模型 {.unnumbered}
+
+10. [空间权重与空间自相关](10-spatial-weights-autocorrelation.qmd)：邻接关系、距离关系、Moran's I 与局部聚类
+11. [城市网络与可达性](11-urban-networks-accessibility.qmd)：图模型、最短路径、服务区、中心性与公平性
+12. [机器学习与城市空间智能](12-machine-learning-spatial-intelligence.qmd)：特征工程、监督学习、非监督学习与空间预测
+13. [模型评价、不确定性与稳健性](13-model-evaluation-uncertainty.qmd)：空间交叉验证、外推风险、敏感性分析与模型报告
+
+## 第四部分　规划证据、设计应用与综合研究 {.unnumbered}
+
+14. [规划证据与专业表达](14-evidence-planning-communication.qmd)：证据等级、因果语言、地图叙事与决策沟通
+15. [规划设计综合案例](15-planning-design-case.qmd)：热风险、公共服务、慢行联系与多目标方案比较
+16. [综合研究、复现与批判](16-capstone-critique.qmd)：完整项目、同行评议、复现检查与研究边界
+
+## 书末材料 {.unnumbered}
+
+- [参考文献](references.qmd)
+- [教材仓库与版本记录](https://github.com/zipan07/urban-spatial-data-science)
+- [在线阅读主页](https://zipan07.github.io/urban-spatial-data-science/)
+

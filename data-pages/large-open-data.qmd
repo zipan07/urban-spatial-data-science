@@ -1,0 +1,162 @@
+# 遥感、人口、地形与政府开放数据 {.unnumbered}
+
+## 为什么采用官方入口 {.unnumbered}
+
+人口栅格、卫星影像、地表温度和再分析气候数据常以数百MB到数十GB计。GitHub 仓库适合保存下载脚本、元数据、裁剪样本和处理后的结果，不适合长期镜像全球原始产品。官方数据平台还会修订算法、补充质量层和更新许可，因此课程项目应记录产品版本、获取日期、空间范围、波段、分辨率和校验值。
+
+## 推荐数据源 {.unnumbered}
+
+| 数据源 | 适合的城市问题 | 典型分辨率/范围 | 获取与许可提示 |
+|---|---|---|---|
+| [GHSL 数据集与下载向导](https://human-settlement.emergency.copernicus.eu/datasets.php) | 建成区扩张、人口格网、城市形态区和跨城市比较 | 全球，多时期、多尺度 | 免费开放；结果中按数据包要求署名 JRC/GHSL |
+| [WorldPop 中国人口数据](https://hub.worldpop.org/doi/10.5258/SOTON/WP00055) | 人口暴露、服务覆盖、灾害风险 | 常用100m人口栅格 | 多数产品 CC BY 4.0；具体文件还可能包含 ODbL 来源要求 |
+| [Copernicus Data Space](https://dataspace.copernicus.eu/) | Sentinel-1/2城市扩张、绿地、水体和地表覆盖 | Sentinel-2常用10—20m | 免费开放，通常需要账号；保留产品ID与 Copernicus 署名 |
+| [MODIS 地表温度 MOD11](https://modis.gsfc.nasa.gov/data/dataprod/mod11.php) | 城市热岛、昼夜地表温度与季节变化 | 日尺度，约1km | NASA官方产品；同时下载质量控制层 |
+| [NASA SRTM](https://www.earthdata.nasa.gov/data/instruments/srtm) | 地形、坡度、视域、汇水与建设适宜性 | 约30m产品常用 | 通过 Earthdata 获取；记录产品版本和空洞处理方法 |
+| [ERA5-Land](https://cds.climate.copernicus.eu/datasets/reanalysis-era5-land) | 长期气温、降水、风、土壤和气候背景 | 约9km，1950年至今 | Copernicus Climate Data Store；通常需账号和API配置 |
+| [geoBoundaries](https://www.geoboundaries.org/api.html) | 国家以下行政边界与跨国比较 | ADM0—ADM5，视国家而定 | `gbOpen` 为 CC BY 4.0；需保留版本与边界来源 |
+| [北京市公共数据开放平台](https://data.beijing.gov.cn/) | 交通、公共服务、生态环境与城市治理目录 | 数据集各异 | 逐项核对开放协议、更新频率和第三方权利 |
+| [上海市公共数据开放平台](https://data.sh.gov.cn/) | 交通、设施、统计和空间目录 | 数据集各异 | 以数据集页面的下载与使用条件为准 |
+| [深圳市政府数据开放平台](https://opendata.sz.gov.cn/) | 交通、规划、公共服务和城市运行目录 | 数据集各异 | 部分数据需要登录或申请；记录数据版本与授权范围 |
+
+## 数据选择矩阵 {.unnumbered}
+
+研究问题先确定分析对象，再选择数据。热风险研究通常需要地表温度、人口、绿量和脆弱性；城市扩张需要多期建成区或遥感分类；公共服务公平需要设施、人口、道路网络和制度服务范围。单一数据产品很少能够覆盖完整证据链。
+
+| 研究问题 | 结果变量 | 暴露/解释变量 | 空间单元 | 主要风险 |
+|---|---|---|---|---|
+| 哪些居民暴露于较高热环境？ | MODIS或Landsat/Sentinel派生温度 | WorldPop、绿量、老龄人口 | 规则网格或统计区 | 地表温度与人体暴露差异、时间不一致 |
+| 建成区如何扩张？ | GHSL建成区或多期遥感分类 | 地形、道路、规划边界 | 像元、斑块、扇区 | 分类误差、传感器变化、边界修订 |
+| 服务可达性是否公平？ | 最近设施时间或累计机会 | OSM/官方设施、人口、路网 | 人口网格或社区 | 设施完整性、道路权限、出行方式假设 |
+| 城市密度与绩效如何比较？ | 人口、面积、GDP或排放指标 | GHSL UCDB与统计数据 | 形态区或行政区 | 空间单元不可比、总量与密度混用 |
+
+## 下载前记录清单 {.unnumbered}
+
+在浏览器点击下载前，先在 `data_inventory.csv` 中建立一条记录：
+
+```{csv filename="data/data_inventory.csv"}
+dataset_id,title,provider,product_version,download_date,spatial_extent,temporal_extent,crs,resolution,license,source_url,local_file,sha256
+ghsl_built_s_2025,GHSL built-up surface,JRC,R2023A,2026-08-24,Nanjing,2025,ESRI:54009,100m,see_package,https://human-settlement.emergency.copernicus.eu/,data/raw/ghsl/...,pending
+```
+
+记录表将“网页上看到的数据”转化为可追溯研究材料。`sha256` 用来检查文件在传输、解压或团队共享过程中是否改变。
+
+## 通用下载与校验模板 {.unnumbered}
+
+官方平台给出直接文件链接后，可以使用下面的脚本流式下载。`url` 应替换为数据集页面提供的实际链接；不要从搜索结果复制来历不明的镜像地址。
+
+```{python filename="scripts/download_with_checksum.py"}
+from pathlib import Path
+import hashlib
+import requests
+
+url = "在官方数据集页面复制实际下载链接"
+target = Path("data/raw/product/source_file.zip")
+target.parent.mkdir(parents=True, exist_ok=True)
+
+sha256 = hashlib.sha256()
+with requests.get(url, stream=True, timeout=120) as response:
+    response.raise_for_status()
+    with target.open("wb") as file:
+        for chunk in response.iter_content(chunk_size=1024 * 1024):
+            if chunk:
+                file.write(chunk)
+                sha256.update(chunk)
+
+print(target)
+print("SHA256:", sha256.hexdigest())
+```
+
+大文件下载完成后不要立即删除压缩包。先记录校验值、产品版本和解压后的目录结构，再将裁剪与投影写成独立脚本。
+
+## 栅格裁剪：先缩小空间范围 {.unnumbered}
+
+假设已经从官方平台下载中国或区域尺度人口栅格，可用城市研究区裁剪。矢量边界与栅格必须处于可解释的坐标关系中，`rasterio.mask` 会自动按输入几何裁剪，但不会替研究者解决时间口径和人口定义问题。
+
+```{python filename="scripts/clip_population.py"}
+from pathlib import Path
+
+import geopandas as gpd
+import rasterio
+from rasterio.mask import mask
+
+boundary = gpd.read_file("data/processed/study_area.gpkg")
+source_path = Path("data/raw/worldpop/china_population.tif")
+output_path = Path("data/interim/worldpop/study_area_population.tif")
+output_path.parent.mkdir(parents=True, exist_ok=True)
+
+with rasterio.open(source_path) as source:
+    # 将研究区转换到栅格坐标系，再传入裁剪函数
+    boundary_in_raster_crs = boundary.to_crs(source.crs)
+    clipped, transform = mask(
+        source,
+        boundary_in_raster_crs.geometry,
+        crop=True,
+        nodata=source.nodata,
+    )
+    profile = source.profile.copy()
+    profile.update(
+        height=clipped.shape[1],
+        width=clipped.shape[2],
+        transform=transform,
+        compress="deflate",
+    )
+    with rasterio.open(output_path, "w", **profile) as destination:
+        destination.write(clipped)
+```
+
+## Sentinel-2 城市绿量案例的数据契约 {.unnumbered}
+
+城市绿量常用归一化植被指数：
+
+$$
+\mathrm{NDVI}=\frac{\rho_{NIR}-\rho_{Red}}{\rho_{NIR}+\rho_{Red}}
+$$
+
+Sentinel-2 中常用 B8 作为近红外、B4 作为红光。计算前应统一空间分辨率，应用云与阴影掩膜，并记录地表反射率产品级别。单景影像容易受云、物候和观测日期影响，城市比较宜使用相近季节的无云合成。
+
+```{python filename="scripts/calculate_ndvi.py"}
+import numpy as np
+import rasterio
+
+with rasterio.open("data/interim/sentinel2/B08_10m.tif") as nir_src, \
+     rasterio.open("data/interim/sentinel2/B04_10m.tif") as red_src:
+    nir = nir_src.read(1).astype("float32")
+    red = red_src.read(1).astype("float32")
+    denominator = nir + red
+
+    ndvi = np.full(nir.shape, np.nan, dtype="float32")
+    valid = denominator != 0
+    ndvi[valid] = (nir[valid] - red[valid]) / denominator[valid]
+
+    profile = nir_src.profile.copy()
+    profile.update(dtype="float32", nodata=np.nan, compress="deflate")
+    with rasterio.open("data/processed/ndvi.tif", "w", **profile) as dst:
+        dst.write(ndvi, 1)
+```
+
+## 政府开放数据的核验路径 {.unnumbered}
+
+中国城市公共数据平台的目录结构、登录要求和下载条件会更新。正式使用前逐项完成以下核验：
+
+1. 数据集页面是否仍由政府平台发布，提供部门和联系方式是否明确；
+2. 开放协议是否允许课程仓库再分发，是否存在第三方权利或仅限平台内使用；
+3. 字段说明、更新日期、覆盖范围和缺失编码是否完整；
+4. 坐标是否采用 WGS84、GCJ-02、BD-09、CGCS2000 或地方投影；
+5. 设施清单是否包含关闭、规划、在建和重复记录；
+6. 是否含个人信息、敏感位置或需要脱敏的记录。
+
+若许可只允许用户从平台自行下载，教材提交下载说明和处理脚本，不把原始文件上传到 GitHub。若数据集明确允许再分发，应在数据目录中附上原许可、来源链接、下载日期和未经修改的原始字段说明。
+
+## 城市替换实验 {.unnumbered}
+
+选择北京、上海、深圳、成都、武汉或其他城市，把南京案例迁移到新的数据环境：
+
+1. 从官方或开放平台取得研究区边界、人口、设施和道路；
+2. 将字段映射到教材的稳定字段契约，例如 `area_id`、`population`、`facility_type`；
+3. 在 `data/raw` 中保存原始文件，在 `data/interim` 中完成坐标转换与清洗；
+4. 重跑第7—13章的核心代码，记录无法直接迁移的步骤；
+5. 比较两个城市的数据生成方式、缺失模式和空间单元，随后讨论结果差异。
+
+迁移实验的成果包括一份数据清单、一份字段映射表、可重复脚本、三幅关键图和一段证据边界说明。研究结论以数据来源和口径为前提，代码成功运行只是复现检查的一部分。
+

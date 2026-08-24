@@ -40,6 +40,9 @@ https://theeffectbook.net/
 - 外部数据记录生产者、时间、许可、空间范围、处理过程和已知偏差。
 - 外部图片、地图和代码分别核查许可，不因网页可访问而默认可转载。
 - `figures/`中的教学结果图由本项目脚本使用合成数据生成，可通过`scripts/generate_textbook_figures.py`与`scripts/generate_nanjing_case_assets.py`重现；替换为真实城市数据时需要同步更新图注、数据来源和适用范围。
+- `data/china_city_open/ghsl_china_major_cities.*`来自 European Commission Joint Research Centre 的 GHSL Urban Centre Database R2024A 教学子集。再使用时署名 European Commission, Joint Research Centre (JRC), GHSL UCDB R2024A，并查阅官方数据包条款：https://human-settlement.emergency.copernicus.eu/ghs_ucdb_2024.php
+- `data/china_city_open/nanjing_osm_public_services.geojson`来自 OpenStreetMap 贡献者，依据 ODbL 1.0 使用。地图、图表与衍生数据库保留“© OpenStreetMap contributors”署名：https://www.openstreetmap.org/copyright
+- 上述真实数据的查询范围、字段、记录数、获取日期和复现参数写入`data/china_city_open/metadata.json`，可通过`scripts/build_open_city_datasets.py`更新。
 - 代码示例以课程自行编写为主；第三方软件调用遵守其软件许可与引用规范。
 - 涉及个体位置和行为的数据遵守最小必要、去标识化、访问控制和科研伦理要求。
 
