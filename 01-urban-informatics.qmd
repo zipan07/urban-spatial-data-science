@@ -14,6 +14,10 @@ title: "城市信息学与数字时代的城市研究"
 
 {{< include _theory/01-concepts.qmd >}}
 
+{{< include _part1/01-depth.qmd >}}
+
+{{< include _part1/01-foundations.qmd >}}
+
 ## 城市为何成为一个信息问题
 
 城市一直依靠信息运行。人口登记决定公共资源如何配置，地籍记录维持产权与税收，交通调查支撑道路和公交规划，规划图则把未来空间秩序转化为制度语言。数字时代使数据生产的速度、粒度、关联性和用途发生了根本转变。
@@ -51,35 +55,7 @@ title: "城市信息学与数字时代的城市研究"
 
 例如，使用共享单车订单研究慢行需求时，平台只记录特定企业和用户，订单起终点无法还原完整出行路径，运维调度会改变车辆分布，天气和促销也会影响使用。将订单聚合到网格后，网格大小还会改变热点形态。最终地图所表达的是“在给定平台、时期、空间单元和处理规则下被记录的使用”，其覆盖范围小于城市整体慢行需求。
 
-下面的代码展示一条最小证据链如何在项目中被显式记录。阅读时先关注筛选口径、质量记录和输出对象，再在课程环境中运行。
-
-```{.python filename="01_evidence_chain.py"}
-from pathlib import Path
-import pandas as pd
-
-RAW = Path("data/raw/bikeshare_orders.csv")
-
-# 1. 读取时保留原始字段，不直接覆盖源文件
-orders = pd.read_csv(RAW, parse_dates=["start_time", "end_time"])
-
-# 2. 写出研究口径：仅保留正常完成且持续时间合理的订单
-analysis = orders.loc[
-    orders["status"].eq("completed")
-    & orders["duration_min"].between(1, 180)
-].copy()
-
-# 3. 生成质量记录，让排除规则可以被复查
-quality = {
-    "raw_rows": len(orders),
-    "analysis_rows": len(analysis),
-    "excluded_share": 1 - len(analysis) / len(orders),
-    "time_start": analysis["start_time"].min(),
-    "time_end": analysis["start_time"].max(),
-}
-print(pd.Series(quality, name="value"))
-```
-
-这段代码体现了三项研究习惯：保留原始数据；把筛选口径写成可见规则；在进入制图和模型前保存质量指标。
+一条最小证据链应当显式记录六类信息：原始数据及版本、研究口径、排除规则、质量检查、分析数据和研究主张。原始文件需要保持不变；筛选、纠错和汇总应形成独立记录；每张图表都应能够追溯到相应数据与规则。这样的证据链为后续复核、版本比较和责任审查提供基础。
 
 ## 城市研究的计算转向
 
@@ -128,8 +104,6 @@ print(pd.Series(quality, name="value"))
 4. 当模型预测与规划师现场判断冲突时，应如何组织复核？
 
 {{< include _units/01-nanjing-case.qmd >}}
-
-{{< include _units/01-guided-lab.qmd >}}
 
 ## 延伸阅读
 

@@ -39,15 +39,19 @@ https://theeffectbook.net/
 - 中国城市案例优先使用开放数据、教师自有数据、合成数据或取得教学授权的数据。
 - 外部数据记录生产者、时间、许可、空间范围、处理过程和已知偏差。
 - 外部图片、地图和代码分别核查许可，不因网页可访问而默认可转载。
-- `figures/`中的教学结果图由本项目脚本使用合成数据生成，可通过`scripts/generate_textbook_figures.py`与`scripts/generate_nanjing_case_assets.py`重现；替换为真实城市数据时需要同步更新图注、数据来源和适用范围。
+- 除下列明确署名的第三方图像外，`figures/`中的GIS与模型结果图由本项目脚本使用开放数据或生成式教学数据制作，可通过`scripts/generate_textbook_figures.py`、`scripts/generate_nanjing_case_assets.py`与相应数据脚本重现；第一部分的概念关系图由本教材绘制。替换数据时需要同步更新图注、来源和适用范围。
+- `figures/part1/urban-systems-flow.jpg`为Gallotti、Bertagnolli与De Domenico发表于*EPJ Data Science*的论文“Unraveling the Hidden Organisation of Urban Systems and Their Mobility Flows”的Figure 1，原图采用CC BY 4.0许可，本教材原样转载并在图注中署名：https://link.springer.com/article/10.1140/epjds/s13688-020-00258-3
+- `figures/part1/shanghai-landsat-2016.jpg`与`figures/part1/shanghai-landsat-2019.jpg`来自NASA Earth Observatory文章“The Expansion of Shanghai”，图像由Joshua Stevens使用USGS Landsat数据制作；本教材依据NASA图像与媒体使用指南用于教育并在图注中署名：https://science.nasa.gov/earth/earth-observatory/the-expansion-of-shanghai-145968/ ，使用指南：https://www.nasa.gov/nasa-brand-center/images-and-media/
 - `data/china_city_open/ghsl_china_major_cities.*`来自 European Commission Joint Research Centre 的 GHSL Urban Centre Database R2024A 教学子集。再使用时署名 European Commission, Joint Research Centre (JRC), GHSL UCDB R2024A，并查阅官方数据包条款：https://human-settlement.emergency.copernicus.eu/ghs_ucdb_2024.php
 - `data/china_city_open/nanjing_osm_public_services.geojson`来自 OpenStreetMap 贡献者，依据 ODbL 1.0 使用。地图、图表与衍生数据库保留“© OpenStreetMap contributors”署名：https://www.openstreetmap.org/copyright
 - 上述真实数据的查询范围、字段、记录数、获取日期和复现参数写入`data/china_city_open/metadata.json`，可通过`scripts/build_open_city_datasets.py`更新。
-- 代码示例以课程自行编写为主；第三方软件调用遵守其软件许可与引用规范。
+- 教材代码块和`scripts/`目录采用MIT License。学生可以复制、运行、修改和再发布代码；再发布时保留版权与MIT许可声明。第三方软件调用遵守其软件许可与引用规范。
 - 涉及个体位置和行为的数据遵守最小必要、去标识化、访问控制和科研伦理要求。
 
 ## 教学与再使用
 
-除文件或页面另有说明外，本教材原创中文正文、原创教学图件、课程组织和原创示例采用CC BY-NC-ND 4.0许可。未经改动的内容可以在署名条件下用于非商业分享；商业使用以及公开传播翻译、改写、重组或删节版本需要事先取得书面许可。学生可以在个人学习和非商业研究中运行、修改示例代码并替换数据。
+除文件或页面另有说明外，本教材原创中文正文、原创教学图件和课程组织采用CC BY-NC-ND 4.0许可。未经改动的内容可以在署名条件下用于非商业分享；商业使用以及公开传播翻译、改写、重组或删节版本需要事先取得书面许可。
+
+教材代码块和`scripts/`目录采用MIT License，允许复制、运行、修改和再发布。本项目生成的`data/nanjing_teaching/`教学数据采用CC BY 4.0，允许下载、修改和分享，但不得表述为南京官方统计、真实设施或规划结论。GHSL、OpenStreetMap及其他第三方数据继续适用各自许可。
 
 该许可只覆盖本项目有权许可的原创内容。第三方数据、软件、底图、引文和署名材料继续遵守各自条款。完整说明见[`LICENSE.md`](LICENSE.md)和在线[版权与使用说明](copyright.qmd)。

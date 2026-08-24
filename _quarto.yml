@@ -78,8 +78,8 @@ format:
     include-in-header:
       text: |
         <meta name="copyright" content="Copyright © 2026 蔡子攀">
-        <meta name="license" content="CC BY-NC-ND 4.0">
-        <meta name="rights" content="Non-commercial sharing of unmodified material with attribution; no public distribution of derivatives.">
+        <meta name="license" content="Text and original teaching figures: CC BY-NC-ND 4.0; instructional code: MIT; project-generated teaching data: CC BY 4.0">
+        <meta name="rights" content="Students may download course data and copy, run, and modify instructional code under the stated licenses.">
 
 execute:
   enabled: false

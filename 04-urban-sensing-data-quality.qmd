@@ -14,6 +14,10 @@ title: "城市数据来源、城市感知与数据质量"
 
 {{< include _theory/04-concepts.qmd >}}
 
+{{< include _part1/04-depth.qmd >}}
+
+{{< include _part1/04-foundations.qmd >}}
+
 ## 六类城市数据及其生成逻辑
 
 **行政管理数据**来自人口登记、地籍、规划许可、企业登记和设施运营，覆盖稳定、制度含义明确，但字段服务于管理业务，更新与研究需要未必一致。**抽样调查数据**能够直接询问态度、出行目的和家庭属性，却受抽样、无回答和回忆误差影响。
@@ -35,38 +39,7 @@ title: "城市数据来源、城市感知与数据质量"
 
 例如，投诉数据中的零可能表示没有问题，也可能表示居民不知道渠道、缺乏表达能力或认为投诉无效。POI 数量变化可能反映设施开闭，也可能来自平台重新抓取和分类更新。没有数据传记，时间变化分析很容易把数据库变化误认为城市变化。
 
-```{.python filename="04_data_biography.py"}
-from dataclasses import dataclass, asdict
-import json
-
-@dataclass
-class DataBiography:
-    title: str
-    producer: str
-    original_purpose: str
-    observation_unit: str
-    spatial_coverage: str
-    temporal_coverage: str
-    update_cycle: str
-    missing_meaning: str
-    license: str
-    known_biases: list[str]
-
-biography = DataBiography(
-    title="社区养老设施名录",
-    producer="市级民政管理部门",
-    original_purpose="机构登记与监管",
-    observation_unit="一个登记机构",
-    spatial_coverage="全市行政范围",
-    temporal_coverage="2022-01 至 2025-12",
-    update_cycle="不定期业务更新",
-    missing_meaning="未知；不能直接解释为无设施",
-    license="课程内部教学使用",
-    known_biases=["未登记的小微服务点", "地址更新滞后"],
-)
-
-print(json.dumps(asdict(biography), ensure_ascii=False, indent=2))
-```
+数据传记可以采用结构化表格或连续文本记录。核心项目包括标题、生产者、原始业务目的、观察单位、空间与时间覆盖、采集方法、更新频率、许可和已知限制。结构化字段便于机器读取，连续说明有助于解释制度变化和“零”“空值”的业务含义。
 
 ## 数据质量是相对于用途的
 
@@ -78,27 +51,7 @@ print(json.dumps(asdict(biography), ensure_ascii=False, indent=2))
 
 普通质量检查包括缺失、重复、取值范围、逻辑约束和唯一键。空间数据还要检查坐标参考系统、几何有效性、边界范围、拓扑关系和空间上异常的缺失。时间数据需要检查时区、重复时间、设备离线和制度变更点。
 
-```{.python filename="04_quality_report.py"}
-import pandas as pd
-import geopandas as gpd
-
-gdf = gpd.read_file("data/raw/facilities.gpkg")
-
-report = pd.Series({
-    "rows": len(gdf),
-    "duplicate_ids": gdf["facility_id"].duplicated().sum(),
-    "missing_geometry": gdf.geometry.isna().sum(),
-    "invalid_geometry": (~gdf.geometry.is_valid).sum(),
-    "missing_capacity": gdf["capacity"].isna().sum(),
-    "negative_capacity": gdf["capacity"].lt(0).sum(),
-    "outside_expected_year": (~gdf["year"].between(2020, 2025)).sum(),
-})
-print(report)
-
-# 用空间范围发现经纬度颠倒、错误投影或外地记录
-print("CRS:", gdf.crs)
-print("Bounds:", gdf.total_bounds)
-```
+质量报告应覆盖记录数量、唯一标识、缺失几何、无效几何、关键属性缺失、业务范围、坐标参考和空间边界。数值检查与地图检查需要结合：经纬度颠倒、错误投影和外地记录往往在空间范围图中更加明显。报告还应说明问题记录的处置方式及其对指标的影响。
 
 质量报告应在清洗前后各生成一次。若清洗使记录减少30%，研究总体也会随之改变，因此必须解释排除对象及其空间分布。
 
@@ -145,8 +98,6 @@ print("Bounds:", gdf.total_bounds)
 :::
 
 {{< include _units/04-nanjing-case.qmd >}}
-
-{{< include _units/04-guided-lab.qmd >}}
 
 ## 延伸阅读
 

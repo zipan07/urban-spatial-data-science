@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="650" viewBox="0 0 1100 650" role="img" aria-labelledby="title desc">
+  <title id="title">轨道开通与商业增长研究的因果图</title>
+  <desc id="desc">既有中心性同时影响轨道开通和商业增长，轨道开通通过客流影响商业增长，轨道开通和商业增长还共同影响样本入选。</desc>
+  <defs>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto"><path d="M0,0 L12,6 L0,12 Z" fill="#58706c"/></marker>
+    <style>.node{fill:#fbfaf6;stroke:#9b6555;stroke-width:2.4;rx:17}.node2{fill:#edf3ef;stroke:#58706c;stroke-width:2.4;rx:17}.collider{fill:#f6e6dc;stroke:#a45c49;stroke-width:2.4;rx:17}.txt{font-family:"Noto Sans CJK SC","Microsoft YaHei",sans-serif;font-size:24px;fill:#273735;text-anchor:middle}.sub{font-size:18px;fill:#5f6d68}.arrow{fill:none;stroke:#58706c;stroke-width:3;marker-end:url(#arrow)}.lab{font-family:"Noto Sans CJK SC","Microsoft YaHei",sans-serif;font-size:18px;fill:#6d4034}</style>
+  </defs>
+  <rect x="70" y="80" width="290" height="108" class="node"/><text x="215" y="126" class="txt">既有中心性 C</text><text x="215" y="160" class="txt sub">混杂变量</text>
+  <rect x="405" y="255" width="290" height="108" class="node2"/><text x="550" y="301" class="txt">轨道开通 T</text><text x="550" y="335" class="txt sub">处理变量</text>
+  <rect x="750" y="80" width="280" height="108" class="node2"/><text x="890" y="126" class="txt">客流 M</text><text x="890" y="160" class="txt sub">中介变量</text>
+  <rect x="750" y="432" width="280" height="108" class="node"/><text x="890" y="478" class="txt">商业增长 Y</text><text x="890" y="512" class="txt sub">结果变量</text>
+  <rect x="70" y="432" width="290" height="108" class="collider"/><text x="215" y="478" class="txt">入选样本 K</text><text x="215" y="512" class="txt sub">碰撞变量</text>
+  <path d="M360 150 C460 160 500 208 524 255" class="arrow"/>
+  <path d="M350 188 C460 330 610 442 750 476" class="arrow"/>
+  <path d="M695 283 C755 235 805 198 848 188" class="arrow"/>
+  <path d="M890 188 L890 432" class="arrow"/>
+  <path d="M405 339 C330 375 285 403 252 432" class="arrow"/>
+  <path d="M750 504 C585 546 450 548 360 510" class="arrow"/>
+  <text x="418" y="202" class="lab">后门路径</text><text x="724" y="230" class="lab">作用路径</text><text x="505" y="568" class="lab">对K进行条件化可能打开虚假关联</text>
+</svg>

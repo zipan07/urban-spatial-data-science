@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="650" viewBox="0 0 1100 650" role="img" aria-labelledby="title desc">
+  <title id="title">城市复杂适应系统的反馈循环</title>
+  <desc id="desc">主体选择引起空间流动，空间流动形成集聚与分异，集聚与分异改变价格、制度与环境，新的条件再次影响主体选择。</desc>
+  <defs>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+      <path d="M0,0 L12,6 L0,12 Z" fill="#58706c"/>
+    </marker>
+    <style>
+      .box{fill:#fbfaf6;stroke:#9b6555;stroke-width:2.4;rx:18}.txt{font-family:"Noto Sans CJK SC","Microsoft YaHei",sans-serif;font-size:25px;fill:#273735;text-anchor:middle}.sub{font-size:18px;fill:#5f6d68}.arrow{fill:none;stroke:#58706c;stroke-width:3;marker-end:url(#arrow)}.label{font-family:"Noto Sans CJK SC","Microsoft YaHei",sans-serif;font-size:18px;fill:#58706c;text-anchor:middle}.center{fill:#efe4d9;stroke:#9b6555;stroke-width:2}.ct{font-family:"Noto Sans CJK SC","Microsoft YaHei",sans-serif;font-size:24px;fill:#6d4034;text-anchor:middle;font-weight:600}
+    </style>
+  </defs>
+  <rect x="85" y="80" width="330" height="116" class="box"/>
+  <text x="250" y="130" class="txt">主体选择</text><text x="250" y="164" class="txt sub">居民、企业与政府的行动</text>
+  <rect x="685" y="80" width="330" height="116" class="box"/>
+  <text x="850" y="130" class="txt">空间流动</text><text x="850" y="164" class="txt sub">通勤、交易、信息与资源</text>
+  <rect x="685" y="454" width="330" height="116" class="box"/>
+  <text x="850" y="504" class="txt">集聚与分异</text><text x="850" y="538" class="txt sub">中心、网络与社会空间结构</text>
+  <rect x="85" y="454" width="330" height="116" class="box"/>
+  <text x="250" y="498" class="txt">条件变化</text><text x="250" y="532" class="txt sub">价格、制度、环境与可达性</text>
+  <circle cx="550" cy="325" r="98" class="center"/>
+  <text x="550" y="316" class="ct">复杂适应</text><text x="550" y="351" class="ct">与反馈</text>
+  <path d="M415 138 C515 138 585 138 685 138" class="arrow"/>
+  <path d="M850 196 C850 285 850 365 850 454" class="arrow"/>
+  <path d="M685 512 C585 512 515 512 415 512" class="arrow"/>
+  <path d="M250 454 C250 365 250 285 250 196" class="arrow"/>
+  <text x="550" y="119" class="label">形成活动联系</text>
+  <text x="929" y="330" class="label" transform="rotate(90 929 330)">累积为宏观格局</text>
+  <text x="550" y="550" class="label">改变机会与约束</text>
+  <text x="171" y="330" class="label" transform="rotate(-90 171 330)">反馈至下一轮决策</text>
+</svg>

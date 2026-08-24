@@ -14,6 +14,10 @@ title: "城市数据分析基本范式"
 
 {{< include _theory/03-concepts.qmd >}}
 
+{{< include _part1/03-depth.qmd >}}
+
+{{< include _part1/03-foundations.qmd >}}
+
 ## 范式决定什么算作好结果
 
 描述分析要求指标定义清楚、覆盖完整、尺度适当；统计推断关心样本如何支持总体判断；预测强调未见数据上的误差；因果评价要求反事实设计；模拟则强调规则、反馈和情景假设是否合理。若用错误标准评价方法，就会产生“看起来很强”的研究。
@@ -34,27 +38,7 @@ title: "城市数据分析基本范式"
 
 探索应保持“生成假设”的身份。若在同一数据中反复寻找显著模式，再把其中最有趣的结果当作预先假设，显著性会被夸大。可将数据分为探索部分和确认部分，或者明确把结果写成后续研究问题。
 
-```{.python filename="03_exploratory_profile.py"}
-import pandas as pd
-import geopandas as gpd
-import matplotlib.pyplot as plt
-
-areas = gpd.read_file("data/processed/communities.gpkg")
-variables = ["population_density", "green_share", "metro_access"]
-
-# 数值分布与缺失结构
-profile = areas[variables].describe(percentiles=[.01, .25, .5, .75, .99]).T
-profile["missing_share"] = areas[variables].isna().mean()
-print(profile)
-
-# 统计分布与空间分布必须一起看
-fig, axes = plt.subplots(1, 2, figsize=(12, 4))
-areas["green_share"].plot.hist(ax=axes[0], bins=30, color="#28766f")
-areas.plot(column="green_share", ax=axes[1], legend=True,
-           missing_kwds={"color": "#ddd", "label": "无数据"})
-axes[0].set_title("绿地比例的数值分布")
-axes[1].set_title("绿地比例的空间分布")
-```
+探索性分析需要把数值分布、缺失结构和空间分布放在同一证据框架中。对绿地比例等指标，研究者应同时检查集中趋势、长尾、极端值、缺失位置和区域集聚。统计图回答数值怎样分布，地图回答这些数值出现在哪里；两者结合才能区分录入异常、特殊功能区与真实空间差异。
 
 ## 统计推断：从观测到总体
 
@@ -70,35 +54,7 @@ axes[1].set_title("绿地比例的空间分布")
 
 任何复杂模型都应与基线比较。客流预测的基线可以是上一周同一时段，房价预测可以是全市中位数或简单线性模型。若复杂模型只提高很少，维护、解释和公平风险可能超过收益。
 
-```{.python filename="03_prediction_protocol.py"}
-from sklearn.compose import ColumnTransformer
-from sklearn.impute import SimpleImputer
-from sklearn.pipeline import Pipeline
-from sklearn.preprocessing import StandardScaler
-from sklearn.linear_model import Ridge
-from sklearn.model_selection import GroupKFold, cross_validate
-
-numeric = ["density", "road_density", "metro_access", "green_share"]
-preprocess = ColumnTransformer([
-    ("numeric", Pipeline([
-        ("impute", SimpleImputer(strategy="median")),
-        ("scale", StandardScaler()),
-    ]), numeric)
-])
-
-model = Pipeline([
-    ("preprocess", preprocess),
-    ("regression", Ridge(alpha=1.0)),
-])
-
-# district_id 让完整地区被留作测试，减少空间泄漏
-cv = GroupKFold(n_splits=5)
-scores = cross_validate(
-    model, data[numeric], data["activity_index"],
-    groups=data["district_id"], cv=cv,
-    scoring=["neg_mean_absolute_error", "r2"]
-)
-```
+预测协议应在分析前规定训练范围、测试范围、预处理、特征选择、参数搜索和评价指标。空间预测通常按完整地区或空间分块划分训练集与测试集，时间预测按照过去与未来划分。所有依赖数据分布的处理都需要在训练范围内完成，确保测试结果代表真实未知情境。
 
 ## 因果评价：反事实不是回归控制的同义词
 
@@ -142,8 +98,6 @@ scores = cross_validate(
 :::
 
 {{< include _units/03-nanjing-case.qmd >}}
-
-{{< include _units/03-guided-lab.qmd >}}
 
 ## 延伸阅读
 

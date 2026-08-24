@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="680" viewBox="0 0 1100 680" role="img" aria-labelledby="title desc">
+  <title id="title">可变空间单元问题的尺度效应与分区效应</title>
+  <desc id="desc">同一组点状观测分别按细网格、粗网格和行政边界聚合，会得到局部极值、平滑分布和受边界形状影响的不同结果。</desc>
+  <defs>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto"><path d="M0,0 L12,6 L0,12 Z" fill="#58706c"/></marker>
+    <style>.source{fill:#efe4d9;stroke:#9b6555;stroke-width:2.6;rx:18}.box{fill:#fbfaf6;stroke:#9b6555;stroke-width:2.3;rx:17}.out{fill:#edf3ef;stroke:#58706c;stroke-width:2.3;rx:17}.txt{font-family:"Noto Sans CJK SC","Microsoft YaHei",sans-serif;font-size:24px;fill:#273735;text-anchor:middle}.sub{font-size:18px;fill:#5f6d68}.arrow{fill:none;stroke:#58706c;stroke-width:3;marker-end:url(#arrow)}.tag{font-family:"Noto Sans CJK SC","Microsoft YaHei",sans-serif;font-size:18px;fill:#6d4034;text-anchor:middle;font-weight:600}</style>
+  </defs>
+  <rect x="380" y="44" width="340" height="102" class="source"/><text x="550" y="87" class="txt">同一组点状观测</text><text x="550" y="121" class="txt sub">事件、人口或设施位置</text>
+  <rect x="55" y="245" width="290" height="102" class="box"/><text x="200" y="288" class="txt">细网格聚合</text><text x="200" y="322" class="txt sub">单元较多、空间粒度较细</text>
+  <rect x="405" y="245" width="290" height="102" class="box"/><text x="550" y="288" class="txt">粗网格聚合</text><text x="550" y="322" class="txt sub">单元较少、空间粒度较粗</text>
+  <rect x="755" y="245" width="290" height="102" class="box"/><text x="900" y="288" class="txt">行政边界聚合</text><text x="900" y="322" class="txt sub">边界形状与治理单元固定</text>
+  <rect x="55" y="505" width="290" height="102" class="out"/><text x="200" y="548" class="txt">局部极值明显</text><text x="200" y="582" class="txt sub">零值和不稳定比率可能增加</text>
+  <rect x="405" y="505" width="290" height="102" class="out"/><text x="550" y="548" class="txt">分布趋于平滑</text><text x="550" y="582" class="txt sub">区内差异被汇总值掩盖</text>
+  <rect x="755" y="505" width="290" height="102" class="out"/><text x="900" y="548" class="txt">结果依赖分区</text><text x="900" y="582" class="txt sub">边界调整改变对象组合</text>
+  <path d="M500 146 C430 188 335 207 235 245" class="arrow"/><path d="M550 146 L550 245" class="arrow"/><path d="M600 146 C670 188 765 207 865 245" class="arrow"/>
+  <path d="M200 347 L200 505" class="arrow"/><path d="M550 347 L550 505" class="arrow"/><path d="M900 347 L900 505" class="arrow"/>
+  <text x="375" y="190" class="tag">尺度效应</text><text x="725" y="190" class="tag">分区效应</text>
+</svg>

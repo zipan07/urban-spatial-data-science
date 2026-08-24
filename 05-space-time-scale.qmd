@@ -14,6 +14,10 @@ title: "城市研究中的空间、时间与尺度"
 
 {{< include _theory/05-concepts.qmd >}}
 
+{{< include _part1/05-depth.qmd >}}
+
+{{< include _part1/05-foundations.qmd >}}
+
 ## 空间的五种基本表征
 
 城市对象可以表示为**点**，例如设施或事件；表示为**线**，例如道路和轨迹；表示为**面**，例如地块、社区和服务区；表示为连续**场**，例如温度、污染和地形；也可以表示为**网络**，例如道路、轨道和通勤联系。表征方式体现了研究者对现象结构的假设，文件格式只是其技术载体。
@@ -44,34 +48,7 @@ title: "城市研究中的空间、时间与尺度"
 
 MAUP 是聚合分析的结构属性，与 GIS 软件是否正确运行无关。研究者无法通过寻找“唯一正确边界”完全消除它。较为稳妥的做法是依据理论和决策范围选择主尺度，再用备选尺度检查结论是否稳定。
 
-```{.python filename="05_scale_sensitivity.py"}
-import pandas as pd
-import geopandas as gpd
-
-points = gpd.read_file("data/raw/activity_points.gpkg")
-units = {
-    "community": gpd.read_file("data/raw/communities.gpkg"),
-    "grid_500m": gpd.read_file("data/raw/grid_500m.gpkg"),
-    "grid_1000m": gpd.read_file("data/raw/grid_1000m.gpkg"),
-}
-
-results = []
-for scale_name, polygons in units.items():
-    joined = gpd.sjoin(points, polygons[["unit_id", "geometry"]],
-                       predicate="within")
-    counts = joined.groupby("unit_id").size()
-    results.append({
-        "scale": scale_name,
-        "units": len(polygons),
-        "mean_count": counts.mean(),
-        "cv": counts.std() / counts.mean(),
-        "zero_share": 1 - counts.index.nunique() / len(polygons),
-    })
-
-print(pd.DataFrame(results))
-```
-
-这段敏感性分析不只比较地图外观，还比较变异系数和零值比例。后续可进一步比较相关系数、热点和模型误差。
+尺度敏感性分析可以在社区、500米网格和1000米网格等多种支持域上汇总同一组活动观测，再比较单元数量、均值、变异系数、零值比例、空间排序和热点位置。研究重点在于识别哪些结论稳定、哪些结论依赖特定分区，并解释尺度与城市机制的对应关系。
 
 ## 个体与区域：生态谬误和原子谬误
 
@@ -85,26 +62,7 @@ print(pd.DataFrame(results))
 
 时间聚合也会改变模式。小时客流能显示峰值，日均值会抹平通勤节律，月度数据适合季节变化，年度数据适合长期结构。研究窗口还会影响政策评价：窗口太短看不到实施滞后，太长又容易混入其他变化。
 
-```{.python filename="05_temporal_profiles.py"}
-import pandas as pd
-
-trips = pd.read_parquet("data/raw/transit_trips.parquet")
-trips["timestamp"] = pd.to_datetime(trips["timestamp"], utc=True)
-trips["local_time"] = trips["timestamp"].dt.tz_convert("Asia/Shanghai")
-
-trips["hour"] = trips["local_time"].dt.hour
-trips["weekday"] = trips["local_time"].dt.dayofweek
-trips["is_weekend"] = trips["weekday"].ge(5)
-
-profile = (
-    trips.groupby(["station_id", "is_weekend", "hour"])
-         .size()
-         .rename("entries")
-         .reset_index()
-)
-```
-
-显式转换时区和区分工作日，是避免时间错位的最低要求。跨日运营、节假日和特殊事件还需单独处理。
+时间剖面需要分别计算小时、日、周和季节尺度的活动，并区分工作日、周末、节假日和特殊事件。改变时间聚合窗口后，应比较峰值时刻、波动幅度和空间分布。时区、跨日运营和夏令时等时间规则需要显式记录，避免产生系统性时间错位。
 
 ## 时空棱柱与活动空间
 
@@ -137,8 +95,6 @@ profile = (
 :::
 
 {{< include _units/05-nanjing-case.qmd >}}
-
-{{< include _units/05-guided-lab.qmd >}}
 
 ## 延伸阅读
 

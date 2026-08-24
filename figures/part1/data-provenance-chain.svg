@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="620" viewBox="0 0 1100 620" role="img" aria-labelledby="title desc">
+  <title id="title">从原始数据到研究主张的数据谱系</title>
+  <desc id="desc">原始数据与版本依次经过清洗规则、空间转换、分析数据集、模型与图表，最终形成研究主张，每一步均需要记录规则和责任。</desc>
+  <defs>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto"><path d="M0,0 L12,6 L0,12 Z" fill="#58706c"/></marker>
+    <style>.box{fill:#fbfaf6;stroke:#9b6555;stroke-width:2.4;rx:17}.final{fill:#efe4d9;stroke:#9b6555;stroke-width:2.6;rx:17}.txt{font-family:"Noto Sans CJK SC","Microsoft YaHei",sans-serif;font-size:24px;fill:#273735;text-anchor:middle}.sub{font-size:17px;fill:#5f6d68}.arrow{fill:none;stroke:#58706c;stroke-width:3;marker-end:url(#arrow)}.note{font-family:"Noto Sans CJK SC","Microsoft YaHei",sans-serif;font-size:18px;fill:#58706c;text-anchor:middle}</style>
+  </defs>
+  <rect x="70" y="72" width="280" height="105" class="box"/><text x="210" y="118" class="txt">原始数据与版本</text><text x="210" y="151" class="txt sub">来源、许可、时间与校验值</text>
+  <rect x="410" y="72" width="280" height="105" class="box"/><text x="550" y="118" class="txt">清洗规则</text><text x="550" y="151" class="txt sub">筛选、纠错与缺失处理</text>
+  <rect x="750" y="72" width="280" height="105" class="box"/><text x="890" y="118" class="txt">空间转换</text><text x="890" y="151" class="txt sub">投影、连接、汇总与换域</text>
+  <rect x="750" y="395" width="280" height="105" class="box"/><text x="890" y="441" class="txt">分析数据集</text><text x="890" y="474" class="txt sub">字段契约、范围与版本</text>
+  <rect x="410" y="395" width="280" height="105" class="box"/><text x="550" y="441" class="txt">模型与图表</text><text x="550" y="474" class="txt sub">参数、验证与输出记录</text>
+  <rect x="70" y="395" width="280" height="105" class="final"/><text x="210" y="441" class="txt">研究主张</text><text x="210" y="474" class="txt sub">证据强度与适用边界</text>
+  <path d="M350 124 L410 124" class="arrow"/><path d="M690 124 L750 124" class="arrow"/><path d="M890 177 L890 395" class="arrow"/><path d="M750 447 L690 447" class="arrow"/><path d="M410 447 L350 447" class="arrow"/>
+  <path d="M210 177 C210 255 315 307 550 307 C785 307 890 255 890 177" fill="none" stroke="#b7a89a" stroke-width="2.3" stroke-dasharray="7 7"/>
+  <text x="550" y="278" class="note">全过程记录生产者、时间、参数、人工决定和责任主体</text>
+</svg>
