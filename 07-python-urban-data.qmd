@@ -1,0 +1,213 @@
+---
+title: "Python城市数据获取、清洗与组织"
+---
+
+# 学习目标
+
+完成本章后，学生应能够：
+
+- 区分表格数据与空间数据；
+- 使用Pandas和GeoPandas读取、检查、连接和聚合城市数据；
+- 识别缺失值、重复记录、字段类型和坐标系统问题；
+- 将人口、设施和空间单元组织为可分析的数据集；
+- 记录从原始数据到分析数据的转换过程。
+
+# 7.1 从城市问题反推数据结构
+
+假设研究问题是：
+
+> 某城市不同社区的养老服务设施供给是否与老年人口分布相匹配？
+
+至少需要三类数据：
+
+1. 社区边界；
+2. 社区人口及老年人口；
+3. 养老设施位置与类型。
+
+空间分析之前，应明确每张表的一行代表什么。社区表通常“一行一个社区”，设施表通常“一行一个设施”。如果分析单元不明确，就容易在连接和统计时重复计算。
+
+# 7.2 使用Pandas检查表格数据
+
+~~~{python}
+import pandas as pd
+
+population = pd.DataFrame({
+    "community_id": ["A01", "A02", "A03", "A03"],
+    "population": [8200, 12600, 9400, 9400],
+    "older_population": [1540, 2100, None, None]
+})
+
+population.info()
+population.head()
+~~~
+
+首先检查：
+
+- 行数和列数；
+- 字段类型；
+- 缺失值；
+- 主键是否唯一；
+- 数值范围是否合理。
+
+~~~{python}
+population.isna().sum()
+population["community_id"].duplicated().sum()
+population.describe(include="all")
+~~~
+
+重复记录不能机械删除。它可能是数据错误，也可能代表同一社区在不同年份或不同类别下的多条记录。处理之前必须先理解字段含义。
+
+# 7.3 清洗与派生指标
+
+~~~{python}
+population_clean = (
+    population
+    .drop_duplicates(subset="community_id")
+    .assign(
+        older_population=lambda x: x["older_population"].fillna(0),
+        ageing_rate=lambda x: x["older_population"] / x["population"]
+    )
+)
+
+population_clean
+~~~
+
+这里的\`fillna(0)\`只用于演示。真实研究中，“缺失”不一定等于“没有”。如果把未知值替换为0，可能系统性低估部分地区需求。
+
+常见的数据清洗内容包括：
+
+- 统一字段名称；
+- 转换日期与数值类型；
+- 处理缺失值；
+- 检查重复和异常值；
+- 统一分类编码；
+- 记录数据筛选条件。
+
+# 7.4 使用GeoPandas处理空间数据
+
+~~~{python}
+import geopandas as gpd
+
+communities = gpd.read_file("data/raw/communities.gpkg")
+facilities = gpd.read_file("data/raw/facilities.gpkg")
+
+print(communities.crs)
+print(facilities.crs)
+print(communities.geom_type.value_counts())
+print(facilities.geom_type.value_counts())
+~~~
+
+空间数据至少包含普通属性和一个geometry字段。分析前应检查：
+
+- 坐标参考系统；
+- 几何类型；
+- 空几何；
+- 无效几何；
+- 研究范围；
+- 数据尺度与精度。
+
+~~~{python}
+communities.geometry.isna().sum()
+(~communities.geometry.is_valid).sum()
+~~~
+
+进行距离、面积和缓冲区计算时，应使用适合研究地区的投影坐标系，而不是直接在经纬度坐标上计算米或平方米。
+
+# 7.5 属性连接与空间连接
+
+人口表可通过社区编号连接到空间边界：
+
+~~~{python}
+communities = communities.merge(
+    population_clean,
+    on="community_id",
+    how="left",
+    validate="one_to_one"
+)
+~~~
+
+\`validate="one_to_one"\`能够帮助识别意外的一对多关系。
+
+如果设施数据没有社区编号，可以按空间位置进行连接：
+
+~~~{python}
+facility_with_area = gpd.sjoin(
+    facilities,
+    communities[["community_id", "geometry"]],
+    predicate="within",
+    how="left"
+)
+~~~
+
+空间连接之后必须检查：
+
+- 是否存在没有匹配到社区的设施；
+- 边界上的点如何处理；
+- 是否出现重复匹配；
+- 空间关系\`within\`、\`intersects\`或\`nearest\`是否符合研究问题。
+
+# 7.6 聚合设施供给
+
+~~~{python}
+facility_count = (
+    facility_with_area
+    .groupby("community_id")
+    .size()
+    .rename("facility_count")
+)
+
+communities = communities.join(facility_count, on="community_id")
+communities["facility_count"] = communities["facility_count"].fillna(0)
+
+communities["facilities_per_1000_older"] = (
+    communities["facility_count"]
+    / communities["older_population"]
+    * 1000
+)
+~~~
+
+“每千名老年人口设施数”比设施总数更适合比较社区，但仍有明显局限：
+
+- 没有考虑设施容量；
+- 没有考虑跨社区服务；
+- 没有考虑道路网络和实际出行时间；
+- 小人口社区的比率可能极不稳定。
+
+因此，指标是研究问题的简化表达，而不是现实本身。
+
+# 7.7 数据质量记录
+
+建议为每个处理后的数据集建立数据说明表：
+
+| 项目 | 内容 |
+|---|---|
+| 数据名称 | 社区养老设施分析数据 |
+| 分析单元 | 社区 |
+| 时间范围 | 研究年份 |
+| 空间范围 | 研究城市 |
+| 主键 | community_id |
+| 数据来源 | 人口、边界、设施来源 |
+| 主要处理 | 去重、投影、空间连接、聚合 |
+| 已知限制 | 设施容量缺失、边界效应 |
+
+# 7.8 课堂实验
+
+选择一组社区边界、人口和公共服务设施数据：
+
+1. 检查字段、缺失值和重复记录；
+2. 检查空间参考和几何有效性；
+3. 完成人口表属性连接；
+4. 将设施点空间连接到社区；
+5. 计算设施总量和人均供给指标；
+6. 输出GeoPackage与数据质量说明；
+7. 解释至少两项指标局限。
+
+# 7.9 本章小结
+
+城市数据处理的目标不是得到一张“干净表”，而是建立从原始记录到分析变量的透明转换过程。每一次删除、填补、连接和聚合都会改变研究证据。
+
+# 延伸阅读
+
+- [原书：Spatial Data](https://geographicdata.science/book/data.html)
+- [Pandas用户指南](https://pandas.pydata.org/docs/user_guide/)
+- [GeoPandas用户指南](https://geopandas.org/en/stable/docs/user_guide.html)
