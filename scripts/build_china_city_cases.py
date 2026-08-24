@@ -42,6 +42,7 @@ OUTPUT = ROOT / "data" / "china_city_cases"
 CACHE = Path(os.environ.get("COURSE_DATA_CACHE", ROOT / ".cache" / "course_data"))
 
 EXTRACT_DATE = date.today().isoformat()
+REFRESH_SOURCES = os.environ.get("COURSE_DATA_REFRESH", "0") == "1"
 GRID_ROWS = 8
 GRID_COLS = 8
 # 八城裁剪约为5—7 km见方；24×24像元对应约200—260 m的课堂栅格。
@@ -49,10 +50,10 @@ RASTER_ROWS = 24
 RASTER_COLS = 24
 
 OVERPASS_ENDPOINTS = [
-    "https://overpass.private.coffee/api/interpreter",
-    "https://overpass.nchc.org.tw/api/interpreter",
     "https://overpass-api.de/api/interpreter",
     "https://overpass.kumi.systems/api/interpreter",
+    "https://overpass.private.coffee/api/interpreter",
+    "https://overpass.nchc.org.tw/api/interpreter",
 ]
 SRTM_TEMPLATE = "https://s3.amazonaws.com/elevation-tiles-prod/skadi/{band}/{tile}.hgt.gz"
 
@@ -114,7 +115,7 @@ def bbox_for(city: dict[str, Any]) -> tuple[float, float, float, float]:
 def overpass_query(bbox: tuple[float, float, float, float]) -> str:
     south, west, north, east = bbox
     extent = f"({south},{west},{north},{east})"
-    return f'''[out:json][timeout:180];
+    return f'''[out:json][timeout:110];
 (
   way["highway"~"^({ROAD_TYPES})$"]{extent};
   node["amenity"~"^({AMENITIES})$"]{extent};
@@ -139,7 +140,7 @@ def request_overpass(query: str, *, attempts_per_endpoint: int = 2) -> dict[str,
                 },
             )
             try:
-                with urllib.request.urlopen(request, timeout=240) as response:
+                with urllib.request.urlopen(request, timeout=120) as response:
                     result = json.load(response)
                 if result.get("elements"):
                     return result
@@ -579,6 +580,30 @@ def write_zip(path: Path, members: list[Path]) -> None:
             archive.write(member, member.relative_to(OUTPUT))
 
 
+def read_csv_records(path: Path) -> list[dict[str, Any]]:
+    with path.open(encoding="utf-8-sig", newline="") as stream:
+        return list(csv.DictReader(stream))
+
+
+def load_existing_city(city: dict[str, Any]) -> dict[str, Any] | None:
+    """复用已经通过发布流程生成的城市包，避免每次文档更新访问公共API。"""
+    city_dir = OUTPUT / city["city_id"]
+    required = [
+        "boundary.geojson", "facilities.geojson", "network_nodes.geojson",
+        "network_edges.geojson", "analysis_grid.geojson", "grid_indicators.csv",
+        "elevation_250m.tif", "city_profile.csv", "metadata.json",
+        f"{city['city_id']}_course_data.zip",
+    ]
+    if REFRESH_SOURCES or not all((city_dir / filename).is_file() for filename in required):
+        return None
+    profile_rows = read_csv_records(city_dir / "city_profile.csv")
+    grid_records = read_csv_records(city_dir / "grid_indicators.csv")
+    if len(profile_rows) != 1 or len(grid_records) != GRID_ROWS * GRID_COLS:
+        return None
+    metadata = json.loads((city_dir / "metadata.json").read_text(encoding="utf-8"))
+    return {"profile": profile_rows[0], "grid_records": grid_records, "metadata": metadata}
+
+
 def build_city(city: dict[str, Any], ghsl: dict[str, Any]) -> dict[str, Any]:
     city_dir = OUTPUT / city["city_id"]
     city_dir.mkdir(parents=True, exist_ok=True)
@@ -695,7 +720,11 @@ def main() -> None:
 
     for index, city in enumerate(CITIES, start=1):
         print(f"[{index}/{len(CITIES)}] {city['name_zh']} / {city['name_en']}", flush=True)
-        result = build_city(city, ghsl)
+        result = load_existing_city(city)
+        if result is None:
+            result = build_city(city, ghsl)
+        else:
+            print("  复用仓库中已发布的课程裁剪；手动刷新可设置COURSE_DATA_REFRESH=1", flush=True)
         profile = result["profile"]
         metadata = result["metadata"]
         profiles.append(profile)
@@ -714,10 +743,10 @@ def main() -> None:
                 "elevation_file": f"{city['city_id']}/elevation_250m.tif",
                 "metadata_file": f"{city['city_id']}/metadata.json",
                 "download_file": f"{city['city_id']}/{city['city_id']}_course_data.zip",
-                "facility_count": profile["osm_facility_count"],
-                "network_edge_count": profile["osm_network_edge_count"],
+                "facility_count": int(profile["osm_facility_count"]),
+                "network_edge_count": int(profile["osm_network_edge_count"]),
                 "grid_count": metadata["record_counts"]["analysis_grid"],
-                "extract_date": EXTRACT_DATE,
+                "extract_date": metadata["extract_date"],
             }
         )
         for source_id, source in metadata["sources"].items():
@@ -727,7 +756,7 @@ def main() -> None:
                     "city_id": city["city_id"],
                     "provider": source["provider"],
                     "source_url": source.get("url"),
-                    "extract_date": EXTRACT_DATE,
+                    "extract_date": metadata["extract_date"],
                     "spatial_extent": ",".join(map(str, metadata["teaching_extent_bbox_south_west_north_east"])),
                     "crs": metadata["coordinate_reference_system"],
                     "license_or_reuse": source.get("license") or source.get("reuse") or "See source attribution",

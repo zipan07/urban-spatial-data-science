@@ -1,6 +1,7 @@
 """生成可重复执行的八城市数据质量审计Notebook。"""
 
 from pathlib import Path
+from textwrap import dedent
 
 import nbformat as nbf
 
@@ -10,11 +11,11 @@ OUTPUT = ROOT / "notebooks" / "00_china_city_data_quality.ipynb"
 
 
 def markdown(text: str):
-    return nbf.v4.new_markdown_cell(text.strip())
+    return nbf.v4.new_markdown_cell(dedent(text).strip())
 
 
 def code(text: str):
-    return nbf.v4.new_code_cell(text.strip())
+    return nbf.v4.new_code_cell(dedent(text).strip())
 
 
 notebook = nbf.v4.new_notebook()
@@ -52,8 +53,14 @@ notebook["cells"] = [
         import pandas as pd
 
         ROOT = Path.cwd()
+        if not (ROOT / "scripts").exists():
+            ROOT = ROOT.parent
         DATA = ROOT / "data" / "china_city_cases"
-        subprocess.run([sys.executable, "scripts/validate_china_city_cases.py"], check=True)
+        subprocess.run(
+            [sys.executable, str(ROOT / "scripts" / "validate_china_city_cases.py")],
+            cwd=ROOT,
+            check=True,
+        )
         """
     ),
     markdown("## Data"),
