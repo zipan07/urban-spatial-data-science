@@ -1,0 +1,46 @@
+{
+  "status": "PASS",
+  "city_count": 8,
+  "combined_grid_rows": 512,
+  "nanjing": {
+    "grid_cells": 64,
+    "facilities": 157,
+    "network_nodes_file": 3454,
+    "network_edges_file": 3777,
+    "simple_graph_nodes": 3454,
+    "simple_graph_edges": 3777,
+    "connected_components": 41,
+    "largest_component_nodes": 2826,
+    "demonstration_route_length_m": 5350.03,
+    "moran_I_accessibility_proxy": 0.375843,
+    "moran_permutation_p": 0.001,
+    "raster_shape": [
+      24,
+      24
+    ],
+    "raster_crs": "EPSG:4326",
+    "raster_bounds": [
+      118.7669,
+      32.0353,
+      118.8269,
+      32.0853
+    ]
+  },
+  "leave_one_city_out_random_forest": {
+    "target": "facility_count",
+    "features": [
+      "road_density_km_km2",
+      "intersection_count",
+      "distance_to_center_km",
+      "elevation_m",
+      "terrain_relief_m"
+    ],
+    "folds": 8,
+    "MAE": 2.194161,
+    "interpretation": "Technical reproducibility check; OSM coverage differences prevent direct service-performance ranking."
+  },
+  "generated_maps": [
+    "nanjing_case_preview.png",
+    "eight_city_facility_density.png"
+  ]
+}

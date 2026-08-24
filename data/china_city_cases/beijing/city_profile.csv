@@ -1,0 +1,2 @@
+﻿city_id,city_name_zh,city_name_en,center_lon,center_lat,ghsl_uc_id,ghsl_urban_area_km2_2025,ghsl_population_2025,ghsl_population_density_km2_2025,ghsl_gdp_total_ppp_2020,ghsl_hdi_2020,osm_facility_count,osm_transit_count,osm_healthcare_count,osm_education_count,osm_park_count,osm_network_node_count,osm_network_edge_count,osm_network_length_km,srtm_minimum_elevation_m,srtm_maximum_elevation_m,srtm_mean_elevation_m,extract_date
+beijing,北京,Beijing,116.4074,39.9042,8745,2179,18150575,8329.77,649000000000,0.903,135,115,11,6,0,8300,10052,336.109,40,113,50.6,2026-08-24

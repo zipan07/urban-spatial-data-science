@@ -1,0 +1,673 @@
+{
+  "report_title": "中国八城市课程数据包质量审计",
+  "generated_at_utc": "2026-08-24T17:16:53.464474+00:00",
+  "data_root": "data/china_city_cases",
+  "city_count_expected": 8,
+  "status": "PASS",
+  "publishable": true,
+  "risk_policy": "critical/high findings block publication; medium/low findings require review",
+  "severity_counts": {
+    "critical": 0,
+    "high": 0,
+    "medium": 0,
+    "low": 0
+  },
+  "check_count": 108,
+  "checks": [
+    {
+      "check": "global_file",
+      "status": "pass",
+      "city_id": null,
+      "detail": "catalog.csv: 2601 bytes"
+    },
+    {
+      "check": "global_file",
+      "status": "pass",
+      "city_id": null,
+      "detail": "catalog.json: 5974 bytes"
+    },
+    {
+      "check": "global_file",
+      "status": "pass",
+      "city_id": null,
+      "detail": "city_profiles.csv: 1582 bytes"
+    },
+    {
+      "check": "global_file",
+      "status": "pass",
+      "city_id": null,
+      "detail": "all_grid_indicators.csv: 100542 bytes"
+    },
+    {
+      "check": "global_file",
+      "status": "pass",
+      "city_id": null,
+      "detail": "data_inventory.csv: 7265 bytes"
+    },
+    {
+      "check": "global_file",
+      "status": "pass",
+      "city_id": null,
+      "detail": "china_eight_city_course_data.zip: 3118092 bytes"
+    },
+    {
+      "check": "global_file",
+      "status": "pass",
+      "city_id": null,
+      "detail": "checksums.sha256: 881 bytes"
+    },
+    {
+      "check": "required_files",
+      "status": "pass",
+      "city_id": "beijing",
+      "detail": "10个文件齐全"
+    },
+    {
+      "check": "city_zip",
+      "status": "pass",
+      "city_id": "beijing",
+      "detail": "9个成员可解压"
+    },
+    {
+      "check": "geojson",
+      "status": "pass",
+      "city_id": "beijing",
+      "detail": "boundary.geojson: 1 features, 322 coordinates"
+    },
+    {
+      "check": "geojson",
+      "status": "pass",
+      "city_id": "beijing",
+      "detail": "facilities.geojson: 135 features, 135 coordinates"
+    },
+    {
+      "check": "geojson",
+      "status": "pass",
+      "city_id": "beijing",
+      "detail": "network_nodes.geojson: 8300 features, 8300 coordinates"
+    },
+    {
+      "check": "geojson",
+      "status": "pass",
+      "city_id": "beijing",
+      "detail": "network_edges.geojson: 10052 features, 20104 coordinates"
+    },
+    {
+      "check": "geojson",
+      "status": "pass",
+      "city_id": "beijing",
+      "detail": "analysis_grid.geojson: 64 features, 320 coordinates"
+    },
+    {
+      "check": "grid_join",
+      "status": "pass",
+      "city_id": "beijing",
+      "detail": "64个cell_id一一对应"
+    },
+    {
+      "check": "city_profile",
+      "status": "pass",
+      "city_id": "beijing",
+      "detail": "单行城市摘要与目录一致"
+    },
+    {
+      "check": "raster",
+      "status": "pass",
+      "city_id": "beijing",
+      "detail": "24×24；WGS84 GeoTIFF标签齐全；mode=I;16"
+    },
+    {
+      "check": "metadata_counts",
+      "status": "pass",
+      "city_id": "beijing",
+      "detail": "元数据计数与文件一致"
+    },
+    {
+      "check": "checksums",
+      "status": "pass",
+      "city_id": "beijing",
+      "detail": "8个文件校验通过"
+    },
+    {
+      "check": "required_files",
+      "status": "pass",
+      "city_id": "shanghai",
+      "detail": "10个文件齐全"
+    },
+    {
+      "check": "city_zip",
+      "status": "pass",
+      "city_id": "shanghai",
+      "detail": "9个成员可解压"
+    },
+    {
+      "check": "geojson",
+      "status": "pass",
+      "city_id": "shanghai",
+      "detail": "boundary.geojson: 1 features, 394 coordinates"
+    },
+    {
+      "check": "geojson",
+      "status": "pass",
+      "city_id": "shanghai",
+      "detail": "facilities.geojson: 265 features, 265 coordinates"
+    },
+    {
+      "check": "geojson",
+      "status": "pass",
+      "city_id": "shanghai",
+      "detail": "network_nodes.geojson: 12794 features, 12794 coordinates"
+    },
+    {
+      "check": "geojson",
+      "status": "pass",
+      "city_id": "shanghai",
+      "detail": "network_edges.geojson: 14252 features, 28504 coordinates"
+    },
+    {
+      "check": "geojson",
+      "status": "pass",
+      "city_id": "shanghai",
+      "detail": "analysis_grid.geojson: 64 features, 320 coordinates"
+    },
+    {
+      "check": "grid_join",
+      "status": "pass",
+      "city_id": "shanghai",
+      "detail": "64个cell_id一一对应"
+    },
+    {
+      "check": "city_profile",
+      "status": "pass",
+      "city_id": "shanghai",
+      "detail": "单行城市摘要与目录一致"
+    },
+    {
+      "check": "raster",
+      "status": "pass",
+      "city_id": "shanghai",
+      "detail": "24×24；WGS84 GeoTIFF标签齐全；mode=I;16"
+    },
+    {
+      "check": "metadata_counts",
+      "status": "pass",
+      "city_id": "shanghai",
+      "detail": "元数据计数与文件一致"
+    },
+    {
+      "check": "checksums",
+      "status": "pass",
+      "city_id": "shanghai",
+      "detail": "8个文件校验通过"
+    },
+    {
+      "check": "required_files",
+      "status": "pass",
+      "city_id": "nanjing",
+      "detail": "10个文件齐全"
+    },
+    {
+      "check": "city_zip",
+      "status": "pass",
+      "city_id": "nanjing",
+      "detail": "9个成员可解压"
+    },
+    {
+      "check": "geojson",
+      "status": "pass",
+      "city_id": "nanjing",
+      "detail": "boundary.geojson: 1 features, 205 coordinates"
+    },
+    {
+      "check": "geojson",
+      "status": "pass",
+      "city_id": "nanjing",
+      "detail": "facilities.geojson: 157 features, 157 coordinates"
+    },
+    {
+      "check": "geojson",
+      "status": "pass",
+      "city_id": "nanjing",
+      "detail": "network_nodes.geojson: 3454 features, 3454 coordinates"
+    },
+    {
+      "check": "geojson",
+      "status": "pass",
+      "city_id": "nanjing",
+      "detail": "network_edges.geojson: 3777 features, 7554 coordinates"
+    },
+    {
+      "check": "geojson",
+      "status": "pass",
+      "city_id": "nanjing",
+      "detail": "analysis_grid.geojson: 64 features, 320 coordinates"
+    },
+    {
+      "check": "grid_join",
+      "status": "pass",
+      "city_id": "nanjing",
+      "detail": "64个cell_id一一对应"
+    },
+    {
+      "check": "city_profile",
+      "status": "pass",
+      "city_id": "nanjing",
+      "detail": "单行城市摘要与目录一致"
+    },
+    {
+      "check": "raster",
+      "status": "pass",
+      "city_id": "nanjing",
+      "detail": "24×24；WGS84 GeoTIFF标签齐全；mode=I;16"
+    },
+    {
+      "check": "metadata_counts",
+      "status": "pass",
+      "city_id": "nanjing",
+      "detail": "元数据计数与文件一致"
+    },
+    {
+      "check": "checksums",
+      "status": "pass",
+      "city_id": "nanjing",
+      "detail": "8个文件校验通过"
+    },
+    {
+      "check": "required_files",
+      "status": "pass",
+      "city_id": "guangzhou",
+      "detail": "10个文件齐全"
+    },
+    {
+      "check": "city_zip",
+      "status": "pass",
+      "city_id": "guangzhou",
+      "detail": "9个成员可解压"
+    },
+    {
+      "check": "geojson",
+      "status": "pass",
+      "city_id": "guangzhou",
+      "detail": "boundary.geojson: 1 features, 966 coordinates"
+    },
+    {
+      "check": "geojson",
+      "status": "pass",
+      "city_id": "guangzhou",
+      "detail": "facilities.geojson: 227 features, 227 coordinates"
+    },
+    {
+      "check": "geojson",
+      "status": "pass",
+      "city_id": "guangzhou",
+      "detail": "network_nodes.geojson: 13594 features, 13594 coordinates"
+    },
+    {
+      "check": "geojson",
+      "status": "pass",
+      "city_id": "guangzhou",
+      "detail": "network_edges.geojson: 14228 features, 28456 coordinates"
+    },
+    {
+      "check": "geojson",
+      "status": "pass",
+      "city_id": "guangzhou",
+      "detail": "analysis_grid.geojson: 64 features, 320 coordinates"
+    },
+    {
+      "check": "grid_join",
+      "status": "pass",
+      "city_id": "guangzhou",
+      "detail": "64个cell_id一一对应"
+    },
+    {
+      "check": "city_profile",
+      "status": "pass",
+      "city_id": "guangzhou",
+      "detail": "单行城市摘要与目录一致"
+    },
+    {
+      "check": "raster",
+      "status": "pass",
+      "city_id": "guangzhou",
+      "detail": "24×24；WGS84 GeoTIFF标签齐全；mode=I;16"
+    },
+    {
+      "check": "metadata_counts",
+      "status": "pass",
+      "city_id": "guangzhou",
+      "detail": "元数据计数与文件一致"
+    },
+    {
+      "check": "checksums",
+      "status": "pass",
+      "city_id": "guangzhou",
+      "detail": "8个文件校验通过"
+    },
+    {
+      "check": "required_files",
+      "status": "pass",
+      "city_id": "chengdu",
+      "detail": "10个文件齐全"
+    },
+    {
+      "check": "city_zip",
+      "status": "pass",
+      "city_id": "chengdu",
+      "detail": "9个成员可解压"
+    },
+    {
+      "check": "geojson",
+      "status": "pass",
+      "city_id": "chengdu",
+      "detail": "boundary.geojson: 1 features, 185 coordinates"
+    },
+    {
+      "check": "geojson",
+      "status": "pass",
+      "city_id": "chengdu",
+      "detail": "facilities.geojson: 66 features, 66 coordinates"
+    },
+    {
+      "check": "geojson",
+      "status": "pass",
+      "city_id": "chengdu",
+      "detail": "network_nodes.geojson: 4929 features, 4929 coordinates"
+    },
+    {
+      "check": "geojson",
+      "status": "pass",
+      "city_id": "chengdu",
+      "detail": "network_edges.geojson: 5723 features, 11446 coordinates"
+    },
+    {
+      "check": "geojson",
+      "status": "pass",
+      "city_id": "chengdu",
+      "detail": "analysis_grid.geojson: 64 features, 320 coordinates"
+    },
+    {
+      "check": "grid_join",
+      "status": "pass",
+      "city_id": "chengdu",
+      "detail": "64个cell_id一一对应"
+    },
+    {
+      "check": "city_profile",
+      "status": "pass",
+      "city_id": "chengdu",
+      "detail": "单行城市摘要与目录一致"
+    },
+    {
+      "check": "raster",
+      "status": "pass",
+      "city_id": "chengdu",
+      "detail": "24×24；WGS84 GeoTIFF标签齐全；mode=I;16"
+    },
+    {
+      "check": "metadata_counts",
+      "status": "pass",
+      "city_id": "chengdu",
+      "detail": "元数据计数与文件一致"
+    },
+    {
+      "check": "checksums",
+      "status": "pass",
+      "city_id": "chengdu",
+      "detail": "8个文件校验通过"
+    },
+    {
+      "check": "required_files",
+      "status": "pass",
+      "city_id": "wuhan",
+      "detail": "10个文件齐全"
+    },
+    {
+      "check": "city_zip",
+      "status": "pass",
+      "city_id": "wuhan",
+      "detail": "9个成员可解压"
+    },
+    {
+      "check": "geojson",
+      "status": "pass",
+      "city_id": "wuhan",
+      "detail": "boundary.geojson: 1 features, 185 coordinates"
+    },
+    {
+      "check": "geojson",
+      "status": "pass",
+      "city_id": "wuhan",
+      "detail": "facilities.geojson: 59 features, 59 coordinates"
+    },
+    {
+      "check": "geojson",
+      "status": "pass",
+      "city_id": "wuhan",
+      "detail": "network_nodes.geojson: 5716 features, 5716 coordinates"
+    },
+    {
+      "check": "geojson",
+      "status": "pass",
+      "city_id": "wuhan",
+      "detail": "network_edges.geojson: 6473 features, 12946 coordinates"
+    },
+    {
+      "check": "geojson",
+      "status": "pass",
+      "city_id": "wuhan",
+      "detail": "analysis_grid.geojson: 64 features, 320 coordinates"
+    },
+    {
+      "check": "grid_join",
+      "status": "pass",
+      "city_id": "wuhan",
+      "detail": "64个cell_id一一对应"
+    },
+    {
+      "check": "city_profile",
+      "status": "pass",
+      "city_id": "wuhan",
+      "detail": "单行城市摘要与目录一致"
+    },
+    {
+      "check": "raster",
+      "status": "pass",
+      "city_id": "wuhan",
+      "detail": "24×24；WGS84 GeoTIFF标签齐全；mode=I;16"
+    },
+    {
+      "check": "metadata_counts",
+      "status": "pass",
+      "city_id": "wuhan",
+      "detail": "元数据计数与文件一致"
+    },
+    {
+      "check": "checksums",
+      "status": "pass",
+      "city_id": "wuhan",
+      "detail": "8个文件校验通过"
+    },
+    {
+      "check": "required_files",
+      "status": "pass",
+      "city_id": "xian",
+      "detail": "10个文件齐全"
+    },
+    {
+      "check": "city_zip",
+      "status": "pass",
+      "city_id": "xian",
+      "detail": "9个成员可解压"
+    },
+    {
+      "check": "geojson",
+      "status": "pass",
+      "city_id": "xian",
+      "detail": "boundary.geojson: 1 features, 117 coordinates"
+    },
+    {
+      "check": "geojson",
+      "status": "pass",
+      "city_id": "xian",
+      "detail": "facilities.geojson: 92 features, 92 coordinates"
+    },
+    {
+      "check": "geojson",
+      "status": "pass",
+      "city_id": "xian",
+      "detail": "network_nodes.geojson: 2782 features, 2782 coordinates"
+    },
+    {
+      "check": "geojson",
+      "status": "pass",
+      "city_id": "xian",
+      "detail": "network_edges.geojson: 3217 features, 6434 coordinates"
+    },
+    {
+      "check": "geojson",
+      "status": "pass",
+      "city_id": "xian",
+      "detail": "analysis_grid.geojson: 64 features, 320 coordinates"
+    },
+    {
+      "check": "grid_join",
+      "status": "pass",
+      "city_id": "xian",
+      "detail": "64个cell_id一一对应"
+    },
+    {
+      "check": "city_profile",
+      "status": "pass",
+      "city_id": "xian",
+      "detail": "单行城市摘要与目录一致"
+    },
+    {
+      "check": "raster",
+      "status": "pass",
+      "city_id": "xian",
+      "detail": "24×24；WGS84 GeoTIFF标签齐全；mode=I;16"
+    },
+    {
+      "check": "metadata_counts",
+      "status": "pass",
+      "city_id": "xian",
+      "detail": "元数据计数与文件一致"
+    },
+    {
+      "check": "checksums",
+      "status": "pass",
+      "city_id": "xian",
+      "detail": "8个文件校验通过"
+    },
+    {
+      "check": "required_files",
+      "status": "pass",
+      "city_id": "hangzhou",
+      "detail": "10个文件齐全"
+    },
+    {
+      "check": "city_zip",
+      "status": "pass",
+      "city_id": "hangzhou",
+      "detail": "9个成员可解压"
+    },
+    {
+      "check": "geojson",
+      "status": "pass",
+      "city_id": "hangzhou",
+      "detail": "boundary.geojson: 1 features, 341 coordinates"
+    },
+    {
+      "check": "geojson",
+      "status": "pass",
+      "city_id": "hangzhou",
+      "detail": "facilities.geojson: 164 features, 164 coordinates"
+    },
+    {
+      "check": "geojson",
+      "status": "pass",
+      "city_id": "hangzhou",
+      "detail": "network_nodes.geojson: 6826 features, 6826 coordinates"
+    },
+    {
+      "check": "geojson",
+      "status": "pass",
+      "city_id": "hangzhou",
+      "detail": "network_edges.geojson: 7608 features, 15216 coordinates"
+    },
+    {
+      "check": "geojson",
+      "status": "pass",
+      "city_id": "hangzhou",
+      "detail": "analysis_grid.geojson: 64 features, 320 coordinates"
+    },
+    {
+      "check": "grid_join",
+      "status": "pass",
+      "city_id": "hangzhou",
+      "detail": "64个cell_id一一对应"
+    },
+    {
+      "check": "city_profile",
+      "status": "pass",
+      "city_id": "hangzhou",
+      "detail": "单行城市摘要与目录一致"
+    },
+    {
+      "check": "raster",
+      "status": "pass",
+      "city_id": "hangzhou",
+      "detail": "24×24；WGS84 GeoTIFF标签齐全；mode=I;16"
+    },
+    {
+      "check": "metadata_counts",
+      "status": "pass",
+      "city_id": "hangzhou",
+      "detail": "元数据计数与文件一致"
+    },
+    {
+      "check": "checksums",
+      "status": "pass",
+      "city_id": "hangzhou",
+      "detail": "8个文件校验通过"
+    },
+    {
+      "check": "catalog_city_coverage",
+      "status": "pass",
+      "city_id": null,
+      "detail": "八城目录完整"
+    },
+    {
+      "check": "profile_rows",
+      "status": "pass",
+      "city_id": null,
+      "detail": "八条城市摘要完整"
+    },
+    {
+      "check": "all_grid_rows",
+      "status": "pass",
+      "city_id": null,
+      "detail": "8×64=512条网格记录完整"
+    },
+    {
+      "check": "full_zip",
+      "status": "pass",
+      "city_id": null,
+      "detail": "79个成员可解压且名称唯一"
+    },
+    {
+      "check": "download_checksums",
+      "status": "pass",
+      "city_id": null,
+      "detail": "八个单城ZIP与八城合集SHA-256全部一致"
+    }
+  ],
+  "findings": [],
+  "limitations": [
+    "OSM对象由志愿者维护，八城之间的设施完整性不可直接解释为真实服务供给差异。",
+    "课程裁剪覆盖中心点附近约5—7 km范围，不代表城市行政区全域。",
+    "accessibility_proxy为教学推导指标，不能替代正式的出行时间或规划评价。",
+    "GHSL、OSM与SRTM保留各自的来源和许可条件。"
+  ]
+}

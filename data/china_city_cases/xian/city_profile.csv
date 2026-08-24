@@ -1,0 +1,2 @@
+﻿city_id,city_name_zh,city_name_en,center_lon,center_lat,ghsl_uc_id,ghsl_urban_area_km2_2025,ghsl_population_2025,ghsl_population_density_km2_2025,ghsl_gdp_total_ppp_2020,ghsl_hdi_2020,osm_facility_count,osm_transit_count,osm_healthcare_count,osm_education_count,osm_park_count,osm_network_node_count,osm_network_edge_count,osm_network_length_km,srtm_minimum_elevation_m,srtm_maximum_elevation_m,srtm_mean_elevation_m,extract_date
+xian,西安,Xi'an,108.9398,34.3416,8006,691,5298991,7668.58,125000000000,0.763,92,90,0,1,0,2782,3217,254.801,369,409,382.47,2026-08-24

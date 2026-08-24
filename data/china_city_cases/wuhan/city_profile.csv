@@ -1,0 +1,2 @@
+﻿city_id,city_name_zh,city_name_en,center_lon,center_lat,ghsl_uc_id,ghsl_urban_area_km2_2025,ghsl_population_2025,ghsl_population_density_km2_2025,ghsl_gdp_total_ppp_2020,ghsl_hdi_2020,osm_facility_count,osm_transit_count,osm_healthcare_count,osm_education_count,osm_park_count,osm_network_node_count,osm_network_edge_count,osm_network_length_km,srtm_minimum_elevation_m,srtm_maximum_elevation_m,srtm_mean_elevation_m,extract_date
+wuhan,武汉,Wuhan,114.3055,30.5928,10131,772,8079484,10465.65,202000000000,0.771,59,19,4,35,0,5716,6473,309.654,11,56,26.18,2026-08-24

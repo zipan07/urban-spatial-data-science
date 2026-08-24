@@ -1,0 +1,2 @@
+﻿city_id,city_name_zh,city_name_en,center_lon,center_lat,ghsl_uc_id,ghsl_urban_area_km2_2025,ghsl_population_2025,ghsl_population_density_km2_2025,ghsl_gdp_total_ppp_2020,ghsl_hdi_2020,osm_facility_count,osm_transit_count,osm_healthcare_count,osm_education_count,osm_park_count,osm_network_node_count,osm_network_edge_count,osm_network_length_km,srtm_minimum_elevation_m,srtm_maximum_elevation_m,srtm_mean_elevation_m,extract_date
+guangzhou,广州,Guangzhou,113.2644,23.1291,10933,6454,42987704,6660.63,1070000000000,0.794,227,161,34,27,0,13594,14228,357.015,0,76,17.25,2026-08-24

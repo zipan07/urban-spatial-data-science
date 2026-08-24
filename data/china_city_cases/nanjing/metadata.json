@@ -1,0 +1,103 @@
+{
+  "pipeline_version": "0.13.1",
+  "city": {
+    "city_id": "nanjing",
+    "name_zh": "南京",
+    "name_en": "Nanjing",
+    "lon": 118.7969,
+    "lat": 32.0603
+  },
+  "extract_date": "2026-08-24",
+  "teaching_extent_bbox_south_west_north_east": [
+    32.0353,
+    118.7669,
+    32.0853,
+    118.8269
+  ],
+  "scope": "Bounded central-city teaching extract; not a complete administrative or facility census.",
+  "coordinate_reference_system": "OGC:CRS84 for vectors; EPSG:4326 for raster",
+  "processing_notes": {
+    "road_geometry": "OSM ways selected by the query bbox are segment-clipped to the exact teaching bbox with the Liang-Barsky algorithm.",
+    "network_boundary_nodes": "A node_id containing '_clip_' is a derived boundary intersection, not an original OSM node identifier.",
+    "grid_road_assignment": "Each clipped road segment is assigned to the analysis grid containing its midpoint."
+  },
+  "sources": {
+    "boundary_and_city_statistics": {
+      "provider": "European Commission Joint Research Centre",
+      "dataset": "GHSL Urban Centre Database R2024A",
+      "url": "https://human-settlement.emergency.copernicus.eu/ghs_ucdb_2024.php",
+      "reuse": "Open and free reuse with source acknowledgement.",
+      "attribution": "European Commission, Joint Research Centre (JRC), GHSL UCDB R2024A."
+    },
+    "facilities_and_network": {
+      "provider": "OpenStreetMap contributors",
+      "url": "https://www.openstreetmap.org/copyright",
+      "license": "Open Data Commons Open Database License (ODbL) 1.0",
+      "attribution": "© OpenStreetMap contributors",
+      "query": "[out:json][timeout:110];\n(\n  way[\"highway\"~\"^(primary|secondary|tertiary|residential|living_street|pedestrian|unclassified)$\"](32.0353,118.7669,32.0853,118.8269);\n  node[\"amenity\"~\"^(hospital|clinic|school|kindergarten|library|community_centre|college|university)$\"](32.0353,118.7669,32.0853,118.8269);\n  node[\"leisure\"=\"park\"](32.0353,118.7669,32.0853,118.8269);\n  node[\"railway\"~\"^(station|halt|subway_entrance|tram_stop)$\"](32.0353,118.7669,32.0853,118.8269);\n);\nout body geom;"
+    },
+    "elevation": {
+      "provider": "Terrain Tiles on AWS / Mapzen; source elevation in this area is NASA SRTM",
+      "url": "https://s3.amazonaws.com/elevation-tiles-prod/skadi/N32/N32E118.hgt.gz",
+      "registry": "https://registry.opendata.aws/terrain-tiles/",
+      "tile": "N32E118",
+      "attribution": "Terrain Tiles accessed from AWS; elevation source NASA SRTM."
+    }
+  },
+  "record_counts": {
+    "boundary": 1,
+    "facilities": 157,
+    "network_nodes": 3454,
+    "network_edges": 3777,
+    "analysis_grid": 64,
+    "grid_indicators": 64
+  },
+  "elevation_statistics": {
+    "minimum_m": 4,
+    "maximum_m": 252,
+    "mean_m": 20.68,
+    "valid_cell_count": 576,
+    "rows": 24,
+    "columns": 24
+  },
+  "raster_note": "The 24×24 WGS84 teaching raster has an approximate ground resolution of 200–260 m, depending on latitude and extract width.",
+  "derived_fields": {
+    "accessibility_proxy": "0.40×normalized facility density + 0.35×normalized road density + 0.25×distance-decay centrality; teaching proxy, not an official accessibility measure.",
+    "osm_intensity_class": "City-specific quartiles of accessibility_proxy.",
+    "terrain_relief_m": "Range of five SRTM samples per analysis cell."
+  },
+  "files": {
+    "boundary.geojson": {
+      "sha256": "8514a15072638adf3ee5f803609ce3aaeff732462a05aa5bd7079303feb3d802",
+      "bytes": 8060
+    },
+    "facilities.geojson": {
+      "sha256": "98b5a9a6dfd506451a65579b4b47384e212284b999ca45504478989d5c249546",
+      "bytes": 46612
+    },
+    "network_nodes.geojson": {
+      "sha256": "bd12114396683c170671569bdda3917ff07a989ec93da500cb17c61ea748da0d",
+      "bytes": 724579
+    },
+    "network_edges.geojson": {
+      "sha256": "932b0b760bc33c0d98cb867826ec1f5d858e3c65ebeb1d3301c29731c9010c54",
+      "bytes": 1324498
+    },
+    "analysis_grid.geojson": {
+      "sha256": "b913352eb7f4c95b9663d64862f29368205083aa9499d6734a7028966e3b932f",
+      "bytes": 51676
+    },
+    "grid_indicators.csv": {
+      "sha256": "5a68a0d5a6bfd4061cb6c9cd10b5d8d8b3b817562d96d8b43da3e177697eb570",
+      "bytes": 12828
+    },
+    "elevation_250m.tif": {
+      "sha256": "ecc4989e98be2f5cd23f548766bf6a14b665ffc5cfb240ee13f0ae09b3e93c25",
+      "bytes": 924
+    },
+    "city_profile.csv": {
+      "sha256": "ffccbc14ac948e060e1d34f94828a316584eb27879fdc2a5cb95315680131534",
+      "bytes": 578
+    }
+  }
+}

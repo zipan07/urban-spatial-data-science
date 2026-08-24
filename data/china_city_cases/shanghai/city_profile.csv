@@ -1,0 +1,2 @@
+﻿city_id,city_name_zh,city_name_en,center_lon,center_lat,ghsl_uc_id,ghsl_urban_area_km2_2025,ghsl_population_2025,ghsl_population_density_km2_2025,ghsl_gdp_total_ppp_2020,ghsl_hdi_2020,osm_facility_count,osm_transit_count,osm_healthcare_count,osm_education_count,osm_park_count,osm_network_node_count,osm_network_edge_count,osm_network_length_km,srtm_minimum_elevation_m,srtm_maximum_elevation_m,srtm_mean_elevation_m,extract_date
+shanghai,上海,Shanghai,121.4737,31.2304,11345,3128,30678616,9807.74,984000000000,0.8719335,265,218,18,16,3,12794,14252,470.959,0,64,11.55,2026-08-24
