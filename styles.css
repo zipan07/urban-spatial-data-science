@@ -1,0 +1,96 @@
+:root {
+  --book-text: #242424;
+  --book-muted: #666;
+  --book-accent: #275d72;
+  --book-rule: #d9e1e5;
+  --book-paper: #fff;
+}
+
+body {
+  color: var(--book-text);
+  background: var(--book-paper);
+  font-family: "Noto Serif CJK SC", "Source Han Serif SC", "Songti SC",
+               "SimSun", Georgia, serif;
+  line-height: 1.85;
+  letter-spacing: 0.01em;
+}
+
+main.content {
+  max-width: 860px;
+}
+
+h1, h2, h3, h4,
+.book-title, .sidebar-title {
+  font-family: "Noto Sans CJK SC", "Source Han Sans SC", "Microsoft YaHei",
+               Arial, sans-serif;
+}
+
+h1 {
+  color: #173f50;
+  font-weight: 700;
+  line-height: 1.3;
+  padding-bottom: 0.55rem;
+  border-bottom: 1px solid var(--book-rule);
+}
+
+h2 {
+  color: var(--book-accent);
+  margin-top: 2.3rem;
+}
+
+h3 {
+  margin-top: 1.7rem;
+}
+
+p {
+  margin: 0.75rem 0 1rem;
+  text-align: justify;
+}
+
+blockquote {
+  border-left: 3px solid var(--book-accent);
+  color: var(--book-muted);
+  background: #f7fafb;
+  padding: 0.8rem 1.1rem;
+}
+
+.callout {
+  border-radius: 0;
+  box-shadow: none;
+}
+
+div.sourceCode {
+  border: 1px solid #e3e8eb;
+  border-radius: 4px;
+}
+
+pre code {
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+  font-size: 0.9rem;
+  line-height: 1.55;
+}
+
+table {
+  font-size: 0.95rem;
+}
+
+caption, figcaption {
+  color: var(--book-muted);
+  font-size: 0.9rem;
+}
+
+.sidebar nav[role="doc-toc"] ul > li > a.active,
+.sidebar-item-container .active {
+  color: var(--book-accent);
+  font-weight: 600;
+}
+
+@media (max-width: 768px) {
+  body {
+    line-height: 1.75;
+  }
+
+  p {
+    text-align: left;
+  }
+}
