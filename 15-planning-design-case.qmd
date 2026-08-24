@@ -1,5 +1,5 @@
 ---
-title: "第15章 规划设计案例分析"
+title: "规划设计案例分析"
 ---
 
 ::: {.chapter-opening}
