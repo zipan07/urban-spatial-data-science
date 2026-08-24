@@ -6,7 +6,6 @@ book:
   title: "数据科学与城市空间研究"
   subtitle: "方法、计算与规划应用"
   author:
-    - "胡明星"
     - "蔡子攀"
   date: today
   language: zh

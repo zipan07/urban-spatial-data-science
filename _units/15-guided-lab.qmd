@@ -36,6 +36,41 @@ for name, w in scenarios.items():
 
 高分路段还需检查连续性。孤立降温节点适合短时停留，连续遮阴线路则应连接住宅、公交站、医院和公园。学生用网络连通性检查方案是否形成可用路径。
 
+### 比较目标函数如何改变空间方案
+
+多目标规划中的权重不是纯粹的技术参数，它们表达了方案希望优先服务谁、承担何种成本，以及把哪一种空间连接视为重要。为了让权重选择可讨论，学生应在相同预算、相同候选路段和相同工程约束下生成至少三套方案，并把每套方案的受益人口、网络连续性、建设成本和养护负担放在同一张评价表中。
+
+![三种目标权重形成的降温廊道。底图颜色表示热暴露，折线表示被选中的廊道路段；图中使用教学合成数据。](figures/15-cool-corridor-output.png){#fig-cool-corridor-output fig-alt="三个并列热风险网格地图分别叠加健康优先、可实施性优先和公共服务连接优先的降温廊道。"}
+
+@fig-cool-corridor-output 表明，健康优先方案穿越高暴露区，可实施性优先方案选择较直接且工程条件简单的通道，服务连接优先方案则形成连接多个目的地的折线网络。三套方案之间没有脱离目标的绝对优劣。健康优先方案可能建设成本较高；可实施性优先方案可能绕开最脆弱社区；服务连接方案覆盖面更广，却可能降低单位长度的降温收益。规划报告需要把这些交换关系公开呈现。
+
+评价方案时可从“路段得分”提升到“网络结果”。先检查被选路段是否构成连续路径，再计算500米或10分钟步行范围内覆盖的老年人口、儿童人口、公交站和公共服务设施。随后模拟树木成活率下降、某条道路无法施工以及年度预算缩减等扰动。若方案在移除一条关键路段后完全断裂，它的平均得分虽高，实施韧性仍然较弱。
+
+```{.python filename="15_compare_corridor_scenarios.py"}
+evaluation = []
+for plan_name in ["health_first", "feasibility_first", "service_first"]:
+    selected = segments[segments[plan_name]].copy()
+    covered = residents[residents.geometry.distance(
+        selected.geometry.union_all()
+    ).le(500)]
+    evaluation.append({
+        "方案": plan_name,
+        "总长度_km": selected.length.sum() / 1000,
+        "建设成本_万元": selected["cost_10k"].sum(),
+        "覆盖老年人口": covered["elderly"].sum(),
+        "连接设施数": facilities.sjoin(
+            selected.buffer(300).to_frame("geometry"),
+            predicate="intersects"
+        )["facility_id"].nunique(),
+    })
+
+evaluation = pd.DataFrame(evaluation).set_index("方案")
+evaluation["每公里覆盖老年人口"] = (
+    evaluation["覆盖老年人口"] / evaluation["总长度_km"]
+)
+print(evaluation)
+```
+
 ### 第三小时：情景、维护与适应性路径
 
 比较正常年份、极端热浪、预算下降和树木成活率偏低四种情景。每组提出近期低成本节点、中期连线和长期片区治理，并设置监测指标：夏季体感温度、遮阴连续长度、脆弱人口覆盖、设施使用和养护成本。

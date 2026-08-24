@@ -52,6 +52,41 @@ print(result.groupby(["quadrant", "significant_fdr"]).size())
 
 比较原始p值和FDR校正后的热点数量，再与KNN权重结果叠加。稳定出现的高—高区适合进入机制调查；只在单一权重下出现的区域应标为参数敏感。
 
+### 把全局统计量、散点图与局部地图连起来
+
+全局Moran's $I$、Moran散点图和LISA聚类图构成三个互相衔接的证据层次。全局统计量回答整个研究区是否呈现总体空间关联；散点图展示标准化变量与空间滞后之间的关系，并帮助识别具有高杠杆作用的观测；LISA把总体关联分解到具体空间单元。三者应使用同一组观测、同一套空间权重和一致的缺失值处理，否则图件之间不能直接对应。
+
+![全局空间关联与局部集聚诊断。左图为标准化指标，中图为Moran散点图，右图为局部聚类诊断；图中使用教学合成数据。](figures/10-moran-lisa-output.png){#fig-moran-lisa-output fig-alt="左侧网格图显示标准化指标，中间散点图显示指标与空间滞后的正相关，右侧地图区分高高、低低及未标记单元。"}
+
+@fig-moran-lisa-output 中散点图拟合线的斜率为正，与左图中相邻高值和相邻低值成片出现的现象一致。右图只标示同时满足局部统计条件的单元，因此不应把左图所有颜色相近的区域都称为热点。高—高表示一个高值单元被高值邻居包围，低—低表示低值集聚；高—低和低—高属于空间离群，可能对应功能突变、边界效应、数据错误或真实的局部异常。
+
+统计显著性仍需结合效应大小和敏感性阅读。第一次运行可采用999次置换进行课堂调试，正式结果建议提高到9999次并固定随机种子。随后依次改变邻接规则、距离阈值和行标准化设置，把每个空间单元在不同设定下被识别为同一类型的次数记录为“稳定度”。若一个高—高区只在单一权重矩阵下出现，它可以作为探索线索，却不适合直接进入刚性的资源配置清单。
+
+```{.python filename="10_lisa_stability_table.py"}
+weight_sets = {"queen": w_q, "rook": w_r, "knn6": w_knn6}
+stability = []
+
+for weight_name, weight in weight_sets.items():
+    local = Moran_Local(y.loc[weight.id_order].values, weight,
+                        permutations=9999, seed=42)
+    keep = multipletests(local.p_sim, method="fdr_bh")[0]
+    tmp = pd.DataFrame({
+        "community_id": weight.id_order,
+        "weight": weight_name,
+        "quadrant": local.q,
+        "flagged": keep,
+    })
+    stability.append(tmp)
+
+stability = pd.concat(stability, ignore_index=True)
+stable_hh = (
+    stability.assign(hh=lambda d: d["flagged"] & d["quadrant"].eq(1))
+    .groupby("community_id")["hh"].sum()
+    .rename("hh_count")
+)
+print(stable_hh.value_counts().sort_index())
+```
+
 ::: {.lab-brief}
 **课堂提交**：权重诊断、Moran散点图、全局检验、LISA地图和权重敏感性表。结论必须区分空间配置、统计证据和机制解释。
 :::

@@ -163,6 +163,42 @@ GeoPackage支持较长字段名、统一坐标系信息和多个图层，适合�
 | `CRS mismatch`警告 | 图层坐标系不同 | 确认正确CRS后使用`to_crs`统一 |
 | 地图只有一个小点 | 坐标或范围异常 | 打印`total_bounds`并检查经纬度顺序 |
 
+### 把数据质量问题画在地图上
+
+字段缺失率、重复记录数和异常值比例可以汇总成表，但城市数据质量常常具有鲜明的空间结构。街景采集车很少进入封闭园区，移动信令在城市边缘的基站覆盖较弱，老旧小区的门牌地址更难完成地理编码。若只报告全市平均缺失率，这些集中发生在特定地域和特定人群周围的问题会被平均值掩盖。因此，数据审计的最后一步应当把“数据是否可用”本身当作一个空间变量。
+
+下面的代码先计算每个网格的有效记录覆盖率，再把结果连接回网格。`observed`表示实际取得的记录数，`expected`表示依据抽样设计或业务台账应当取得的记录数。分母必须来自明确的数据生成过程；如果`expected`只是估计值，报告中应说明估计规则。
+
+```{.python filename="07_spatial_coverage_audit.py"}
+coverage = (
+    records.groupby("grid_id")
+    .agg(observed=("record_id", "nunique"))
+    .join(sampling_frame.set_index("grid_id")[["expected"]])
+)
+coverage["coverage_pct"] = (
+    coverage["observed"] / coverage["expected"] * 100
+).clip(upper=100)
+
+audit_map = grids.merge(
+    coverage.reset_index(), on="grid_id", how="left", validate="1:1"
+)
+audit_map["coverage_pct"] = audit_map["coverage_pct"].fillna(0)
+
+ax = audit_map.plot(
+    column="coverage_pct", cmap="YlGnBu", vmin=0, vmax=100,
+    legend=True, edgecolor="white", linewidth=0.2,
+    legend_kwds={"label": "有效记录覆盖率（%）"}
+)
+ax.set_title("观测覆盖率的空间分布")
+ax.set_axis_off()
+```
+
+![数据覆盖率的空间审计示例。左图把有效记录覆盖率放回网格，右图比较不同区位样本的缺失率。图中使用教学合成数据。](figures/07-data-quality-output.png){#fig-data-quality-output fig-alt="左侧为网格覆盖率地图，右侧为中心区、内城区、外围区和边缘区样本缺失率的横向条形图。"}
+
+@fig-data-quality-output 展示了为什么覆盖率地图需要与分组统计同时阅读。左图从西向东出现连续的覆盖率下降，说明缺失并非随机散布；右图进一步显示城市边缘样本的缺失率更高。若研究问题是识别边缘地区的服务短缺，这种数据结构可能会把“缺少观测”误读为“缺少活动”。此时不能简单删除缺失网格，也不宜用全市均值填补。更合适的处理包括补充采样、引入另一数据源交叉验证、把覆盖率作为模型权重或质量变量，并在成果地图上单独标示证据薄弱区。
+
+判读结果时至少回答四个问题：低覆盖区是否成片出现；它是否与行政边界、道路等级或平台服务范围重合；高缺失区是否集中覆盖特定群体；改变最小覆盖率阈值后，核心结论是否保持。完成这些检查后，数据质量章节形成的就不只是一张“错误清单”，而是一份可以随研究结果一起提交的证据地图。
+
 ::: {.lab-brief}
 **完成标准**：Notebook可从第一个单元运行到最后一个单元；原始数据未被覆盖；每次连接都有行数与匹配检查；输出文件重新读取后通过主键、记录数和CRS验证。
 :::

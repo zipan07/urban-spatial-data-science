@@ -196,10 +196,10 @@ communities["facility_count"] = (
 
 现在可以构造每千名老年人口设施数：
 
-\[
+$$
 R_i=
 \frac{F_i}{P_i^{65+}}\times1000
-\]
+$$
 
 ```{.python}
 communities["facilities_per_1000_older"] = (

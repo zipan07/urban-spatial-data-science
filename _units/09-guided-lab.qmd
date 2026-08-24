@@ -43,6 +43,39 @@ for ax, (name, _) in zip(axes, schemes.items()):
 plt.tight_layout()
 ```
 
+### 读取三种分级方法产生的空间叙事
+
+同一个变量采用不同分级方法时，数值本身没有变化，读者看到的空间结构却可能明显不同。分位数法使每一类包含近似相同数量的空间单元，适合比较相对位置；等距法保持数值区间宽度一致，适合说明绝对差距；政策阈值法把法规、规划标准或行动门槛直接转化为图例边界，适合回答“哪些地区达到干预条件”。课堂中应保存每种分类的断点和类内数量，不要只保留最后一张地图。
+
+![同一指标的三种分级结果。左图为分位数，中图为等距，右图为政策阈值；图中使用教学合成数据。](figures/09-classification-comparison.png){#fig-classification-comparison fig-alt="三个并列网格地图展示分位数、等距和政策阈值三种分级方法对同一空间变量的分类差异。"}
+
+在 @fig-classification-comparison 中，分位数法的五类单元数完全相等，视觉上形成较丰富的色阶；等距法的大量单元落入最低等级，只有少数高值区被突出；政策阈值法则保留了行动标准所定义的等级边界。三幅图都可以在技术上成立，但它们回答的问题不同。学生在选择最终图件前，应先写出一句完整的研究问题，再判断哪种图例与问题匹配。
+
+进一步审查时，可建立一张“空间单元—分类结果”对照表，查找在三种方案之间跳动两个及以上等级的单元。这些单元往往位于断点附近，是地图叙事最敏感的地方。对规划决策而言，应把断点附近的对象标记为边界案例，结合原始数值、样本误差和现场知识复核。地图标题也应陈述实际发现，例如“高供需压力集中于东北片区，但范围对分级规则敏感”，而不只是写“设施供给率分布图”。
+
+```{.python filename="09_compare_class_membership.py"}
+comparison = communities[["community_id", "facilities_per_1000_elderly"]].copy()
+comparison["q_class"] = pd.qcut(
+    comparison["facilities_per_1000_elderly"], 5, labels=False,
+    duplicates="drop"
+)
+comparison["equal_class"] = pd.cut(
+    comparison["facilities_per_1000_elderly"], 5, labels=False,
+    include_lowest=True
+)
+comparison["policy_class"] = pd.cut(
+    comparison["facilities_per_1000_elderly"],
+    bins=[-float("inf"), 0.5, 1.0, 1.5, 2.0, float("inf")],
+    labels=False
+)
+comparison["max_class_shift"] = comparison[
+    ["q_class", "equal_class", "policy_class"]
+].max(axis=1) - comparison[
+    ["q_class", "equal_class", "policy_class"]
+].min(axis=1)
+print(comparison.nlargest(10, "max_class_shift"))
+```
+
 ### 第三小时：供需错配与地图审查
 
 将老年人口比例和设施供给率各分为高低两组，构造“高需求—低供给”等四类。学生检查双变量分类阈值、缺失值颜色、边界、比例尺、数据日期和色盲可读性，并为主图写一个带发现的标题。

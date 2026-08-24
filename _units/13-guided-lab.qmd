@@ -45,6 +45,37 @@ print(error_by_vulnerability)
 
 检查模型是否在高老龄化、高贫困或低传感器覆盖地区系统失准。公平审计同时报告样本量，避免用极小分组得出过度结论。
 
+### 从空间折之间的差异判断迁移风险
+
+随机交叉验证把邻近位置分到训练集和测试集，空间相似性会让测试任务变得过于容易。空间交叉验证把连续地域整体留出，模拟模型被应用到尚未观测片区的情形。每个空间折代表一种不同的外推任务，因此最终报告不能只给出五折平均误差，还应显示每一折的分布、空间位置、样本规模和主要城市形态。
+
+![连续空间折与折间误差。左图展示五个相邻的空间折，右图显示每一折的MAE分布；图中使用教学合成数据。](figures/13-spatial-cv-output.png){#fig-spatial-cv-output fig-alt="左侧网格图按从西向东分为五个连续空间折，右侧箱线图显示第五折的平均绝对误差最高。"}
+
+@fig-spatial-cv-output 中第五折误差明显高于其他折。如果只报告总体平均MAE，这一地域迁移风险会被稀释。研究者应返回第五折，比较其特征范围与训练数据范围，检查土地利用结构、传感器覆盖和目标变量测量方式是否不同。若第五折代表城市边缘新区，那么模型的适用范围应明确限制在已建成区，或补充新区样本后重新训练。
+
+空间折的尺度也是模型评价的一部分。折块过小，训练集与测试集仍共享邻域信息；折块过大，每一折样本量不足，误差估计可能剧烈波动。可以依据预期部署距离、空间自相关衰减范围和实际管理单元设置多组折块，并把结论分成三类：不同尺度下均稳定、误差数值变化但模型排序稳定、模型排序发生反转。第三类结果表明“最佳模型”依赖部署范围，报告中应保留这一不确定性。
+
+```{.python filename="13_fold_transfer_diagnostics.py"}
+fold_report = (
+    test_result.groupby("spatial_fold")
+    .agg(
+        n=("grid_id", "size"),
+        mae=("abs_error", "mean"),
+        p90_error=("abs_error", lambda s: s.quantile(0.90)),
+        elderly_share=("elderly_share", "mean"),
+        sensor_coverage=("sensor_coverage", "mean"),
+    )
+)
+fold_report["mae_ratio_to_best"] = (
+    fold_report["mae"] / fold_report["mae"].min()
+)
+print(fold_report.sort_values("mae", ascending=False))
+
+# 把最差空间折留给误差归因，不在测试集上继续调参。
+worst_fold = fold_report["mae"].idxmax()
+worst_area = test_result[test_result["spatial_fold"].eq(worst_fold)]
+```
+
 ### 第三小时：稳健性矩阵与模型卡
 
 依次改变空间块尺度、时间窗口、缺失处理、特征集合和模型参数。将主要结论记录为稳定、方向稳定但幅度变化、方向变化三类。最终模型卡包含预期用途、禁止用途、训练数据、空间时间范围、评价方式、主要误差、已知偏差、人工复核和更新条件。

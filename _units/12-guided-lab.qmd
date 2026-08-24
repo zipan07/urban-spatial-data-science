@@ -55,6 +55,38 @@ print(classification_report(test["label"], pred))
 
 课堂比较随机划分和空间留出结果，制图显示错误集中区与最大预测概率。低置信度网格进入人工复核，不直接赋予规划用地含义。
 
+### 预测图必须与误差图共同出现
+
+城市空间预测往往以连续、完整的彩色表面呈现，容易给人一种每个位置都获得同等可靠判断的印象。模型实际上只在具有标签的样本上学习，预测面中不同地区与训练样本的相似程度并不相同。因此，教材实验要求至少输出观测图、预测图、绝对误差图和数据外推诊断；分类任务则对应真实类别、预测类别、最大类别概率和错误位置。
+
+![空间预测结果的联合阅读。左图为观测热风险，中图为模型预测，右图为绝对误差；图中使用教学合成数据。](figures/12-spatial-model-output.png){#fig-spatial-model-output fig-alt="三个并列网格地图显示观测热风险、空间模型预测和绝对误差，右侧边缘形成连续高误差区。"}
+
+@fig-spatial-model-output 中预测图大体重现了两个高值片区，但绝对误差集中于研究区东缘。只看预测图时，东缘的空间梯度似乎平滑合理；误差图则揭示模型在那里持续失准。可能原因包括训练样本在边缘地区不足、未纳入的海陆风或地形因素、传感器覆盖差异，以及邻近行政区的数据被研究边界截断。下一步分析应围绕这些可检验的解释展开，而不是立即增加更复杂的算法。
+
+误差地图的颜色范围应在模型之间保持一致，并同时报告带符号残差。绝对误差说明偏离程度，带符号残差能够区分系统高估和系统低估。对规划预警而言，低估高风险通常比高估具有更高代价，可以建立非对称损失函数，或单独报告高风险地区的漏报率。模型输出进入决策界面时，还应允许工作人员点击空间单元查看样本量、主要特征、预测概率、所属空间验证折和最近一次数据更新时间。
+
+```{.python filename="12_map_prediction_diagnostics.py"}
+test_result = test[["grid_id", "geometry", "label"]].copy()
+test_result["pred"] = pred
+test_result["confidence"] = clf.predict_proba(test[feature_cols]).max(axis=1)
+test_result["correct"] = test_result["label"].eq(test_result["pred"])
+test_result["needs_review"] = (
+    test_result["confidence"].lt(0.60) |
+    test_result["correct"].eq(False)
+)
+
+fig, axes = plt.subplots(1, 3, figsize=(15, 5))
+test_result.plot(column="pred", categorical=True, legend=True, ax=axes[0])
+test_result.plot(column="confidence", cmap="viridis", vmin=0, vmax=1,
+                 legend=True, ax=axes[1])
+test_result.plot(column="needs_review", categorical=True, legend=True,
+                 ax=axes[2])
+for ax, title in zip(axes, ["预测类型", "最大类别概率", "人工复核区"]):
+    ax.set_title(title)
+    ax.set_axis_off()
+plt.tight_layout()
+```
+
 ::: {.lab-brief}
 **课堂提交**：特征字典、聚类剖面、典型样本核查、空间测试报告和概率地图。报告要区分数据驱动类型、实际使用和法定规划类别。
 :::

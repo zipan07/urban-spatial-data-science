@@ -110,6 +110,23 @@ caption, figcaption { color: var(--book-muted); font-size: 0.88rem; }
 }
 .callout .callout-body { font-size: 0.98rem; }
 
+/* Display equations use a quiet reading surface and scroll on narrow screens. */
+.math.display,
+span.math.display {
+  display: block;
+  overflow-x: auto;
+  margin: 1.5rem 0 1.8rem;
+  padding: 1rem 1.2rem;
+  border-left: 4px solid #8eaaa5;
+  background: #f7f9f8;
+  color: #183138;
+  text-align: center;
+}
+mjx-container[jax="CHTML"][display="true"] {
+  margin: 0 !important;
+  min-width: max-content;
+}
+
 /* Light code panels keep long examples readable alongside the main text. */
 div.sourceCode {
   position: relative;
