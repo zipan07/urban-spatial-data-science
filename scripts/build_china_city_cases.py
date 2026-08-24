@@ -49,6 +49,8 @@ RASTER_ROWS = 24
 RASTER_COLS = 24
 
 OVERPASS_ENDPOINTS = [
+    "https://overpass.private.coffee/api/interpreter",
+    "https://overpass.nchc.org.tw/api/interpreter",
     "https://overpass-api.de/api/interpreter",
     "https://overpass.kumi.systems/api/interpreter",
 ]
@@ -122,16 +124,12 @@ def overpass_query(bbox: tuple[float, float, float, float]) -> str:
 out body geom;'''
 
 
-def fetch_overpass(city: dict[str, Any], bbox: tuple[float, float, float, float]) -> dict[str, Any]:
-    """下载并缓存一次有边界的OSM教学裁剪。"""
-    cache_path = CACHE / "overpass" / f"{city['city_id']}.json"
-    if cache_path.exists():
-        return json.loads(cache_path.read_text(encoding="utf-8"))
-
-    payload = urllib.parse.urlencode({"data": overpass_query(bbox)}).encode("utf-8")
+def request_overpass(query: str, *, attempts_per_endpoint: int = 2) -> dict[str, Any]:
+    """在多个公开实例间有限重试一次Overpass查询。"""
+    payload = urllib.parse.urlencode({"data": query}).encode("utf-8")
     last_error: Exception | None = None
     for endpoint in OVERPASS_ENDPOINTS:
-        for attempt in range(1, 4):
+        for attempt in range(1, attempts_per_endpoint + 1):
             request = urllib.request.Request(
                 endpoint,
                 data=payload,
@@ -144,15 +142,51 @@ def fetch_overpass(city: dict[str, Any], bbox: tuple[float, float, float, float]
                 with urllib.request.urlopen(request, timeout=240) as response:
                     result = json.load(response)
                 if result.get("elements"):
-                    cache_path.parent.mkdir(parents=True, exist_ok=True)
-                    write_json(cache_path, result)
                     return result
                 raise RuntimeError("Overpass returned no elements")
             except Exception as error:  # 服务繁忙时有限重试并切换公开实例
                 last_error = error
                 time.sleep(5 * attempt)
-        time.sleep(5)
-    raise RuntimeError(f"无法下载{city['name_zh']}OSM裁剪：{last_error}")
+        time.sleep(3)
+    raise RuntimeError(str(last_error))
+
+
+def split_bbox(bbox: tuple[float, float, float, float]) -> list[tuple[float, float, float, float]]:
+    south, west, north, east = bbox
+    middle_lat = (south + north) / 2
+    middle_lon = (west + east) / 2
+    return [
+        (south, west, middle_lat, middle_lon),
+        (south, middle_lon, middle_lat, east),
+        (middle_lat, west, north, middle_lon),
+        (middle_lat, middle_lon, north, east),
+    ]
+
+
+def fetch_overpass(city: dict[str, Any], bbox: tuple[float, float, float, float]) -> dict[str, Any]:
+    """下载并缓存一次有边界的OSM教学裁剪；必要时自动分块。"""
+    cache_path = CACHE / "overpass" / f"{city['city_id']}.json"
+    if cache_path.exists():
+        return json.loads(cache_path.read_text(encoding="utf-8"))
+
+    try:
+        result = request_overpass(overpass_query(bbox), attempts_per_endpoint=1)
+    except Exception as whole_error:
+        print(f"  整体查询失败，改用四个子范围：{whole_error}", flush=True)
+        elements: dict[tuple[str, int], dict[str, Any]] = {}
+        for part_number, part_bbox in enumerate(split_bbox(bbox), start=1):
+            part = request_overpass(overpass_query(part_bbox), attempts_per_endpoint=2)
+            for element in part.get("elements", []):
+                key = (str(element.get("type")), int(element.get("id", 0)))
+                elements[key] = element
+            print(f"  子范围{part_number}/4完成", flush=True)
+        result = {"version": 0.6, "generator": "merged bounded Overpass extracts", "elements": list(elements.values())}
+
+    if not result.get("elements"):
+        raise RuntimeError(f"无法下载{city['name_zh']}OSM裁剪：无返回对象")
+    cache_path.parent.mkdir(parents=True, exist_ok=True)
+    write_json(cache_path, result)
+    return result
 
 
 def classify_facility(tags: dict[str, Any]) -> tuple[str, str]:
@@ -351,7 +385,7 @@ def write_elevation_geotiff(
     )
     info[42113] = "65535"
     path.parent.mkdir(parents=True, exist_ok=True)
-    Image.fromarray(raster, mode="I;16").save(path, compression="tiff_deflate", tiffinfo=info)
+    Image.fromarray(raster).save(path, compression="tiff_deflate", tiffinfo=info)
     return {
         "minimum_m": min(valid_values) if valid_values else None,
         "maximum_m": max(valid_values) if valid_values else None,
