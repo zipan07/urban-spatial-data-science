@@ -177,7 +177,28 @@ def fetch_overpass(city: dict[str, Any], bbox: tuple[float, float, float, float]
         print(f"  整体查询失败，改用四个子范围：{whole_error}", flush=True)
         elements: dict[tuple[str, int], dict[str, Any]] = {}
         for part_number, part_bbox in enumerate(split_bbox(bbox), start=1):
-            part = request_overpass(overpass_query(part_bbox), attempts_per_endpoint=2)
+            part: dict[str, Any] | None = None
+            part_error: Exception | None = None
+            for retry_round in range(1, 4):
+                try:
+                    part = request_overpass(
+                        overpass_query(part_bbox), attempts_per_endpoint=2
+                    )
+                    break
+                except Exception as error:
+                    part_error = error
+                    if retry_round < 3:
+                        delay = 20 * retry_round
+                        print(
+                            f"  子范围{part_number}/4第{retry_round}轮失败；"
+                            f"{delay}秒后重试：{error}",
+                            flush=True,
+                        )
+                        time.sleep(delay)
+            if part is None:
+                raise RuntimeError(
+                    f"{city['name_zh']}子范围{part_number}/4连续失败：{part_error}"
+                )
             for element in part.get("elements", []):
                 key = (str(element.get("type")), int(element.get("id", 0)))
                 elements[key] = element
@@ -642,13 +663,29 @@ def read_csv_records(path: Path) -> list[dict[str, Any]]:
 def load_existing_city(city: dict[str, Any]) -> dict[str, Any] | None:
     """复用已经通过发布流程生成的城市包，避免每次文档更新访问公共API。"""
     city_dir = OUTPUT / city["city_id"]
-    required = [
+    data_files = [
         "boundary.geojson", "facilities.geojson", "network_nodes.geojson",
         "network_edges.geojson", "analysis_grid.geojson", "grid_indicators.csv",
         "elevation_250m.tif", "city_profile.csv", "metadata.json",
-        f"{city['city_id']}_course_data.zip",
     ]
-    if REFRESH_SOURCES or not all((city_dir / filename).is_file() for filename in required):
+    city_zip = city_dir / f"{city['city_id']}_course_data.zip"
+    if REFRESH_SOURCES:
+        return None
+    if city_zip.is_file() and not all((city_dir / filename).is_file() for filename in data_files):
+        try:
+            with zipfile.ZipFile(city_zip) as archive:
+                expected = {f"{city['city_id']}/{filename}" for filename in data_files}
+                names = archive.namelist()
+                if (
+                    archive.testzip() is None
+                    and len(names) == len(set(names))
+                    and expected.issubset(set(names))
+                ):
+                    archive.extractall(OUTPUT, members=sorted(expected))
+        except (OSError, zipfile.BadZipFile):
+            return None
+    required = [*data_files, city_zip.name]
+    if not all((city_dir / filename).is_file() for filename in required):
         return None
     profile_rows = read_csv_records(city_dir / "city_profile.csv")
     grid_records = read_csv_records(city_dir / "grid_indicators.csv")
