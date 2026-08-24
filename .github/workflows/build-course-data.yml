@@ -1,0 +1,72 @@
+name: Build eight-city course data
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "scripts/build_china_city_cases.py"
+      - "scripts/validate_china_city_cases.py"
+      - "scripts/create_data_quality_notebook.py"
+      - "data/china_city_cases/README.md"
+      - "data/china_city_cases/LICENSES.md"
+      - ".github/workflows/build-course-data.yml"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: build-course-data
+  cancel-in-progress: false
+
+jobs:
+  build-and-audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 55
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install data build dependencies
+        run: python -m pip install --disable-pip-version-check numpy pandas pillow nbformat nbclient nbconvert ipykernel
+
+      - name: Build eight-city teaching extracts
+        env:
+          COURSE_DATA_CACHE: ${{ runner.temp }}/course-data-cache
+        run: python scripts/build_china_city_cases.py
+
+      - name: Validate files, joins, raster metadata and checksums
+        run: python scripts/validate_china_city_cases.py
+
+      - name: Create and execute quality audit notebook
+        run: |
+          python scripts/create_data_quality_notebook.py
+          jupyter nbconvert --to notebook --execute --inplace notebooks/00_china_city_data_quality.ipynb --ExecutePreprocessor.timeout=600
+
+      - name: Upload audit artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: eight-city-data-audit
+          if-no-files-found: warn
+          path: |
+            data/china_city_cases/quality_report.json
+            notebooks/00_china_city_data_quality.ipynb
+
+      - name: Commit generated course data
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/china_city_cases notebooks/00_china_city_data_quality.ipynb
+          if git diff --cached --quiet; then
+            echo "Generated data are unchanged."
+          else
+            git commit -m "data: build eight-city course packages"
+            git push
+          fi
