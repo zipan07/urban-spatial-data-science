@@ -1,0 +1,25 @@
+---
+title: "参考文献与在线资源"
+unnumbered: true
+---
+
+# 主要教材 {.unnumbered}
+
+1. 史文中、Michael F. Goodchild、Michael Batty、关美宝、张安舒等：《城市信息学》，科学出版社，2024。
+2. Rey, S. J., Arribas-Bel, D., & Wolf, L. J. *Geographic Data Science with Python*. Chapman & Hall/CRC, 2023.
+3. 翁敏、李霖、苏世亮：《空间数据分析案例式实验教程》，科学出版社。
+4. Huntington-Klein, N. *The Effect: An Introduction to Research Design and Causality*. Chapman & Hall/CRC.
+
+# 开放在线资源 {.unnumbered}
+
+- [Urban Informatics开放英文版](https://link.springer.com/book/10.1007/978-981-15-8983-6)
+- [Geographic Data Science with Python在线版](https://geographicdata.science/book/)
+- [The Effect在线版](https://theeffectbook.net/)
+- [PySAL](https://pysal.org/)
+- [GeoPandas](https://geopandas.org/)
+- [Scikit-learn](https://scikit-learn.org/stable/user_guide.html)
+- [ArcGIS Pro Documentation](https://pro.arcgis.com/)
+
+# 使用说明 {.unnumbered}
+
+各章中已注明具体参考来源和改编方式。完整版权与许可说明见项目根目录的`COPYRIGHT_AND_SOURCES.md`。

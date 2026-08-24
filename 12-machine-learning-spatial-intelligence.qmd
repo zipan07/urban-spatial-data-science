@@ -1,0 +1,262 @@
+---
+title: "第12章 从空间特征到城市预测：机器学习与城市空间智能"
+---
+
+# 本章导读
+
+城市数据的丰富，使研究者能够同时观察人口、建筑、道路、设施、环境和移动行为。传统分析往往一次关注少量变量，而机器学习擅长从高维数据中识别复杂模式，完成分类、预测和区域识别。
+
+但机器学习不会自动理解城市。一个预测准确的模型可能依赖偶然的空间邻近，一个特征重要性较高的变量也不一定具有因果作用。城市空间智能的关键不在于使用更复杂的算法，而在于把研究问题、空间单元、特征、验证和规划解释连接起来。
+
+## 学习目标
+
+完成本章后，你应当能够区分监督学习、无监督学习、解释和预测，建立城市空间机器学习的基本流程，构造具有地理意义的空间特征，并识别数据泄漏、随机验证偏差与过度解释。
+
+# 12.1 先问问题，再选择算法
+
+机器学习可以支持多种城市研究任务：
+
+- 识别城市功能类型；
+- 预测轨道站点客流；
+- 估计街道活力；
+- 分类建筑或街景；
+- 预测环境风险；
+- 发现空间上相似的区域。
+
+这些任务分别对应聚类、分类和回归。但同一个算法可能服务完全不同的研究目的，研究者必须先明确要回答的是描述、解释还是预测问题。
+
+如果目标是预测未观测地区的活力，重点是模型对新空间的表现；如果目标是解释建成环境与活力关系，则需要关注变量定义、混杂和证据边界。预测准确不等于机制解释正确。
+
+# 12.2 分析单元决定模型看见什么
+
+假设我们希望预测社区活力。首先需要确定分析单元是社区、街区、地块还是规则网格。不同单元会改变样本数量、变量分布和空间关系。
+
+设目标变量为\(y\)，特征矩阵为\(X\)。可能的特征包括：
+
+- 人口与就业密度；
+- 兴趣点密度与功能混合度；
+- 建筑覆盖率与开发强度；
+- 道路密度和网络中心性；
+- 到轨道站的距离；
+- 绿地和公共空间；
+- 周边地区活动水平。
+
+每项变量都需要时间和空间上的对应。使用预测年份之后产生的设施数据，会造成时间泄漏；把目标变量的邻近平均作为特征，也可能让模型间接看到测试结果。
+
+# 12.3 机器学习工作流
+
+一个基本流程包括：
+
+\[
+问题定义 \rightarrow 数据划分 \rightarrow 特征处理
+\rightarrow 模型训练 \rightarrow 验证比较
+\rightarrow 空间解释
+\]
+
+预处理应被放入Pipeline，确保训练和预测采用相同规则：
+
+~~~{python}
+from sklearn.compose import ColumnTransformer
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import StandardScaler, OneHotEncoder
+from sklearn.impute import SimpleImputer
+
+numeric_features = [
+    "population_density",
+    "poi_density",
+    "road_density",
+    "metro_access"
+]
+
+categorical_features = [
+    "district_type"
+]
+
+numeric_pipeline = Pipeline([
+    ("imputer", SimpleImputer(strategy="median")),
+    ("scale", StandardScaler())
+])
+
+categorical_pipeline = Pipeline([
+    ("imputer", SimpleImputer(
+        strategy="most_frequent"
+    )),
+    ("onehot", OneHotEncoder(
+        handle_unknown="ignore"
+    ))
+])
+
+preprocess = ColumnTransformer([
+    ("num", numeric_pipeline, numeric_features),
+    ("cat", categorical_pipeline,
+     categorical_features)
+])
+~~~
+
+如果先在全部数据上计算均值和标准差，再划分训练集与测试集，测试数据的信息已经进入训练过程。Pipeline可以减少这种泄漏。
+
+# 12.4 聚类：发现相似，而不是发现真相
+
+无监督学习没有预先给定标签。K-means根据特征距离把地区划分为若干类型：
+
+~~~{python}
+from sklearn.cluster import KMeans
+from sklearn.pipeline import Pipeline
+
+cluster_model = Pipeline([
+    ("preprocess", preprocess),
+    ("cluster", KMeans(
+        n_clusters=4,
+        random_state=42,
+        n_init="auto"
+    ))
+])
+
+communities["cluster"] = (
+    cluster_model.fit_predict(
+        communities[
+            numeric_features
+            + categorical_features
+        ]
+    )
+)
+~~~
+
+聚类结果并不会自动产生“商业中心”“居住区”或“创新区”等规划含义。命名之前应检查各类特征均值、空间位置、典型地区和外部资料。
+
+普通K-means只关心属性相似，不保证空间连续。如果目标是形成连续区域，应采用区域化方法或明确加入空间约束。
+
+# 12.5 监督学习：从已知样本预测未知对象
+
+监督学习使用已有目标变量训练模型。以社区活力回归为例，可以先建立简单线性基线，再使用随机森林等复杂模型。
+
+~~~{python}
+from sklearn.ensemble import RandomForestRegressor
+
+model = Pipeline([
+    ("preprocess", preprocess),
+    ("model", RandomForestRegressor(
+        n_estimators=300,
+        min_samples_leaf=5,
+        random_state=42
+    ))
+])
+~~~
+
+基线模型非常重要。如果复杂模型不能稳定优于均值预测或简单线性模型，就没有必要增加复杂度。机器学习不是为了展示算法，而是为了在明确任务上获得可验证的改进。
+
+# 12.6 空间特征工程：让模型认识位置与关系
+
+传统数据科学常把每一行视为独立观测。空间特征工程则把距离、邻近和网络关系转化为模型变量。
+
+常见空间特征包括：
+
+- 到最近轨道站或中心的距离；
+- 一定服务范围内的设施数量；
+- 邻近社区人口或活力平均值；
+- 道路网络中心性；
+- 周边绿地覆盖率；
+- 功能混合度；
+- 局部集聚类型；
+- 空间坐标或区域类别。
+
+例如，计算兴趣点密度的空间滞后：
+
+~~~{python}
+from libpysal.weights import lag_spatial
+
+w_queen.transform = "R"
+
+communities["lag_poi_density"] = (
+    lag_spatial(
+        w_queen,
+        communities["poi_density"]
+    )
+)
+~~~
+
+空间特征可以提高预测，但也可能造成泄漏。如果模型用于预测一个完全没有目标观测的新城市，就不能使用依赖该城市目标变量构造的邻近特征。
+
+# 12.7 随机划分为什么可能高估模型
+
+普通随机划分把样本随机分入训练集和测试集：
+
+~~~{python}
+from sklearn.model_selection import (
+    train_test_split
+)
+
+train_idx, test_idx = train_test_split(
+    communities.index,
+    test_size=0.2,
+    random_state=42
+)
+~~~
+
+对于空间数据，相邻地区通常较为相似。随机划分可能让测试社区紧邻训练社区，模型因而在测试中表现很好，却无法推广到城市另一侧或另一座城市。
+
+更严格的空间验证可以按行政区、空间块或城市分组，也可以采用留一区域验证。第13章将进一步讨论评价指标、空间交叉验证、稳健性和不确定性。
+
+# 12.8 特征重要性不是因果效应
+
+随机森林等模型可以给出特征重要性，SHAP等方法也能解释单个预测。但这些工具说明的是模型怎样使用变量，并不自动说明现实世界中的因果关系。
+
+假设轨道站距离在活力预测中非常重要，可能意味着：
+
+- 轨道改善了可达性；
+- 轨道优先布局在原本活跃地区；
+- 轨道距离与中心区位置高度相关；
+- 数据只覆盖轨道周边地区。
+
+只有研究设计能够区分这些解释。*The Effect*强调，研究设计与回归技术不是同一件事：先明确什么变化具有因果解释，再选择模型估计。这个原则将在课程后段进一步展开。
+
+# 12.9 空间回归与机器学习的关系
+
+空间回归通过明确的空间过程结构处理空间依赖，例如空间滞后、空间误差或局部关系；机器学习则更强调预测和复杂函数拟合。二者不是简单的新旧替代关系。
+
+如果研究目标是估计和解释空间关系，空间回归通常提供更清晰的参数结构；如果目标是对新样本进行准确预测，机器学习可能更具优势。实际研究可以先以回归建立可解释基线，再比较机器学习是否带来稳定改进。
+
+# 12.10 贯穿案例：识别与预测城市功能
+
+以规则网格为分析单元，计算人口、设施、建筑、道路、公共交通和绿地特征。首先使用聚类识别属性相似的区域，检查不同类别数和标准化方式下结果；随后使用已有功能标签训练分类模型，并采用空间分组验证。
+
+结果解释应区分三层：
+
+1. 数据中形成了哪些特征组合；
+2. 模型能够多准确地区分已有类型；
+3. 这些类型是否能被解释为规划功能。
+
+数据驱动类别与法定用地、实际活动和规划意图可能并不一致。模型结果应作为城市诊断证据，而不是自动替代专业判断。
+
+# 12.11 从模型结果到下一章
+
+完成训练只是建模过程的中点。下一章需要回答：
+
+- 模型是否优于基线；
+- 随机验证是否过度乐观；
+- 换一种尺度或变量后结果是否稳定；
+- 误差是否仍呈现空间集聚；
+- 模型能否推广到其他地区；
+- 预测不确定性如何表达；
+- 精度改善是否具有规划意义。
+
+因此，本章以模型构建结束，第13章将直接进入模型评价、稳健性与不确定性。
+
+# 12.12 本章小结
+
+城市空间智能不是算法清单，而是问题、数据、空间特征、验证和解释共同组成的研究过程。空间信息能够显著提升模型，也可能悄悄造成数据泄漏。一个值得用于规划的模型，不仅要表现良好，还必须经得起空间验证和证据边界的检验。
+
+# 章末思考
+
+1. 聚类发现的是城市功能，还是变量相似性？
+2. 为什么随机划分可能高估空间模型表现？
+3. 空间特征工程怎样同时带来信息和泄漏风险？
+4. 特征重要性与可干预的规划因素有什么区别？
+5. 什么时候应优先使用空间回归而不是复杂机器学习？
+
+# 来源与延伸阅读
+
+- Shi et al. (Eds.). [Urban Informatics](https://link.springer.com/book/10.1007/978-981-15-8983-6), CC BY 4.0。相关开放章节涉及城市计算、机器学习、城市感知与应用。
+- Rey, Arribas-Bel, & Wolf: [Clustering and Regionalization](https://geographicdata.science/book/geosilhouettes.html)、[Spatial Regression](https://geographicdata.science/book/models.html)、[Spatial Feature Engineering](https://geographicdata.science/book/feature_engineering.html)。作为英文指定阅读。
+- Huntington-Klein, N. [The Effect](https://theeffectbook.net/)。本章仅引用其“研究设计先于技术估计”的一般原则。
+- [Scikit-learn User Guide](https://scikit-learn.org/stable/user_guide.html)

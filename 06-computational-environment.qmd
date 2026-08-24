@@ -1,0 +1,167 @@
+---
+title: "第6章 走进计算城市：Python、VS Code与可重复研究"
+---
+
+# 本章导读
+
+城市研究正在经历一场安静而深刻的变化。过去，研究者往往以统计年鉴、问卷和规划图纸为主要材料；今天，建筑轮廓、道路网络、公共交通刷卡、移动轨迹、街景影像和传感器记录共同构成了城市的数字痕迹。数据的数量增加了，类型也更加复杂，但这并不意味着我们自动获得了更可靠的城市知识。真正的变化在于：研究过程越来越需要通过代码被清楚地表达、重复地执行和公开地检验。
+
+*Urban Informatics* 将城市信息学描述为连接城市科学、城市感知、城市计算、数据基础设施和城市应用的交叉领域。计算工具在这一体系中并不是终点，而是把城市现象转化为可分析证据的媒介。本章从一个最基础的问题开始：怎样建立一个能够陪伴整学期、也能够支持未来研究的计算环境？
+
+## 学习目标
+
+完成本章后，你应当能够理解Python、Conda、VS Code、Jupyter、ArcGIS Pro和Quarto之间的关系，建立统一的\`urban-data\`环境，并按照“原始数据—处理代码—分析结果—文字解释”的逻辑组织城市研究项目。更重要的是，你需要理解：可重复研究不是一种文件管理习惯，而是研究可信度的一部分。
+
+# 6.1 从城市问题到计算工作流
+
+设想我们希望研究“轨道交通是否改善了站点周边的公共服务可达性”。这个问题无法由一个软件按钮直接回答。研究者首先需要界定站点、服务设施和居民的空间范围，随后收集道路、人口和设施数据，再决定使用直线距离、网络距离还是出行时间。数据经过清洗、连接和计算后，结果还要通过地图、统计量和文字解释返回最初的问题。
+
+这一过程可以写成：
+
+\[
+城市问题 \rightarrow 数据组织 \rightarrow 计算方法
+\rightarrow 结果检验 \rightarrow 规划解释
+\]
+
+Python擅长重复的数据处理、统计分析和模型计算；ArcGIS Pro擅长空间数据检查、交互式分析和专业制图；VS Code把代码、Notebook和项目文件组织在一起；Quarto则把文字、公式、代码与图表编织成可以阅读的网页或书稿。它们的分工不同，却共同服务于同一条证据链。
+
+# 6.2 Python环境为什么需要隔离
+
+Python本身只提供基础语言能力。城市空间分析还依赖Pandas、GeoPandas、Shapely、PySAL、Scikit-learn、NetworkX等大量软件包。这些包会持续更新，不同项目也可能依赖不同版本。如果所有项目共享同一个环境，某次升级可能使过去的代码突然失效。
+
+Conda环境相当于为课程建立一个独立的计算空间。本教材在项目根目录提供\`environment.yml\`。在终端中执行：
+
+~~~{bash}
+conda env create -f environment.yml
+conda activate urban-data
+python --version
+~~~
+
+创建完成后，在VS Code中安装Microsoft提供的Python与Jupyter扩展，并选择\`urban-data\`作为解释器。之后，Notebook中的每一个代码单元都将在同一套依赖中运行。
+
+可以用一段简短代码检查环境：
+
+~~~{python}
+import sys
+import pandas as pd
+import geopandas as gpd
+import sklearn
+import libpysal
+
+print("Python:", sys.version)
+print("Pandas:", pd.__version__)
+print("GeoPandas:", gpd.__version__)
+print("Scikit-learn:", sklearn.__version__)
+print("PySAL:", libpysal.__version__)
+~~~
+
+这些版本信息看似琐碎，却能帮助我们解释为什么同一段代码在不同电脑上可能产生差异。
+
+# 6.3 VS Code中的项目，而不是散落的文件
+
+一个城市研究项目不应只是若干Excel文件、地图和Notebook的集合。建议采用如下结构：
+
+~~~{text}
+urban-study/
+├── README.md
+├── environment.yml
+├── data/
+│   ├── raw/
+│   ├── interim/
+│   └── processed/
+├── notebooks/
+├── src/
+├── outputs/
+│   ├── figures/
+│   ├── maps/
+│   └── tables/
+└── report/
+~~~
+
+\`raw\`保存未经修改的原始数据，\`interim\`保存处理过程中的中间结果，\`processed\`保存可以直接进入分析的数据。探索性代码放入\`notebooks\`，稳定且重复使用的函数放入\`src\`，图表和地图则统一进入\`outputs\`。
+
+这种结构背后有一个重要原则：原始数据不被覆盖，最终结果能够由代码重新生成。研究者不再依靠“最终版”“最终版2”“真的最终版”等文件名记忆过程，而是让项目结构本身说明数据如何流动。
+
+# 6.4 Notebook：把推理写进计算过程
+
+Notebook的优势在于把代码、结果和解释放在同一页面。例如，在读取社区人口数据之前，我们可以说明数据代表什么；计算人口密度之后，可以立即检查极端值；绘制地图之后，可以写出初步观察和仍待检验的问题。
+
+然而，Notebook也容易制造一种“看起来完整”的假象。常见情况是：单元格没有按顺序执行，中间变量来自已经删除的代码，图表能够显示却无法从头生成，或者只有结果而没有方法说明。
+
+提交Notebook之前，应重新启动Kernel并运行全部单元。如果代码不能从空白状态完整执行，那么它就没有准确记录研究过程。
+
+一个成熟的Notebook通常在每个关键步骤中回答三个问题：
+
+1. 为什么进行这一步？
+2. 代码具体做了什么？
+3. 输出结果意味着什么？
+
+# 6.5 从探索到可重复函数
+
+课堂初期，我们会在Notebook中逐步探索数据。随着分析稳定，应把重复步骤整理成函数。
+
+~~~{python}
+def ageing_rate(data, older_col, total_col):
+    """计算老年人口占总人口的比例。"""
+    result = data[older_col] / data[total_col]
+    return result.where(data[total_col] > 0)
+
+communities["ageing_rate"] = ageing_rate(
+    communities,
+    "older_population",
+    "population"
+)
+~~~
+
+函数不仅减少重复，也迫使研究者明确输入、输出和异常条件。上例特意处理了总人口为零的情况，因为一个没有分母检查的比率可能产生无穷值，并在地图和模型中制造虚假异常。
+
+# 6.6 ArcGIS Pro与Python如何协同
+
+在本课程中，ArcGIS Pro不是Python的替代品，Python也不是为了取代GIS。更合理的工作方式是：
+
+先在ArcGIS Pro中查看数据的空间范围、坐标系统和几何质量；随后使用Python进行批量清洗、指标计算、统计分析和模型训练；最后再把结果返回ArcGIS Pro，检查空间位置并完成需要专业制图控制的表达。
+
+数据交换优先采用GeoPackage、GeoJSON或规范的File Geodatabase。每次导出都应保留清晰的图层名、字段说明和处理日期，避免在桌面上积累无法追溯的Shapefile副本。
+
+# 6.7 AI辅助编程：助手而不是证据来源
+
+生成式AI能够解释报错、补充函数、比较不同写法，也能把重复代码整理成更清晰的形式。但它并不知道你的字段是否代表常住人口还是活动人口，也不能自动判断500米缓冲是否符合真实步行条件。
+
+在城市空间研究中，AI生成代码至少需要经过四类检查：
+
+- **语法检查**：函数、参数和软件版本是否真实可用；
+- **数据检查**：字段、单位、坐标和缺失值是否被正确理解；
+- **方法检查**：分析方法是否回答原研究问题；
+- **结果检查**：数量级、空间位置和统计解释是否合理。
+
+AI可以帮助生成计算过程，却不能替代研究者对证据的责任。
+
+# 6.8 一个可重复的微型实验
+
+现在建立第一个课程项目。选择一个公开的社区人口表，完成以下过程：
+
+首先在README中写出研究问题，例如“不同社区的老龄化程度是否存在明显差异”。随后将原始数据放入\`data/raw\`，在Notebook中读取并检查字段类型、缺失值和重复记录，计算老龄化率，制作一个简单统计图，并把结果保存到\`outputs/figures\`。
+
+最后关闭Notebook、重新启动Kernel并运行全部单元。请另一位同学仅根据README和环境文件重新运行项目。如果对方无法得到相同结果，记录阻碍复现的环节。
+
+# 6.9 本章小结
+
+计算环境并不是课程开始前需要匆忙跨过的技术门槛，而是研究方法的一部分。一个结构清楚、环境明确、能够从头运行的项目，让城市研究从个人电脑中的一次性操作变成可以检查、讨论和积累的知识过程。
+
+# 章末思考
+
+1. 为什么“代码能够运行”不等于“研究结论正确”？
+2. 在哪些情况下，ArcGIS Pro中的交互操作比Python更合适？
+3. 如果原始数据因隐私不能公开，研究仍然可以怎样提高可重复性？
+4. 你会如何记录AI参与代码编写的过程？
+
+# 来源与延伸阅读
+
+本章关于城市信息学体系的表述参考并改写自开放获取著作 *Urban Informatics*（CC BY 4.0）：  
+Shi, W., Goodchild, M. F., Batty, M., Kwan, M.-P., & Zhang, A. (Eds.). 2021. [Urban Informatics](https://link.springer.com/book/10.1007/978-981-15-8983-6).
+
+计算环境部分可继续阅读：
+
+- [Quarto Documentation](https://quarto.org/docs/)
+- [GeoPandas Documentation](https://geopandas.org/)
+- [Visual Studio Code: Python](https://code.visualstudio.com/docs/languages/python)
