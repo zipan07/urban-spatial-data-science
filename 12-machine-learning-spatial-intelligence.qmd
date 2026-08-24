@@ -1,16 +1,18 @@
 ---
-title: "第12章 从空间特征到城市预测：机器学习与城市空间智能"
+title: "第12章 机器学习与城市空间智能"
 ---
 
-# 本章导读
-
+::: {.chapter-opening}
 城市数据的丰富，使研究者能够同时观察人口、建筑、道路、设施、环境和移动行为。传统分析往往一次关注少量变量，而机器学习擅长从高维数据中识别复杂模式，完成分类、预测和区域识别。
 
 但机器学习不会自动理解城市。一个预测准确的模型可能依赖偶然的空间邻近，一个特征重要性较高的变量也不一定具有因果作用。城市空间智能的关键不在于使用更复杂的算法，而在于把研究问题、空间单元、特征、验证和规划解释连接起来。
+:::
 
-## 学习目标
+::: {.learning-objectives}
+**学习目标**
 
 完成本章后，你应当能够区分监督学习、无监督学习、解释和预测，建立城市空间机器学习的基本流程，构造具有地理意义的空间特征，并识别数据泄漏、随机验证偏差与过度解释。
+:::
 
 # 12.1 先问问题，再选择算法
 
@@ -55,7 +57,7 @@ title: "第12章 从空间特征到城市预测：机器学习与城市空间智
 
 预处理应被放入Pipeline，确保训练和预测采用相同规则：
 
-~~~{python}
+```{.python}
 from sklearn.compose import ColumnTransformer
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler, OneHotEncoder
@@ -91,7 +93,7 @@ preprocess = ColumnTransformer([
     ("cat", categorical_pipeline,
      categorical_features)
 ])
-~~~
+```
 
 如果先在全部数据上计算均值和标准差，再划分训练集与测试集，测试数据的信息已经进入训练过程。Pipeline可以减少这种泄漏。
 
@@ -99,7 +101,7 @@ preprocess = ColumnTransformer([
 
 无监督学习没有预先给定标签。K-means根据特征距离把地区划分为若干类型：
 
-~~~{python}
+```{.python}
 from sklearn.cluster import KMeans
 from sklearn.pipeline import Pipeline
 
@@ -120,7 +122,7 @@ communities["cluster"] = (
         ]
     )
 )
-~~~
+```
 
 聚类结果并不会自动产生“商业中心”“居住区”或“创新区”等规划含义。命名之前应检查各类特征均值、空间位置、典型地区和外部资料。
 
@@ -130,7 +132,7 @@ communities["cluster"] = (
 
 监督学习使用已有目标变量训练模型。以社区活力回归为例，可以先建立简单线性基线，再使用随机森林等复杂模型。
 
-~~~{python}
+```{.python}
 from sklearn.ensemble import RandomForestRegressor
 
 model = Pipeline([
@@ -141,7 +143,7 @@ model = Pipeline([
         random_state=42
     ))
 ])
-~~~
+```
 
 基线模型非常重要。如果复杂模型不能稳定优于均值预测或简单线性模型，就没有必要增加复杂度。机器学习不是为了展示算法，而是为了在明确任务上获得可验证的改进。
 
@@ -162,7 +164,7 @@ model = Pipeline([
 
 例如，计算兴趣点密度的空间滞后：
 
-~~~{python}
+```{.python}
 from libpysal.weights import lag_spatial
 
 w_queen.transform = "R"
@@ -173,7 +175,7 @@ communities["lag_poi_density"] = (
         communities["poi_density"]
     )
 )
-~~~
+```
 
 空间特征可以提高预测，但也可能造成泄漏。如果模型用于预测一个完全没有目标观测的新城市，就不能使用依赖该城市目标变量构造的邻近特征。
 
@@ -181,7 +183,7 @@ communities["lag_poi_density"] = (
 
 普通随机划分把样本随机分入训练集和测试集：
 
-~~~{python}
+```{.python}
 from sklearn.model_selection import (
     train_test_split
 )
@@ -191,7 +193,7 @@ train_idx, test_idx = train_test_split(
     test_size=0.2,
     random_state=42
 )
-~~~
+```
 
 对于空间数据，相邻地区通常较为相似。随机划分可能让测试社区紧邻训练社区，模型因而在测试中表现很好，却无法推广到城市另一侧或另一座城市。
 
@@ -242,7 +244,35 @@ train_idx, test_idx = train_test_split(
 
 因此，本章以模型构建结束，第13章将直接进入模型评价、稳健性与不确定性。
 
-# 12.12 本章小结
+# 12.12 深度阅读：概率校准、解释稳定性与外部有效性
+
+分类模型输出的0.8只有在校准良好时才能解释为约80%的发生概率。高AUC模型也可能系统性过度自信。应使用校准曲线、Brier分数，并在空间测试区分别检查。
+
+特征重要性也需要稳定性。相关特征会彼此替代，不同折和不同城市的重要性排名可能变化。可以在每个空间折计算置换重要性，并报告分布，而不是只展示单次训练的柱状图。
+
+```{.python filename="12_interpretation_stability.py"}
+from sklearn.inspection import permutation_importance
+import pandas as pd
+
+fold_importance = []
+for fold, (train_idx, test_idx) in enumerate(spatial_cv.split(X, y, groups)):
+    model.fit(X.iloc[train_idx], y.iloc[train_idx])
+    result = permutation_importance(
+        model, X.iloc[test_idx], y.iloc[test_idx],
+        scoring="neg_mean_absolute_error", n_repeats=20, random_state=fold
+    )
+    fold_importance.append(pd.DataFrame({
+        "fold": fold,
+        "feature": X.columns,
+        "importance": result.importances_mean,
+    }))
+
+importance = pd.concat(fold_importance, ignore_index=True)
+```
+
+跨城市外部有效性需要比同城空间外推更严格。字段含义、规划制度、城市形态和数据平台都可能变化。迁移前应进行变量对齐、分布比较、本地小样本验证与再校准；不能因模型在一座城市成功，就称其为普适城市规律。
+
+# 12.13 本章小结
 
 城市空间智能不是算法清单，而是问题、数据、空间特征、验证和解释共同组成的研究过程。空间信息能够显著提升模型，也可能悄悄造成数据泄漏。一个值得用于规划的模型，不仅要表现良好，还必须经得起空间验证和证据边界的检验。
 

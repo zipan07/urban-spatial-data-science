@@ -1,16 +1,18 @@
 ---
-title: "第10章 城市为何相邻而相似：空间权重与空间自相关"
+title: "第10章 空间关系、空间权重与空间自相关"
 ---
 
-# 本章导读
-
+::: {.chapter-opening}
 地图常常呈现成片的高值与低值。房价高值区彼此相邻，空气污染跨越行政边界，公共服务不足也可能形成连续区域。这样的空间格局提示我们：城市中的观测对象并不总是相互独立。
 
 但是，“相邻”并不是唯一且天然的关系。共享边界、距离接近、道路相连、通勤频繁都可以形成不同意义的邻近。本章首先把空间关系表示为空间权重，然后使用全局与局部空间自相关判断地图中的空间集聚。
+:::
 
-## 学习目标
+::: {.learning-objectives}
+**学习目标**
 
 完成本章后，你应当能够根据城市问题构建邻接、距离和K近邻权重，解释空间滞后、全局Moran’s I和局部Moran统计量，并通过权重敏感性和随机置换审慎判断空间集聚。
+:::
 
 # 10.1 空间依赖从何而来
 
@@ -36,7 +38,7 @@ title: "第10章 城市为何相邻而相似：空间权重与空间自相关"
 
 对于面状行政单元，最常用的是Rook和Queen邻接。Rook要求共享一段边界，Queen则允许共享边界或顶点。
 
-~~~{python}
+```{.python}
 from libpysal.weights import Rook, Queen
 
 w_rook = Rook.from_dataframe(
@@ -53,7 +55,7 @@ w_queen = Queen.from_dataframe(
 
 print(w_rook.mean_neighbors)
 print(w_queen.mean_neighbors)
-~~~
+```
 
 Queen邻接通常产生更多邻居。在形状规整的网格中，两者差异清楚；在边界复杂的社区中，一个微小顶点接触是否代表真实社会联系，则需要进一步判断。
 
@@ -63,7 +65,7 @@ Queen邻接通常产生更多邻居。在形状规整的网格中，两者差异
 
 距离权重把一定范围内的对象视为邻居，适合表达服务范围或局部影响。K近邻则为每个对象选择最近的\(k\)个邻居，能够避免孤立单元。
 
-~~~{python}
+```{.python}
 from libpysal.weights import DistanceBand, KNN
 
 projected = communities.to_crs(
@@ -82,7 +84,7 @@ w_knn = KNN.from_dataframe(
     projected,
     k=6
 )
-~~~
+```
 
 2公里和6个邻居都不是默认真理。阈值可以依据步行范围、街区尺度、设施服务半径或数据连通性设定。更可靠的研究会比较多个合理设定，而不是选择显著性最高的参数。
 
@@ -96,7 +98,7 @@ Wy_i=\sum_jw_{ij}y_j
 
 它可以近似理解为地区\(i\)周边地区的加权平均值。
 
-~~~{python}
+```{.python}
 from libpysal.weights import lag_spatial
 
 w_queen.transform = "R"
@@ -108,7 +110,7 @@ y = communities["ageing_rate"].fillna(
 communities["lag_ageing_rate"] = (
     lag_spatial(w_queen, y)
 )
-~~~
+```
 
 如果某社区老龄化率高，而且其空间滞后也高，它可能处于高值集聚区域。但“周边”完全由空间权重决定。
 
@@ -129,7 +131,7 @@ w_{ij}(y_i-\bar y)(y_j-\bar y)
 
 当相似值彼此邻近时，Moran’s I通常为正；当高值倾向与低值相邻时，统计量可能为负。
 
-~~~{python}
+```{.python}
 from esda.moran import Moran
 
 moran = Moran(
@@ -140,7 +142,7 @@ moran = Moran(
 
 print("Moran's I:", moran.I)
 print("Permutation p:", moran.p_sim)
-~~~
+```
 
 随机置换把变量值重新分配到空间单元，形成“空间位置与数值无关”情况下的参考分布。p值表示观测统计量在这些随机配置中有多罕见。
 
@@ -155,7 +157,7 @@ Moran散点图把标准化变量放在横轴，把空间滞后放在纵轴。四
 - 高值邻近低值（HL）；
 - 低值邻近高值（LH）。
 
-~~~{python}
+```{.python}
 from splot.esda import moran_scatterplot
 
 fig, ax = moran_scatterplot(
@@ -164,7 +166,7 @@ fig, ax = moran_scatterplot(
 )
 ax.set_xlabel("标准化指标")
 ax.set_ylabel("空间滞后")
-~~~
+```
 
 散点图帮助理解整体空间关系，但它没有回答具体哪些地区构成显著集聚。
 
@@ -172,7 +174,7 @@ ax.set_ylabel("空间滞后")
 
 局部Moran为每个空间单元计算局部统计量：
 
-~~~{python}
+```{.python}
 from esda.moran import Moran_Local
 
 lisa = Moran_Local(
@@ -184,7 +186,7 @@ lisa = Moran_Local(
 communities["local_I"] = lisa.Is
 communities["local_p"] = lisa.p_sim
 communities["quadrant"] = lisa.q
-~~~
+```
 
 显著的HH和LL地区可被理解为局部高值或低值集聚，HL和LH则是空间离群：一个地区与周边呈现不同水平。
 
@@ -206,7 +208,7 @@ communities["quadrant"] = lisa.q
 
 # 10.10 权重敏感性：空间关系改变会发生什么
 
-~~~{python}
+```{.python}
 weights = {
     "queen": w_queen,
     "knn6": w_knn,
@@ -229,7 +231,7 @@ for name, weight in weights.items():
     })
 
 comparison
-~~~
+```
 
 如果不同合理权重都显示稳定正向空间自相关，整体结论较为稳健；如果热点位置随权重剧烈变化，应明确说明结果依赖空间关系设定。
 
@@ -247,7 +249,30 @@ comparison
 4. 哪些局部结果对参数敏感？
 5. 这些结果可以支持什么规划判断，又不能支持什么判断？
 
-# 10.12 本章小结
+# 10.12 深度阅读：多重检验、尺度与伪集聚
+
+局部空间自相关对每个地区进行一次检验。地区越多，偶然显著的数量越可能增加。除了使用较严格显著性阈值，还可以报告假发现率校正，并把显著图与原始效应图并列。统计显著不应成为隐藏非显著地区的开关。
+
+空间集聚还可能由空间趋势造成。例如房价从中心向外围平滑下降，Moran's I 会显著，但这不一定代表局部扩散。可以先建模全局趋势，再检查残差空间相关；也可在不同尺度和权重下比较。
+
+```{.python filename="10_multiple_testing.py"}
+from statsmodels.stats.multitest import multipletests
+
+local = Moran_Local(values, w, permutations=999)
+significant_raw = local.p_sim < 0.05
+
+reject_fdr, p_fdr, _, _ = multipletests(
+    local.p_sim, alpha=0.05, method="fdr_bh"
+)
+
+areas["lisa_raw"] = significant_raw
+areas["lisa_fdr"] = reject_fdr
+print(areas[["lisa_raw", "lisa_fdr"]].sum())
+```
+
+最终报告应给出权重图、孤岛处理、置换次数、效应大小和敏感性。没有这些信息，一张 LISA 聚类图很难被独立复核。
+
+# 10.13 本章小结
 
 空间自相关把地图中的视觉印象转化为可以检验的空间关系。但统计量并不会替研究者定义“相邻”，也不会自动解释集聚为何形成。真正重要的是把权重设定、随机参照、局部位置和结果敏感性放在同一证据链中。
 

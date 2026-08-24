@@ -1,16 +1,18 @@
 ---
-title: "第6章 走进计算城市：Python、VS Code与可重复研究"
+title: "第6章 Python、VS Code与可重复研究"
 ---
 
-# 本章导读
-
+::: {.chapter-opening}
 城市研究正在经历一场安静而深刻的变化。过去，研究者往往以统计年鉴、问卷和规划图纸为主要材料；今天，建筑轮廓、道路网络、公共交通刷卡、移动轨迹、街景影像和传感器记录共同构成了城市的数字痕迹。数据的数量增加了，类型也更加复杂，但这并不意味着我们自动获得了更可靠的城市知识。真正的变化在于：研究过程越来越需要通过代码被清楚地表达、重复地执行和公开地检验。
 
 *Urban Informatics* 将城市信息学描述为连接城市科学、城市感知、城市计算、数据基础设施和城市应用的交叉领域。计算工具在这一体系中并不是终点，而是把城市现象转化为可分析证据的媒介。本章从一个最基础的问题开始：怎样建立一个能够陪伴整学期、也能够支持未来研究的计算环境？
+:::
 
-## 学习目标
+::: {.learning-objectives}
+**学习目标**
 
 完成本章后，你应当能够理解Python、Conda、VS Code、Jupyter、ArcGIS Pro和Quarto之间的关系，建立统一的\`urban-data\`环境，并按照“原始数据—处理代码—分析结果—文字解释”的逻辑组织城市研究项目。更重要的是，你需要理解：可重复研究不是一种文件管理习惯，而是研究可信度的一部分。
+:::
 
 # 6.1 从城市问题到计算工作流
 
@@ -31,17 +33,17 @@ Python本身只提供基础语言能力。城市空间分析还依赖Pandas、Ge
 
 Conda环境相当于为课程建立一个独立的计算空间。本教材在项目根目录提供\`environment.yml\`。在终端中执行：
 
-~~~{bash}
+```{.bash}
 conda env create -f environment.yml
 conda activate urban-data
 python --version
-~~~
+```
 
 创建完成后，在VS Code中安装Microsoft提供的Python与Jupyter扩展，并选择\`urban-data\`作为解释器。之后，Notebook中的每一个代码单元都将在同一套依赖中运行。
 
 可以用一段简短代码检查环境：
 
-~~~{python}
+```{.python}
 import sys
 import pandas as pd
 import geopandas as gpd
@@ -53,7 +55,7 @@ print("Pandas:", pd.__version__)
 print("GeoPandas:", gpd.__version__)
 print("Scikit-learn:", sklearn.__version__)
 print("PySAL:", libpysal.__version__)
-~~~
+```
 
 这些版本信息看似琐碎，却能帮助我们解释为什么同一段代码在不同电脑上可能产生差异。
 
@@ -61,7 +63,7 @@ print("PySAL:", libpysal.__version__)
 
 一个城市研究项目不应只是若干Excel文件、地图和Notebook的集合。建议采用如下结构：
 
-~~~{text}
+```{.text}
 urban-study/
 ├── README.md
 ├── environment.yml
@@ -76,7 +78,7 @@ urban-study/
 │   ├── maps/
 │   └── tables/
 └── report/
-~~~
+```
 
 \`raw\`保存未经修改的原始数据，\`interim\`保存处理过程中的中间结果，\`processed\`保存可以直接进入分析的数据。探索性代码放入\`notebooks\`，稳定且重复使用的函数放入\`src\`，图表和地图则统一进入\`outputs\`。
 
@@ -100,7 +102,7 @@ Notebook的优势在于把代码、结果和解释放在同一页面。例如，
 
 课堂初期，我们会在Notebook中逐步探索数据。随着分析稳定，应把重复步骤整理成函数。
 
-~~~{python}
+```{.python}
 def ageing_rate(data, older_col, total_col):
     """计算老年人口占总人口的比例。"""
     result = data[older_col] / data[total_col]
@@ -111,7 +113,7 @@ communities["ageing_rate"] = ageing_rate(
     "older_population",
     "population"
 )
-~~~
+```
 
 函数不仅减少重复，也迫使研究者明确输入、输出和异常条件。上例特意处理了总人口为零的情况，因为一个没有分母检查的比率可能产生无穷值，并在地图和模型中制造虚假异常。
 
@@ -144,7 +146,27 @@ AI可以帮助生成计算过程，却不能替代研究者对证据的责任。
 
 最后关闭Notebook、重新启动Kernel并运行全部单元。请另一位同学仅根据README和环境文件重新运行项目。如果对方无法得到相同结果，记录阻碍复现的环节。
 
-# 6.9 本章小结
+# 6.9 深度阅读：复现、重复与再现
+
+“可重复”常被笼统使用，但至少可以区分三个层次。计算重复要求同一数据和代码再次得到同一结果；方法复现要求另一位研究者依据公开方法独立实现并得到相近结论；跨情境再现则检验关系在另一时间或城市是否仍成立。课程项目首先保证计算重复，重要研究还应追求后两层。
+
+为了让失败更早暴露，稳定的数据处理函数应加入断言和最小测试。例如，人口不能为负、主键应唯一、投影坐标应以米为单位、连接后记录数量应符合预期。测试不是软件工程附加要求，而是把研究口径写成机器可检查规则。
+
+```{.python filename="06_quality_tests.py"}
+def validate_communities(gdf):
+    assert gdf["community_id"].is_unique, "社区主键不唯一"
+    assert gdf.geometry.notna().all(), "存在空几何"
+    assert gdf.geometry.is_valid.all(), "存在无效几何"
+    assert (gdf["population"] >= 0).all(), "人口出现负值"
+    assert gdf.crs is not None and not gdf.crs.is_geographic, \
+        "距离和面积计算前应使用投影坐标系"
+
+validate_communities(communities)
+```
+
+生成式 AI 参与代码时，还应保存提示目的、人工修改和验证方法。AI 可以加快语法实现，却不能替代字段含义、空间机制和数据许可判断。研究责任始终属于研究者。
+
+# 6.10 本章小结
 
 计算环境并不是课程开始前需要匆忙跨过的技术门槛，而是研究方法的一部分。一个结构清楚、环境明确、能够从头运行的项目，让城市研究从个人电脑中的一次性操作变成可以检查、讨论和积累的知识过程。
 

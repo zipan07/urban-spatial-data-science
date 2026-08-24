@@ -1,96 +1,188 @@
 :root {
-  --book-text: #242424;
-  --book-muted: #666;
-  --book-accent: #275d72;
-  --book-rule: #d9e1e5;
-  --book-paper: #fff;
+  --book-ink: #1f2d2b;
+  --book-muted: #64716e;
+  --book-navy: #173f50;
+  --book-teal: #28766f;
+  --book-coral: #c96852;
+  --book-sand: #f3efe6;
+  --book-paper: #fffefb;
+  --book-rule: #d9e2df;
+  --book-code: #142e35;
 }
 
 body {
-  color: var(--book-text);
+  color: var(--book-ink);
   background: var(--book-paper);
   font-family: "Noto Serif CJK SC", "Source Han Serif SC", "Songti SC",
-               "SimSun", Georgia, serif;
-  line-height: 1.85;
-  letter-spacing: 0.01em;
+               "STSong", Georgia, serif;
+  font-size: 17px;
+  line-height: 1.92;
+  letter-spacing: 0.012em;
 }
 
-main.content {
-  max-width: 860px;
-}
+main.content { max-width: 900px; }
 
-h1, h2, h3, h4,
-.book-title, .sidebar-title {
+h1, h2, h3, h4, h5,
+.book-title, .sidebar-title, .chapter-number,
+.quarto-title-meta, .callout-title-container {
   font-family: "Noto Sans CJK SC", "Source Han Sans SC", "Microsoft YaHei",
                Arial, sans-serif;
 }
 
 h1 {
-  color: #173f50;
-  font-weight: 700;
-  line-height: 1.3;
-  padding-bottom: 0.55rem;
-  border-bottom: 1px solid var(--book-rule);
+  color: var(--book-navy);
+  font-size: 2.55rem;
+  font-weight: 760;
+  line-height: 1.28;
+  padding-bottom: 0.7rem;
+  border-bottom: 2px solid var(--book-rule);
 }
 
 h2 {
-  color: var(--book-accent);
-  margin-top: 2.3rem;
+  color: var(--book-navy);
+  font-size: 1.65rem;
+  margin-top: 3.15rem;
+  padding-top: 0.2rem;
 }
 
 h3 {
-  margin-top: 1.7rem;
+  color: var(--book-teal);
+  font-size: 1.23rem;
+  margin-top: 2.25rem;
 }
 
-p {
-  margin: 0.75rem 0 1rem;
-  text-align: justify;
+p { margin: 0.85rem 0 1.15rem; text-align: justify; }
+li { margin-bottom: 0.38rem; }
+strong { color: #172b2a; }
+a { text-underline-offset: 0.18em; }
+
+.chapter-opening {
+  margin: 1.5rem 0 2.6rem;
+  padding: 1.6rem 1.8rem;
+  background: linear-gradient(135deg, #173f50, #245e64);
+  color: #f8fbfa;
+  border-left: 6px solid #d8dc81;
+  box-shadow: 0 12px 30px rgba(23, 63, 80, 0.14);
+  font-size: 1.06rem;
 }
+.chapter-opening p { margin: 0; text-align: left; }
+.chapter-opening strong { color: #edf0a9; }
+
+.learning-objectives,
+.concept-card,
+.planning-lens,
+.lab-brief {
+  margin: 1.7rem 0 2rem;
+  padding: 1.25rem 1.45rem;
+  border: 1px solid var(--book-rule);
+  background: #fbfaf6;
+}
+.learning-objectives { border-top: 4px solid var(--book-teal); }
+.concept-card { border-left: 5px solid #d4a44f; }
+.planning-lens { border-left: 5px solid var(--book-coral); background: #fff7f3; }
+.lab-brief { border-left: 5px solid var(--book-teal); background: #f3f8f7; }
 
 blockquote {
-  border-left: 3px solid var(--book-accent);
-  color: var(--book-muted);
-  background: #f7fafb;
-  padding: 0.8rem 1.1rem;
-}
-
-.callout {
-  border-radius: 0;
-  box-shadow: none;
-}
-
-div.sourceCode {
-  border: 1px solid #e3e8eb;
-  border-radius: 4px;
-}
-
-pre code {
-  font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
-  font-size: 0.9rem;
-  line-height: 1.55;
+  margin: 1.7rem 0;
+  border-left: 4px solid var(--book-teal);
+  color: #475653;
+  background: #f5f8f7;
+  padding: 1rem 1.35rem;
 }
 
 table {
-  font-size: 0.95rem;
+  width: 100%;
+  font-size: 0.93rem;
+  line-height: 1.6;
+  margin: 1.4rem 0 2rem;
 }
+thead { background: var(--book-navy); color: white; }
+th, td { padding: 0.7rem 0.8rem !important; vertical-align: top; }
+tbody tr:nth-child(even) { background: #f6f4ee; }
+caption, figcaption { color: var(--book-muted); font-size: 0.88rem; }
 
-caption, figcaption {
-  color: var(--book-muted);
-  font-size: 0.9rem;
+.callout {
+  margin: 1.8rem 0;
+  border-radius: 2px;
+  box-shadow: none;
 }
+.callout .callout-body { font-size: 0.98rem; }
+
+/* Code is presented as a reading object rather than console debris. */
+div.sourceCode {
+  position: relative;
+  margin: 1.55rem 0 2.1rem;
+  padding-top: 1.9rem;
+  border: 0 !important;
+  border-radius: 7px;
+  background: var(--book-code) !important;
+  box-shadow: 0 10px 24px rgba(16, 42, 48, 0.16);
+  overflow: hidden;
+}
+div.sourceCode::before {
+  content: "代码实验  ·  可复制 / 可替换数据";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1.9rem;
+  display: flex;
+  align-items: center;
+  padding-left: 0.9rem;
+  background: #0d242a;
+  color: #9fb5b1;
+  font: 600 0.68rem/1 "SFMono-Regular", Consolas, monospace;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+div.sourceCode pre.sourceCode,
+div.sourceCode code {
+  background: transparent !important;
+  color: #e8efed;
+}
+pre code {
+  font-family: "SFMono-Regular", "Cascadia Code", Consolas, "Liberation Mono", monospace;
+  font-size: 0.84rem;
+  line-height: 1.72;
+  font-variant-ligatures: none;
+}
+.code-with-filename .code-with-filename-file {
+  background: #0d242a;
+  color: #dbe6e3;
+  border: 0;
+  font-family: "SFMono-Regular", Consolas, monospace;
+  font-size: 0.76rem;
+}
+.code-with-filename div.sourceCode { margin-top: 0; border-radius: 0 0 7px 7px; }
+.code-with-filename div.sourceCode::before { display: none; }
+.code-copy-button { color: #c9d7d4 !important; }
+.sourceCode .fu, .sourceCode .kw { color: #84d1c7; }
+.sourceCode .st { color: #e9c178; }
+.sourceCode .co { color: #8ba39f; font-style: italic; }
+.sourceCode .dv, .sourceCode .fl { color: #e79887; }
 
 .sidebar nav[role="doc-toc"] ul > li > a.active,
 .sidebar-item-container .active {
-  color: var(--book-accent);
-  font-weight: 600;
+  color: var(--book-teal);
+  font-weight: 700;
 }
+.sidebar-title { color: var(--book-navy); }
+.chapter-number { color: var(--book-coral); font-weight: 700; }
+
+.key-takeaways {
+  margin: 2.8rem 0;
+  padding: 1.4rem 1.6rem;
+  background: var(--book-sand);
+  border-top: 1px solid #d6cec0;
+  border-bottom: 1px solid #d6cec0;
+}
+.key-takeaways > :first-child { margin-top: 0; }
 
 @media (max-width: 768px) {
-  body {
-    line-height: 1.75;
-  }
-
-  p {
-    text-align: left;
-  }
+  body { font-size: 16px; line-height: 1.82; }
+  p { text-align: left; }
+  h1 { font-size: 2rem; }
+  h2 { font-size: 1.45rem; margin-top: 2.5rem; }
+  .chapter-opening { padding: 1.25rem; }
+  pre code { font-size: 0.78rem; }
 }

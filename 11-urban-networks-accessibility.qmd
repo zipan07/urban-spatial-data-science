@@ -1,16 +1,18 @@
 ---
-title: "第11章 沿着城市网络移动：可达性、中心性与流空间"
+title: "第11章 城市网络、空间可达性与区域结构"
 ---
 
-# 本章导读
-
+::: {.chapter-opening}
 地图上的直线距离并不能完整描述城市中的接近。隔河相望的两个社区可能需要绕行数公里，相邻街区也可能因封闭小区而无法直接通行。居民到学校、医院和公园的实际路径受到道路、入口、换乘和交通方式的共同影响。
 
 网络视角把城市理解为节点、连接和流动构成的关系系统。从街道交叉口到轨道站，从社区出行到城市间通勤，网络分析帮助我们研究潜在移动路径、服务可达性、空间中心性和区域联系。本章将一般网络分析、空间句法与流空间放在同一框架中，但强调它们各自的理论边界。
+:::
 
-## 学习目标
+::: {.learning-objectives}
+**学习目标**
 
 完成本章后，你应当能够把道路或城市联系表示为网络，区分直线距离、网络距离和时间成本，解释最短路径、服务范围和主要中心性指标，并将网络结果用于公共服务和空间结构分析。
+:::
 
 # 11.1 节点和边如何代表城市
 
@@ -36,7 +38,7 @@ G=(V,E)
 
 OSMnx能够从OpenStreetMap获取并组织道路网络：
 
-~~~{python}
+```{.python}
 import osmnx as ox
 
 G = ox.graph_from_place(
@@ -47,18 +49,18 @@ G = ox.graph_from_place(
 
 print("节点:", G.number_of_nodes())
 print("边:", G.number_of_edges())
-~~~
+```
 
 \`network_type="walk"\`表示构建步行网络。如果研究驾车或骑行，允许通行的道路、方向和成本都不同。
 
 将网络转换为空间图层：
 
-~~~{python}
+```{.python}
 nodes, edges = ox.graph_to_gdfs(G)
 
 nodes.head()
 edges[["length", "geometry"]].head()
-~~~
+```
 
 在线道路数据并不天然完整。小区内部道路、地下通道、临时封闭和出入口可能缺失。正式研究应记录数据获取日期，并对研究区进行空间抽查。
 
@@ -72,7 +74,7 @@ P^*=\arg\min_P\sum_{e\in P}c_e
 
 边成本\(c_e\)可以是道路长度、预计时间、费用、坡度或综合阻抗。
 
-~~~{python}
+```{.python}
 origin = list(G.nodes)[0]
 destination = list(G.nodes)[-1]
 
@@ -82,7 +84,7 @@ route = ox.shortest_path(
     destination,
     weight="length"
 )
-~~~
+```
 
 长度最短并不一定是行人真实选择。更安全、连续、有遮阴或商业活跃的道路可能更受欢迎。因此，最短路径表达的是特定成本定义下的潜在最优路径，而不是观测行为。
 
@@ -106,7 +108,7 @@ route = ox.shortest_path(
 
 给定设施节点和最大网络成本，可以提取可达子网络：
 
-~~~{python}
+```{.python}
 import networkx as nx
 
 facility_node = origin
@@ -118,7 +120,7 @@ service_graph = nx.ego_graph(
     radius=distance_limit,
     distance="length"
 )
-~~~
+```
 
 将这些可达道路转换为服务区域后，可以与人口网格叠加，估算潜在覆盖人口。
 
@@ -144,13 +146,13 @@ C_B(i)=
 \frac{\sigma_{st}(i)}{\sigma_{st}}
 \]
 
-~~~{python}
+```{.python}
 betweenness = nx.betweenness_centrality(
     G,
     weight="length",
     normalized=True
 )
-~~~
+```
 
 介数较高的道路可能承担较强穿行作用，但这只是基于网络结构的潜在流量。如果土地功能、人口和交通方式不同，实际人流可能与结构预测不一致。
 
@@ -166,7 +168,7 @@ betweenness = nx.betweenness_centrality(
 
 当节点从交叉口变成城市或区县，边从道路变成通勤、物流或信息联系时，网络分析进入流空间尺度。
 
-~~~{python}
+```{.python}
 import pandas as pd
 import networkx as nx
 
@@ -183,7 +185,7 @@ G_flow = nx.from_pandas_edgelist(
     edge_attr="trips",
     create_using=nx.DiGraph()
 )
-~~~
+```
 
 流量具有方向和规模效应。人口较大的城市往往拥有更多通勤，因此需要比较总流量、流出比例、流入比例或标准化联系。网络社区可以帮助识别功能联系紧密的区域，但不一定与行政区划完全一致。
 
@@ -215,7 +217,29 @@ G_flow = nx.from_pandas_edgelist(
 
 最后识别高需求、低可达社区，并说明结果仍缺少哪些服务质量与行为信息。
 
-# 11.11 本章小结
+# 11.11 深度阅读：供需竞争与多模式可达性
+
+最近设施距离忽略容量和竞争。供需可达性先计算每个设施服务范围内的供给—需求比，再把居民可达到的设施比率汇总。结果对服务半径、距离衰减、容量口径和跨界流动敏感。
+
+```{.python filename="11_two_step_accessibility.py"}
+import numpy as np
+
+def decay(minutes, cutoff=30, beta=0.08):
+    return np.where(minutes <= cutoff, np.exp(-beta * minutes), 0.0)
+
+# travel_time 的行是社区、列是设施
+weights = decay(travel_time.to_numpy())
+demand_at_facility = weights.T @ communities["older_population"].to_numpy()
+ratio = facilities["capacity"].to_numpy() / np.maximum(demand_at_facility, 1)
+accessibility = weights @ ratio
+communities["medical_access"] = accessibility
+```
+
+多模式研究不应简单取步行、公交和驾车的最小时间，因为不同人群可用交通方式不同。可根据年龄、收入、车辆拥有和时段构造情景，分别报告，而不是用统一“理性出行者”代表所有居民。
+
+网络还会随时间变化。公交班次、道路拥堵、设施开放和夜间安全使同一地点在不同时段拥有不同可达性。静态网络结果应明确其代表的时段。
+
+# 11.12 本章小结
 
 网络分析把城市空间从静态位置推进到关系、路径和流动。节点、边和成本的定义决定了我们看到的网络。中心性、服务范围和通勤联系能够支持空间结构与公共服务研究，但它们始终是对城市运行的抽象，必须与人口、功能、行为和制度共同解释。
 

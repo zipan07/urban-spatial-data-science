@@ -11,23 +11,38 @@ book:
   date: today
   language: zh
   site-url: https://zipan07.github.io/urban-spatial-data-science/
+  repo-url: https://github.com/zipan07/urban-spatial-data-science
+  repo-actions: [edit, issue]
   search: true
   page-navigation: true
   reader-mode: true
   chapters:
     - index.qmd
-    - part: "第二部分 计算工具与城市空间分析"
+    - part: "第一部分 城市问题、数据与研究设计"
+      chapters:
+        - 01-urban-informatics.qmd
+        - 02-researchable-questions.qmd
+        - 03-urban-data-paradigms.qmd
+        - 04-urban-sensing-data-quality.qmd
+        - 05-space-time-scale.qmd
+    - part: "第二部分 计算工具与空间分析"
       chapters:
         - 06-computational-environment.qmd
         - 07-python-urban-data.qmd
         - 08-arcgis-spatial-analysis.qmd
         - 09-geographic-computation-mapping.qmd
+    - part: "第三部分 空间关系、网络与智能模型"
+      chapters:
         - 10-spatial-weights-autocorrelation.qmd
         - 11-urban-networks-accessibility.qmd
         - 12-machine-learning-spatial-intelligence.qmd
+        - 13-model-evaluation-uncertainty.qmd
+    - part: "第四部分 规划证据、设计应用与综合研究"
+      chapters:
+        - 14-evidence-planning-communication.qmd
+        - 15-planning-design-case.qmd
+        - 16-capstone-critique.qmd
     - references.qmd
-  repo-url: https://github.com/zipan07/urban-spatial-data-science
-  repo-actions: [edit, issue]
 
 format:
   html:
@@ -37,8 +52,11 @@ format:
     toc-depth: 3
     number-sections: true
     code-copy: true
-    code-fold: show
-    code-overflow: wrap
+    code-line-numbers: true
+    code-annotations: hover
+    code-overflow: scroll
+    smooth-scroll: true
+    link-external-newwindow: true
 
 execute:
   enabled: false

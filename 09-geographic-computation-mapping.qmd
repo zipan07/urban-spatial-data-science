@@ -1,16 +1,18 @@
 ---
-title: "第9章 阅读城市的空间分布：指标、地图与地理计算"
+title: "第9章 地理计算、空间分布与专题表达"
 ---
 
-# 本章导读
-
+::: {.chapter-opening}
 地图是城市研究最熟悉的表达方式，也是最容易产生误解的表达方式。一幅分级设色地图看起来像是在直接展示现实，但它实际上综合了数据来源、指标计算、空间单元、分类方法和视觉设计等一系列选择。改变其中任何一个环节，读者看到的“城市格局”都可能随之改变。
 
 本章以社区养老服务供需为案例，从指标构建开始，逐步讨论变量分布、地图分类、颜色、尺度和空间单元。我们的目标不是做出一张更漂亮的地图，而是学会通过地图发现问题，并为下一章的空间统计检验做好准备。
+:::
 
-## 学习目标
+::: {.learning-objectives}
+**学习目标**
 
 完成本章后，你应当能够区分总量、比例、密度和标准化指标，解释分级设色地图的主要设计选择，使用GeoPandas和Mapclassify完成专题表达，并识别分类和尺度对结论的影响。
+:::
 
 # 9.1 地图从指标开始
 
@@ -43,7 +45,7 @@ title: "第9章 阅读城市的空间分布：指标、地图与地理计算"
 
 制图之前先查看统计分布：
 
-~~~{python}
+```{.python}
 import matplotlib.pyplot as plt
 import seaborn as sns
 
@@ -64,7 +66,7 @@ sns.boxplot(
 axes[1].set_title("异常值检查")
 
 plt.tight_layout()
-~~~
+```
 
 直方图帮助我们理解偏态与集中趋势，箱线图则提示可能的极端地区。异常值并不一定错误，但必须回到原始数据和分母进行检查。
 
@@ -74,7 +76,7 @@ plt.tight_layout()
 
 **等距分类**让每一类别具有相同数值宽度，适合数值范围本身具有解释意义的情况；**分位数分类**让每类包含相近数量的地区，便于比较相对位置；**自然断点**寻找数据中的组内相似与组间差异，常能形成视觉清楚的类别，但不同年份的断点可能不一致。
 
-~~~{python}
+```{.python}
 import matplotlib.pyplot as plt
 
 fig, axes = plt.subplots(
@@ -103,7 +105,7 @@ for ax, (scheme, title) in zip(axes, schemes):
     ax.set_axis_off()
 
 plt.tight_layout()
-~~~
+```
 
 三幅地图来自同一变量，却可能突出不同地区。这种差异不是制图软件造成的错误，而是分类规则对数据叙事的塑造。
 
@@ -141,7 +143,7 @@ plt.tight_layout()
 
 养老服务研究同时关注需求和供给。分别绘制两张地图可以保持变量清晰，散点图则能帮助比较关系：
 
-~~~{python}
+```{.python}
 sns.scatterplot(
     data=communities,
     x="older_population",
@@ -149,7 +151,7 @@ sns.scatterplot(
 )
 plt.xlabel("老年人口")
 plt.ylabel("设施数量")
-~~~
+```
 
 还可以依据需求和供给相对中位数形成四类：
 
@@ -185,7 +187,32 @@ plt.ylabel("设施数量")
 
 请提交一页地图组合和一段不超过300字的解释。解释中必须说明分类方法、空间单元和至少一项不确定性。
 
-# 9.10 本章小结
+# 9.10 深度阅读：双变量地图与小多图
+
+当研究同时关注需求和供给，单一综合指数会隐藏两者组合。双变量地图可以把两个三分类变量组合为九种颜色，但图例学习成本较高。面向课堂分析，可以先使用需求—供给四象限，再用两张并列地图复核。
+
+跨年份或跨群体比较优先使用固定分级的小多图。所有面板保持相同空间范围、分类断点和颜色，读者才能把差异解释为数据变化。若每年都使用当年分位数，颜色只表示相对排名，无法判断绝对改善。
+
+```{.python filename="09_fixed_classification.py"}
+import numpy as np
+import matplotlib.pyplot as plt
+
+years = [2020, 2025]
+breaks = np.quantile(areas.loc[areas["year"].isin(years), "access_score"],
+                     [0, .2, .4, .6, .8, 1])
+
+fig, axes = plt.subplots(1, 2, figsize=(13, 6))
+for ax, year in zip(axes, years):
+    subset = areas.loc[areas["year"].eq(year)].copy()
+    subset["class"] = np.digitize(subset["access_score"], breaks[1:-1])
+    subset.plot(column="class", cmap="YlGnBu", ax=ax, vmin=0, vmax=4)
+    ax.set_title(f"{year}年（固定分级）")
+    ax.set_axis_off()
+```
+
+如果小样本比率或模型预测具有较大误差，应同时呈现可靠性。最简单做法是并列一张样本量或区间宽度图，而不是用饱和颜色制造虚假精确。
+
+# 9.11 本章小结
 
 专题地图不是现实的透明投影，而是数据、指标、空间单元、分类和视觉语言共同构成的分析结果。高质量地图不仅让格局可见，也让研究者的选择可见。地图能够提出有价值的问题，但要判断空间集聚是否具有统计意义，还需要进一步建立空间关系。
 

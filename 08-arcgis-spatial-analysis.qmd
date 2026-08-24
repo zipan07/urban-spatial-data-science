@@ -1,16 +1,18 @@
 ---
-title: "第8章 从空间关系到规划判断：ArcGIS Pro与城市空间分析"
+title: "第8章 ArcGIS Pro与城市空间分析"
 ---
 
-# 本章导读
-
+::: {.chapter-opening}
 城市规划中的许多问题都具有鲜明的空间语言：学校离居住区是否足够近，老年人能否在合理时间内到达社区服务设施，新增建设是否侵占生态敏感空间，不同规划方案会把发展引向哪里。GIS把这些问题转化为距离、邻近、叠加、网络和适宜性等空间关系。
 
 然而，空间分析从来不只是执行工具。500米缓冲区、15分钟服务圈、生态权重和适宜性等级都包含对现实的假设。本章以ArcGIS Pro为主要操作环境，但教学重点是理解工具背后的空间逻辑，并把结果转化为审慎的规划判断。
+:::
 
-## 学习目标
+::: {.learning-objectives}
+**学习目标**
 
 完成本章后，你应当能够根据规划问题选择邻近、叠加、网络或适宜性分析，理解坐标、距离、边界和权重对结果的影响，并建立ArcGIS Pro与Python之间可追溯的数据工作流。
+:::
 
 # 8.1 一张地图不能自动回答规划问题
 
@@ -124,7 +126,7 @@ ArcGIS Pro适合看见空间问题，Python适合重复和比较空间分析。�
 4. 将结果写回GeoPackage；
 5. 在ArcGIS Pro中核查位置并制作最终地图。
 
-~~~{python}
+```{.python}
 import geopandas as gpd
 
 areas = gpd.read_file(
@@ -137,7 +139,7 @@ areas[[
     "accessibility",
     "population_demand"
 ]].describe()
-~~~
+```
 
 这一往返过程不应依靠人工记忆。关键参数、字段计算和筛选条件应保存在Notebook、脚本或ModelBuilder中。
 
@@ -157,7 +159,33 @@ areas[[
 
 如果一个结论只在某个偶然参数下成立，就不应以确定语气进入规划建议。
 
-# 8.11 本章小结
+# 8.11 深度阅读：把交互探索固化为地理处理模型
+
+ArcGIS Pro 中的交互探索适合理解数据和试验参数，但稳定流程应固化为 ModelBuilder、地理处理历史或 ArcPy 脚本。固化并不是为了排斥人工判断，而是区分哪些步骤必须重复、哪些节点需要人工审查。
+
+```{.python filename="08_arcpy_pipeline.py"}
+import arcpy
+
+arcpy.env.overwriteOutput = True
+arcpy.env.outputCoordinateSystem = arcpy.SpatialReference(4547)
+
+arcpy.management.RepairGeometry("communities")
+arcpy.analysis.SpatialJoin(
+    target_features="communities",
+    join_features="elderly_facilities",
+    out_feature_class="outputs/community_facility_join",
+    join_operation="JOIN_ONE_TO_ONE",
+    match_option="CONTAINS",
+)
+
+count = int(arcpy.management.GetCount("outputs/community_facility_join")[0])
+if count == 0:
+    raise RuntimeError("空间连接结果为空，请检查坐标系和研究范围")
+```
+
+矢量叠加产生的碎片面、栅格重采样产生的平滑、网络构建中的断点，都是工具转换带来的信息变化。工作流应在每次模型转换后检查数量、面积、分辨率和拓扑，而不是只检查最终地图。
+
+# 8.12 本章小结
 
 GIS的真正价值不是快速生成空间结果，而是帮助研究者把规划问题转化为明确的空间关系。距离、邻近、叠加、网络和权重都代表对城市运行方式的假设。高质量空间分析必须让这些假设可见、让结果可查，并在返回规划判断之前说明证据边界。
 

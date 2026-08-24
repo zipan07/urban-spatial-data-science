@@ -1,16 +1,18 @@
 ---
-title: "第7章 城市如何成为数据：Python中的获取、清洗与组织"
+title: "第7章 Python城市数据获取、清洗与组织"
 ---
 
-# 本章导读
-
+::: {.chapter-opening}
 城市不是天然以表格和图层的形式存在。人口普查把居民组织为统计单元，遥感影像把地表转化为像元，兴趣点平台把城市活动压缩为带标签的坐标，手机和交通系统则把移动行为记录为时间戳与轨迹。每一种数据都源于特定的采集制度、技术平台和分类规则。
 
 因此，数据清洗并不是把“不整齐”的数据修理整齐，而是理解数据怎样代表城市，并把不同来源组织成能够回答研究问题的证据。本章以“社区养老服务供需”为贯穿案例，介绍Pandas和GeoPandas中的城市数据工作流。
+:::
 
-## 学习目标
+::: {.learning-objectives}
+**学习目标**
 
 完成本章后，你应当能够区分记录、变量、空间对象和分析单元，使用Pandas与GeoPandas读取和连接城市数据，识别缺失、重复、编码、几何与坐标问题，并为处理后的数据建立透明的数据说明。
+:::
 
 # 7.1 一行数据代表什么
 
@@ -22,7 +24,7 @@ title: "第7章 城市如何成为数据：Python中的获取、清洗与组织"
 
 假设人口表中同一社区出现两行。它可能是重复错误，也可能代表两个年份、两种户籍类型或两个年龄组。如果研究者没有先弄清一行代表什么，直接删除重复值就可能丢失真实信息。
 
-~~~{python}
+```{.python}
 import pandas as pd
 
 population = pd.DataFrame({
@@ -34,7 +36,7 @@ population = pd.DataFrame({
 
 population.info()
 population.head()
-~~~
+```
 
 在清洗之前，首先回答：
 
@@ -52,13 +54,13 @@ population.head()
 
 例如，互联网平台上的养老设施点位可能遗漏没有网络页面的小型机构，也可能保留已经停业的记录。即使坐标精确，它也不一定完整或及时。
 
-~~~{python}
+```{.python}
 population.isna().sum()
 population.duplicated(
     subset=["community_id", "year"]
 ).sum()
 population.describe(include="all")
-~~~
+```
 
 这些命令只帮助我们发现异常，不能自动决定怎样处理。
 
@@ -68,7 +70,7 @@ population.describe(include="all")
 
 更稳妥的做法是先保留缺失，并建立质量标记：
 
-~~~{python}
+```{.python}
 population["older_population_missing"] = (
     population["older_population"].isna()
 )
@@ -77,7 +79,7 @@ population["ageing_rate"] = (
     population["older_population"]
     / population["population"]
 )
-~~~
+```
 
 只有当数据说明明确规定空值代表“未发生”时，才能将其替换为0。对于无法补齐的重要变量，应在地图和模型中显式标记，而不是让缺失地区悄悄退出分析。
 
@@ -85,7 +87,7 @@ population["ageing_rate"] = (
 
 社区边界和设施点可以通过GeoPandas读取：
 
-~~~{python}
+```{.python}
 import geopandas as gpd
 
 communities = gpd.read_file(
@@ -101,17 +103,17 @@ print(communities.crs)
 print(facilities.crs)
 print(communities.geom_type.value_counts())
 print(facilities.geom_type.value_counts())
-~~~
+```
 
 空间数据除属性字段外，还包含几何和坐标参考系统。一个点的经纬度看起来很精确，但精确的小数位并不等于位置准确。一个社区面可能来自规划边界、统计边界或平台绘制边界，它们也不一定相同。
 
 分析前需要检查：
 
-~~~{python}
+```{.python}
 print("空几何:", communities.geometry.isna().sum())
 print("无效几何:", (~communities.geometry.is_valid).sum())
 print("研究范围:", communities.total_bounds)
-~~~
+```
 
 进行面积、长度、距离或缓冲计算时，应把数据转换到适合当地的投影坐标系，而不是直接使用经纬度计算米。
 
@@ -119,7 +121,7 @@ print("研究范围:", communities.total_bounds)
 
 人口表和社区边界共享\`community_id\`时，可以进行属性连接：
 
-~~~{python}
+```{.python}
 population_2025 = (
     population
     .query("year == 2025")
@@ -132,17 +134,17 @@ communities = communities.merge(
     how="left",
     validate="one_to_one"
 )
-~~~
+```
 
 \`validate="one_to_one"\`非常重要。它把我们对数据关系的理解写进代码：每个社区在两张表中都应只出现一次。如果实际关系不是一对一，程序会提醒研究者重新检查。
 
 连接后，应比较行数并检查未匹配记录：
 
-~~~{python}
+```{.python}
 communities[
     communities["population"].isna()
 ][["community_id"]]
-~~~
+```
 
 未匹配可能来自编码差异、边界更新或名称变更。不要简单删除这些社区，因为“连接失败”本身可能揭示数据体系的不一致。
 
@@ -150,23 +152,23 @@ communities[
 
 设施数据没有社区编号时，可以依据位置判断其所在社区：
 
-~~~{python}
+```{.python}
 facility_area = gpd.sjoin(
     facilities,
     communities[["community_id", "geometry"]],
     how="left",
     predicate="within"
 )
-~~~
+```
 
 \`within\`表示设施点严格位于社区面内部。恰好落在边界上的点可能无法匹配；使用\`intersects\`又可能让同一点匹配多个社区。空间关系的选择必须与研究含义一致。
 
 完成连接后，应检查未匹配设施和重复匹配：
 
-~~~{python}
+```{.python}
 facility_area["community_id"].isna().sum()
 facility_area.index.duplicated().sum()
-~~~
+```
 
 如果大量设施未匹配，应检查坐标系统、研究范围和点位质量，而不是立即调整参数让结果“看起来正常”。
 
@@ -174,7 +176,7 @@ facility_area.index.duplicated().sum()
 
 按社区汇总设施数量：
 
-~~~{python}
+```{.python}
 facility_count = (
     facility_area
     .groupby("community_id")
@@ -190,7 +192,7 @@ communities = communities.join(
 communities["facility_count"] = (
     communities["facility_count"].fillna(0)
 )
-~~~
+```
 
 现在可以构造每千名老年人口设施数：
 
@@ -199,13 +201,13 @@ R_i=
 \frac{F_i}{P_i^{65+}}\times1000
 \]
 
-~~~{python}
+```{.python}
 communities["facilities_per_1000_older"] = (
     communities["facility_count"]
     / communities["older_population"]
     * 1000
 )
-~~~
+```
 
 这个指标改善了不同人口规模社区之间的比较，却仍然没有考虑设施容量、服务质量、跨社区使用和网络可达性。指标不是现实的完整复制，而是针对研究问题的简化。
 
@@ -239,7 +241,31 @@ communities["facilities_per_1000_older"] = (
 
 最后写一段说明，解释为什么“设施数量少”不一定等于“养老服务不足”。
 
-# 7.11 本章小结
+# 7.11 深度阅读：模式契约与数据血缘
+
+当数据流程进入多人协作，字段约定需要从口头说明升级为模式契约。契约明确列名、类型、单位、允许范围、唯一性和是否可为空。输入不满足契约时流程应停止，而不是让错误继续传播到地图和模型。
+
+```{.python filename="07_schema_contract.py"}
+required = {
+    "community_id": "string",
+    "population": "Int64",
+    "older_population": "Int64",
+}
+
+missing = set(required) - set(population.columns)
+if missing:
+    raise ValueError(f"缺少字段: {sorted(missing)}")
+
+population = population.astype(required)
+assert population["community_id"].is_unique
+assert population["older_population"].le(population["population"]).all()
+```
+
+数据血缘进一步记录输出字段由哪些输入和公式产生。例如 `facilities_per_1000_older` 来自设施容量、老年人口和比例系数。字段名、公式、代码位置和数据版本应同时保存。这样当人口口径或设施名录更新时，研究者能定位哪些地图和结论需要重算。
+
+大文件处理还要避免一次读入全部记录。可以按日期、区域或批次读取 Parquet，先在源头选择字段和过滤范围，再聚合到分析单元。但任何性能优化都不能改变总体和排除规则；应以小样本对照验证优化前后结果一致。
+
+# 7.12 本章小结
 
 城市成为数据，不是因为现实被完整记录，而是因为研究者通过分类、测量、连接和聚合建立了一个可以分析的城市表征。数据清洗的每个决定都会改变这个表征。透明记录这些决定，是后续地图、统计和模型能够被信任的前提。
 

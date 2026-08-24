@@ -8,3 +8,7 @@ __pycache__/
 .env
 data/raw/*
 !data/raw/.gitkeep
+
+**/*.quarto_ipynb
+/*.html
+/site_libs/

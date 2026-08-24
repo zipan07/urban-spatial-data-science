@@ -1,0 +1,177 @@
+---
+title: "第15章 规划设计案例分析"
+---
+
+::: {.chapter-opening}
+规划设计不是数据分析的“应用展示”，而是把证据转化为空间干预、方案组合与实施路径的过程。本章用一个完整教学案例串联前14章：从热风险与步行环境问题出发，建立数据、诊断空间、生成方案、评价公平与稳健性，最后形成可讨论的设计策略。
+:::
+
+::: {.learning-objectives}
+**学习目标**
+
+完成本章后，你应能够：组织问题导向的规划案例；把空间诊断转化为可操作设计变量；构建现状、备选方案与约束情景；使用多准则和公平指标比较方案；区分模型最优、规划可行与公共可接受；形成分阶段实施和监测方案。
+:::
+
+# 15.1 案例设定：老城热风险与步行公共空间
+
+教学案例设定在南京一片高密度老城片区。研究区拥有密集居住、轨道站点、学校、社区服务和传统商业，也面临夏季热暴露、街道遮阴不足、慢行空间连续性差和可改造土地有限。案例数据使用可替换的示范字段，不代表对具体地区的正式评价。
+
+规划问题不是简单地“哪里温度高”，而是：**在有限街道和公共空间改造预算下，如何形成连续的凉爽步行网络，使高热风险且出行脆弱的人群优先受益，同时保持公共服务可达性和实施可行性？**
+
+这一定义包含三个目标：降低热暴露、改善慢行连续性、提高公平；也包含土地、道路断面、预算、树木生长和工程时序等约束。
+
+# 15.2 建立证据底图
+
+证据底图包括：街道网络、建筑与地块、树冠和绿地、地表温度、遮阴估计、公共服务、人口结构、公交站点、事故点和可实施空间。不同数据具有不同时间和精度，应在案例开头建立数据清单和质量等级。
+
+| 证据层 | 主要指标 | 关键限制 | 设计用途 |
+|---|---|---|---|
+| 热环境 | 夏季日间地表温度、夜间热滞留 | 地表温度不等于人体体感 | 识别高热背景与验证降温方向 |
+| 遮阴与绿化 | 树冠、绿视率、建筑阴影 | 季节和拍摄时间影响 | 确定遮阴缺口和可连接节点 |
+| 步行网络 | 路段长度、坡度、交叉口、过街 | 数据未必包含真实可通行性 | 构建路径和连续性评价 |
+| 人群脆弱性 | 老年、儿童、低收入、户外工作 | 社区统计无法代表个体 | 确定公平权重与重点服务区 |
+| 实施条件 | 道路红线、产权、地下管线、预算 | 信息可能受限 | 过滤不可实施方案 |
+
+# 15.3 从指标堆叠到问题诊断
+
+综合指数容易把多个问题压成一个颜色，但会隐藏指标间权衡。本案例先分别诊断热暴露、人口脆弱性和步行重要性，再通过二维或三维组合识别类型：高暴露—高脆弱—高通行是优先干预，高暴露—低通行可能适合面状生态改善，高脆弱—低暴露则需要维护现有优势。
+
+综合分数只用于筛选，不用于自动决定。所有标准化方向、权重和阈值都应可见，并进行敏感性分析。
+
+```{.python filename="15_priority_screening.py"}
+import pandas as pd
+
+def minmax(series):
+    span = series.max() - series.min()
+    return (series - series.min()) / span if span else series * 0
+
+segments = pd.read_parquet("data/processed/street_segments.parquet")
+
+segments["heat_n"] = minmax(segments["heat_exposure"])
+segments["vulnerability_n"] = minmax(segments["vulnerable_population"])
+segments["walking_n"] = minmax(segments["pedestrian_importance"])
+
+weights = {"heat_n": .40, "vulnerability_n": .35, "walking_n": .25}
+segments["priority"] = sum(segments[k] * w for k, w in weights.items())
+
+# 可实施条件作为过滤，不应被较高的其他指标抵消
+candidates = segments.loc[
+    segments["right_of_way_feasible"]
+    & ~segments["major_utility_conflict"]
+].copy()
+```
+
+# 15.4 现场核验与地方知识
+
+模型候选路段需要现场核验。检查内容包括行道树生长空间、建筑底层使用、实际人流、过街安全、摊贩和装卸、无障碍、夜间照明、积水点和居民使用习惯。很多关键条件不在开放数据中。
+
+现场记录应结构化：位置、时间、照片方向、观察类别、强度和备注。访谈则了解热不适时段、避暑路径、维护问题和改造接受度。地方知识可以纠正算法误判，也能发现“低成本高价值”的微空间。
+
+# 15.5 形成三类方案
+
+**方案A：节点降温。** 在学校、社区中心、公交站和广场集中设置树冠、廊架、饮水与可休息空间。实施快，但路径之间可能断裂。
+
+**方案B：连续凉爽网络。** 沿高步行需求路线连接遮阴、过街与口袋空间，强调从居住地到服务设施的完整体验。系统效益高，但跨部门协调复杂。
+
+**方案C：分布式微更新。** 通过可移动遮阴、墙面绿化、开放院落、时段性街道管理和社区共建形成小尺度网络。成本灵活，但长期维护和效果一致性较弱。
+
+方案不是三个互斥图层，可以形成近期节点—中期连线—长期片区治理的组合路径。
+
+# 15.6 网络化方案评价
+
+评价不能只统计新增绿化面积。需要计算脆弱人群到公共服务的最热路径、遮阴连续长度、关键断点和网络冗余。方案改善应在同一网络和人群基础上比较。
+
+```{.python filename="15_cool_route_evaluation.py"}
+import networkx as nx
+
+def thermal_cost(edge):
+    """时间成本叠加热暴露；参数应通过现场或实验校准。"""
+    minutes = edge["length_m"] / edge["walking_speed_m_min"]
+    heat_penalty = 1 + 0.6 * edge["heat_n"] - 0.3 * edge["shade_n"]
+    return minutes * max(0.5, heat_penalty)
+
+for u, v, data in G.edges(data=True):
+    data["thermal_cost"] = thermal_cost(data)
+
+def access_to_services(origin, service_nodes, cutoff=20):
+    cost = nx.single_source_dijkstra_path_length(
+        G, origin, cutoff=cutoff, weight="thermal_cost"
+    )
+    return sum(service_capacity[n] for n in service_nodes if n in cost)
+
+baseline_access = {o: access_to_services(o, services) for o in origins}
+```
+
+对每个方案更新路段遮阴、通行或过街参数，再计算相同指标。不能用不同起点或服务容量比较方案。
+
+# 15.7 公平评价
+
+公平至少包括三层：分配公平——资源是否优先进入需求和脆弱性高的地区；程序公平——谁参与问题和方案定义；承认公平——模型是否看见不同群体的能力、时间和文化需求。
+
+可量化指标包括最低组改善、群体差距、受益人口、最低服务标准达标率和集中指数。但公平不能压缩为单一分数。一个方案平均收益最大，可能仍让行动不便者无法使用；另一个方案收益较小，却能消除最严重的基本服务缺口。
+
+# 15.8 多准则与帕累托前沿
+
+方案评价维度可能冲突：降温、覆盖、公平、成本、实施速度、生态效益和维护。简单加权分数便于排序，却对权重敏感。帕累托前沿识别“不牺牲另一目标就无法继续改善某目标”的非劣方案，更适合展示权衡。
+
+```{.python filename="15_scenario_tradeoffs.py"}
+criteria = ["heat_reduction", "vulnerable_coverage", "network_continuity"]
+costs = ["capital_cost", "maintenance_cost"]
+
+def dominates(a, b):
+    benefits_ok = all(a[c] >= b[c] for c in criteria)
+    costs_ok = all(a[c] <= b[c] for c in costs)
+    strictly_better = (
+        any(a[c] > b[c] for c in criteria)
+        or any(a[c] < b[c] for c in costs)
+    )
+    return benefits_ok and costs_ok and strictly_better
+
+pareto = []
+for _, candidate in scenarios.iterrows():
+    dominated = any(
+        dominates(other, candidate)
+        for _, other in scenarios.iterrows()
+    )
+    if not dominated:
+        pareto.append(candidate["scenario"])
+```
+
+帕累托方案仍需政治和专业选择，但它避免用隐蔽权重制造唯一“最优”。
+
+# 15.9 稳健方案与适应性路径
+
+树冠增长、气候情景、人口变化和预算都不确定。稳健方案不是某一情景下最高分，而是在多个合理情景下不出现不可接受失败。可以比较正常、极端热浪、预算下降和维护能力不足四种情景。
+
+适应性路径把行动分成无悔措施、需要监测的后续措施和触发条件。例如先实施高脆弱节点遮阴与安全过街；当热浪日数或步行量达到阈值，再连接完整廊道；对需要征地的大型工程保留空间但暂缓实施。
+
+# 15.10 实施、维护与监测
+
+设计方案必须进入实施主体、资金、时间和维护。树木选择涉及地下空间、供水和养护，遮阴设施涉及产权与安全，时段性街道管理涉及执法和商户协商。没有维护安排的绿色基础设施会快速失效。
+
+监测指标分为投入、产出、结果和影响：投入是资金与工程量；产出是新增树冠、座椅和改造路段；结果是遮阴连续性、步行量和热暴露变化；影响是健康、公平和城市活力。不同层级的时间跨度不同。
+
+::: {.planning-lens}
+**规划判断：** 数据分析帮助筛选、比较和监测方案，但设计仍需处理空间体验、制度协作和公共价值。所谓“最优路线”必须经过现场、产权、施工和公众使用检验。
+:::
+
+# 本章成果：一套可评议的规划方案
+
+提交内容包括：问题与目标；数据传记；现状诊断；三套方案图；指标和网络评价；公平与敏感性结果；现场核验；实施分期；监测计划；一页限制说明。每张图应能追溯到脚本或明确的设计判断。
+
+::: {.key-takeaways}
+**本章要点**
+
+- 规划案例从问题和约束出发，不从可用图层出发。
+- 诊断应保留多个维度，综合指数只用于透明筛选。
+- 设计变量需要转化为可计算的网络、环境和人群影响。
+- 多准则和帕累托分析用于展示权衡，不能替代公共选择。
+- 稳健方案、分期路径和监测计划使设计能够面对不确定性。
+:::
+
+# 延伸阅读
+
+- Shi et al. [*Urban Informatics*](https://link.springer.com/book/10.1007/978-981-15-8983-6) 中城市系统与应用案例。
+- Gehl, J. *Cities for People*，关于人的尺度和公共空间观察。
+- Meerow, S. et al. 关于城市韧性定义与规划权衡的研究。
+

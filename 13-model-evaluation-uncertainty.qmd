@@ -1,0 +1,196 @@
+---
+title: "第13章 模型评价、稳健性与不确定性"
+---
+
+::: {.chapter-opening}
+模型训练结束，不代表研究结束。真正决定模型能否用于规划的，是它在什么地方失败、对哪些选择敏感、面对未知数据能否保持表现，以及我们如何把不确定性传递给使用者。本章紧接机器学习，建立从“一个分数”走向完整证据审计的评价框架。
+:::
+
+::: {.learning-objectives}
+**学习目标**
+
+完成本章后，你应能够：选择与任务相匹配的评价指标；设计随机、空间、时间和跨城市验证；诊断空间残差与群体误差；进行尺度、变量、参数和样本敏感性分析；区分随机、模型与情景不确定性；制作模型卡和适用范围声明。
+:::
+
+# 13.1 评价从应用情境开始
+
+同一个模型在不同任务中需要不同评价。若模型用于填补同一城市少量缺失值，随机测试可能接近应用；若用于预测尚未调查的新区，应留出完整空间块；若用于预测下一年，则必须按时间顺序训练和测试；若计划迁移到其他城市，最有意义的是按城市留出。
+
+评价不是在训练结束后挑选一个分数，而是在建模前模拟未来使用。测试集应代表模型真正会遇到的未知，而不是方便切分的20%记录。
+
+# 13.2 指标必须对应错误代价
+
+回归常用平均绝对误差（MAE）、均方根误差（RMSE）和决定系数（$R^2$）。MAE 易解释且对极端值相对稳健；RMSE 对大误差惩罚更强；$R^2$ 描述相对于均值基线解释的变异，但可能在外推测试中为负。
+
+分类任务不能只看准确率。若高风险区域只占5%，全部预测为低风险也有95%准确率。应同时报告精确率、召回率、F1、ROC-AUC、PR-AUC和概率校准。规划预警往往更在意漏报，资源稽核可能更在意误报，阈值应由实际代价决定。
+
+$$
+\mathrm{MAE}=\frac{1}{n}\sum_{i=1}^{n}|y_i-\hat y_i|,
+\qquad
+\mathrm{RMSE}=\sqrt{\frac{1}{n}\sum_{i=1}^{n}(y_i-\hat y_i)^2}
+$$
+
+指标还应回到原单位。“MAE=0.18”若目标经过标准化，对规划者没有直观意义；应同时转换为客流人数、房价比例或可达分钟数，并与行动阈值比较。
+
+# 13.3 基线：复杂模型必须回答“比什么更好”
+
+基线是评价的参照系。时间预测可用上一期或季节均值，空间预测可用全市均值、邻域均值或简单线性模型，分类可用多数类或规则阈值。复杂模型只有在同一数据划分上稳定优于合理基线，才算产生增量价值。
+
+```{.python filename="13_baseline_comparison.py"}
+from sklearn.dummy import DummyRegressor
+from sklearn.linear_model import Ridge
+from sklearn.ensemble import HistGradientBoostingRegressor
+from sklearn.model_selection import GroupKFold, cross_validate
+
+models = {
+    "mean_baseline": DummyRegressor(strategy="mean"),
+    "ridge": Ridge(alpha=1.0),
+    "boosting": HistGradientBoostingRegressor(max_depth=6, random_state=42),
+}
+
+cv = GroupKFold(n_splits=5)
+rows = []
+for name, model in models.items():
+    result = cross_validate(
+        model, X, y, groups=spatial_blocks, cv=cv,
+        scoring=["neg_mean_absolute_error", "neg_root_mean_squared_error", "r2"]
+    )
+    rows.append({
+        "model": name,
+        "MAE": -result["test_neg_mean_absolute_error"].mean(),
+        "RMSE": -result["test_neg_root_mean_squared_error"].mean(),
+        "R2": result["test_r2"].mean(),
+    })
+```
+
+模型比较必须固定切分、预处理和指标。若每个模型使用不同测试样本，分数不可直接比较。
+
+# 13.4 空间交叉验证
+
+相邻地区通常共享环境、社会结构和数据生产方式。随机交叉验证把邻近样本分到训练和测试两侧，模型可以利用空间相似性，导致表现过于乐观。空间分块验证将连续区域作为组，每次留出完整区域。
+
+分块大小应接近预期外推距离。块太小仍会泄漏，块太大则折数少、结果方差高。可以依据空间相关范围、城市功能区或行政层级设置，并比较多个块尺度。
+
+```{.python filename="13_spatial_blocks.py"}
+import geopandas as gpd
+from sklearn.model_selection import GroupKFold
+
+# 示例：用1公里规则网格的行列组合构造5公里评价块
+centroid = areas.geometry.centroid
+areas["block_x"] = (centroid.x // 5000).astype(int)
+areas["block_y"] = (centroid.y // 5000).astype(int)
+areas["spatial_block"] = (
+    areas["block_x"].astype(str) + "_" + areas["block_y"].astype(str)
+)
+
+cv = GroupKFold(n_splits=5)
+for fold, (train_idx, test_idx) in enumerate(
+    cv.split(X, y, groups=areas["spatial_block"]), start=1
+):
+    print(fold, len(train_idx), len(test_idx),
+          areas.iloc[test_idx]["spatial_block"].nunique())
+```
+
+可视化每一折训练与测试区域是必要检查。若块因边界错误交错，或测试区只集中在城市边缘，评价仍可能失真。
+
+# 13.5 时间外推与概念漂移
+
+城市关系会随政策、市场、人口和数据平台改变。过去训练的模型可能在未来失效，这称为概念漂移。时间验证应保持因果顺序：用早期数据训练、后期数据测试，并根据应用节奏采用滚动窗口或扩展窗口。
+
+需要区分数据漂移和概念漂移。前者是输入分布变化，例如新区建筑密度更低；后者是输入与结果关系变化，例如远程办公改变了交通可达性与办公租金的关系。监测应同时比较特征分布、误差和校准。
+
+# 13.6 残差也是空间数据
+
+总体误差良好，仍可能在特定地区持续失败。将残差映射并计算空间自相关，可以识别遗漏的空间过程、数据覆盖差异或边界效应。高估和低估成片出现，通常说明模型没有捕捉某种区域结构。
+
+```{.python filename="13_spatial_residuals.py"}
+from libpysal.weights import Queen
+from esda.moran import Moran
+
+evaluation = test_areas.copy()
+evaluation["residual"] = y_test - y_pred
+evaluation["absolute_error"] = evaluation["residual"].abs()
+
+w = Queen.from_dataframe(evaluation, use_index=True)
+w.transform = "R"
+residual_moran = Moran(evaluation["residual"].to_numpy(), w, permutations=999)
+
+print({
+    "Moran_I": residual_moran.I,
+    "permutation_p": residual_moran.p_sim,
+    "largest_errors": evaluation.nlargest(10, "absolute_error").index.tolist(),
+})
+```
+
+残差空间相关并不自动说明应加入空间滞后。先检查是否遗漏区域变量、存在数据错误或需要分层模型，再决定模型结构。
+
+# 13.7 分组误差、公平与最差表现
+
+平均误差可能掩盖群体差异。应按中心—外围、收入、年龄结构、建设年代、数据覆盖质量等分组报告误差，并关注最差组而非只看平均。分类模型还要比较假阳性、假阴性和校准差异。
+
+公平评价不能只套用统计指标。预测风险在不同群体间相等，并不意味着资源分配公平；历史结果变量本身可能反映不平等。研究者需要说明模型是在预测需要、使用还是历史投入，以及这种目标是否适合用于未来分配。
+
+# 13.8 稳健性：换一种合理选择，结论是否仍在
+
+稳健性分析系统改变合理选择，包括空间单元、时间窗口、变量定义、缺失处理、权重矩阵、模型家族、参数范围和异常值规则。目标不是让所有结果完全相同，而是区分核心结论与依赖特定选择的部分。
+
+建议建立“分析多元宇宙”：先列出有实质依据的备选方案，再批量运行并汇总主要效应、排名或误差。如果某地区只有在一种分级和一种模型下进入优先区，就不应被表述为稳定短板。
+
+```{.python filename="13_sensitivity_grid.py"}
+from itertools import product
+import pandas as pd
+
+specifications = product(
+    ["community", "grid_1000m"],
+    ["median", "knn"],
+    ["ridge", "random_forest"],
+    [3000, 5000],  # 空间块尺度（米）
+)
+
+records = []
+for unit, imputation, model_name, block_size in specifications:
+    score = run_spatial_evaluation(
+        unit=unit, imputation=imputation,
+        model_name=model_name, block_size=block_size
+    )
+    records.append({"unit": unit, "imputation": imputation,
+                    "model": model_name, "block_size": block_size,
+                    **score})
+
+sensitivity = pd.DataFrame(records)
+```
+
+# 13.9 不确定性的三种来源
+
+**随机不确定性**来自不可预测波动和抽样误差；**认知不确定性**来自模型、变量和机制认识不足；**情景不确定性**来自未来政策、人口和经济路径未知。增加样本可以降低部分随机不确定性，却不能自动消除错误模型和情景分歧。
+
+预测区间、Bootstrap、分位数回归和共形预测可以量化部分预测不确定性。情景分析则更适合长期规划：不是给出2040年的唯一地图，而是展示不同人口、交通和生态约束下稳定与分歧区域。
+
+# 13.10 模型卡与适用范围
+
+模型卡应记录用途、训练数据、目标变量、特征、验证、总体与分组表现、限制、伦理风险、更新周期和禁止用途。它把技术细节转化为组织记忆，也防止模型被挪到没有验证的新任务。
+
+::: {.planning-lens}
+**规划判断：** 最重要的不是“最佳模型”，而是“在当前决策中风险可接受的模型”。如果错误会影响弱势群体或重大投资，应提高验证强度、保留人工复核并提供替代方案。
+:::
+
+# 本章工作室：审计一个城市预测模型
+
+选择第12章模型，比较随机、空间和时间验证；绘制残差地图；按中心—外围和数据质量分组报告误差；改变空间单元与两项关键参数；最后写一页模型卡。结论必须说明哪种表现最接近真实使用，以及哪些地区不应直接使用预测。
+
+::: {.key-takeaways}
+**本章要点**
+
+- 测试设计应模拟实际部署中的未知。
+- 评价需要指标、基线、空间残差和分组误差共同构成。
+- 稳健性分析检验结论对合理选择的依赖，而不是寻找更多显著结果。
+- 不确定性包含随机、模型和情景来源，不能被单一置信区间概括。
+- 模型卡明确适用范围、限制和责任。
+:::
+
+# 延伸阅读
+
+- scikit-learn. [Cross-validation](https://scikit-learn.org/stable/modules/cross_validation.html)。
+- Rey, Arribas-Bel, & Wolf. [Spatial Regression](https://geographicdata.science/book/notebooks/11_regression.html) 与 [Spatial Feature Engineering](https://geographicdata.science/book/notebooks/12_feature_engineering.html)。
+- Huntington-Klein. [Partial Identification](https://theeffectbook.net/ch-PartialIdentification.html)。
+

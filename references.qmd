@@ -1,25 +1,45 @@
 ---
-title: "参考文献与在线资源"
+title: "参考文献、在线教材与方法资源"
 unnumbered: true
 ---
 
-# 主要教材 {.unnumbered}
+# 核心参考教材 {.unnumbered}
 
 1. 史文中、Michael F. Goodchild、Michael Batty、关美宝、张安舒等：《城市信息学》，科学出版社，2024。
-2. Rey, S. J., Arribas-Bel, D., & Wolf, L. J. *Geographic Data Science with Python*. Chapman & Hall/CRC, 2023.
-3. 翁敏、李霖、苏世亮：《空间数据分析案例式实验教程》，科学出版社。
-4. Huntington-Klein, N. *The Effect: An Introduction to Research Design and Causality*. Chapman & Hall/CRC.
+2. Shi, W., Goodchild, M. F., Batty, M., Kwan, M.-P., & Zhang, A. (Eds.). [*Urban Informatics*](https://link.springer.com/book/10.1007/978-981-15-8983-6). Springer, 2021. 开放获取英文版，CC BY 4.0。
+3. Rey, S. J., Arribas-Bel, D., & Wolf, L. J. [*Geographic Data Science with Python*](https://geographicdata.science/book/). Chapman & Hall/CRC, 2023。
+4. 翁敏、李霖、苏世亮：《空间数据分析案例式实验教程》，科学出版社。
+5. Huntington-Klein, N. [*The Effect: An Introduction to Research Design and Causality*](https://theeffectbook.net/). Chapman & Hall/CRC。
 
-# 开放在线资源 {.unnumbered}
+# 城市、空间与规划 {.unnumbered}
 
-- [Urban Informatics开放英文版](https://link.springer.com/book/10.1007/978-981-15-8983-6)
-- [Geographic Data Science with Python在线版](https://geographicdata.science/book/)
-- [The Effect在线版](https://theeffectbook.net/)
-- [PySAL](https://pysal.org/)
-- [GeoPandas](https://geopandas.org/)
-- [Scikit-learn](https://scikit-learn.org/stable/user_guide.html)
+- Batty, M. *The New Science of Cities*. MIT Press.
+- Gehl, J. *Cities for People*. Island Press.
+- Kitchin, R. *The Data Revolution*. Sage.
+- Kwan, M.-P. 关于时空棱柱、活动空间和不确定地理情境问题的系列研究。
+- Openshaw, S. *The Modifiable Areal Unit Problem*.
+- Tufte, E. *The Visual Display of Quantitative Information*.
+
+# Python与地理计算 {.unnumbered}
+
+- [Python Documentation](https://docs.python.org/3/)
+- [Pandas User Guide](https://pandas.pydata.org/docs/user_guide/)
+- [GeoPandas User Guide](https://geopandas.org/en/stable/docs/user_guide.html)
+- [PySAL](https://pysal.org/) 与 [Mapclassify](https://pysal.org/mapclassify/)
+- [Scikit-learn User Guide](https://scikit-learn.org/stable/user_guide.html)
+- [NetworkX Documentation](https://networkx.org/documentation/stable/)
+- [OSMnx Documentation](https://osmnx.readthedocs.io/)
+- [Momepy Documentation](https://docs.momepy.org/)
 - [ArcGIS Pro Documentation](https://pro.arcgis.com/)
 
-# 使用说明 {.unnumbered}
+# 研究设计、开放研究与出版 {.unnumbered}
 
-各章中已注明具体参考来源和改编方式。完整版权与许可说明见项目根目录的`COPYRIGHT_AND_SOURCES.md`。
+- [The Turing Way](https://the-turing-way.netlify.app/)，可重复、协作、伦理与开放研究指南。
+- [Quarto Documentation](https://quarto.org/docs/)，在线图书与可执行文档。
+- Booth, W. C. et al. *The Craft of Research*.
+- Schwabish, J. *Better Data Visualizations*.
+
+# 资源使用说明 {.unnumbered}
+
+本教材根据本课程的16讲结构重新组织，正文、代码和教学案例以原创中文表达为主。*Urban Informatics* 开放英文版在 CC BY 4.0 许可下用于框架参考并注明来源；*Geographic Data Science with Python* 用作英文指定阅读和知识顺序参考，不发布其受限制内容的整章翻译或改写；*The Effect* 用于研究设计思维和延伸阅读，不因其可在线阅读而推定具有中文翻译授权。完整说明见仓库根目录 `COPYRIGHT_AND_SOURCES.md`。
+
