@@ -8,6 +8,11 @@ dependencies:
   - numpy
   - pandas
   - scipy
+  - pytest
+  - requests
+  - tqdm
+  - openpyxl
+  - pyarrow
   - matplotlib
   - seaborn
   - geopandas

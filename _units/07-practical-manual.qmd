@@ -1,0 +1,168 @@
+## 上机手册：第一次完成Pandas与GeoPandas数据处理
+
+本节假定第6章环境诊断已经通过。学生将创建自己的实验项目，读取一张社区人口表和一个社区边界图层，完成字段检查、连接、指标计算与GeoPackage输出。
+
+### 建立实验目录并确认工作位置
+
+在教材仓库外新建个人课程目录，例如`urban-data-coursework`。每次实验使用独立子目录，避免不同章节覆盖文件。
+
+```{.bash filename="terminal"}
+mkdir urban-data-coursework
+cd urban-data-coursework
+mkdir -p chapter07/data/raw chapter07/data/processed chapter07/notebooks chapter07/outputs
+cd chapter07
+code .
+```
+
+Windows PowerShell若不支持相同的`mkdir -p`写法，可以在文件管理器中创建目录。最后的`code .`表示用VS Code打开当前文件夹；若`code`命令尚未注册，使用VS Code菜单“Open Folder”得到相同效果。
+
+在Notebook第一个单元检查当前目录。相对路径从这里开始解释。
+
+```{.python filename="07_01_paths.ipynb"}
+from pathlib import Path
+
+ROOT = Path.cwd()
+RAW = ROOT / "data" / "raw"
+PROCESSED = ROOT / "data" / "processed"
+OUTPUTS = ROOT / "outputs"
+
+print("项目根目录:", ROOT)
+print("原始数据目录存在:", RAW.exists())
+print("可见文件:", [p.name for p in RAW.glob("*")])
+```
+
+若`RAW.exists()`为False，先修正打开的文件夹或目录结构。不要通过连续添加`../..`碰运气寻找文件。
+
+### 放置原始数据并建立只读习惯
+
+将教师提供的`community_population.csv`和`communities.gpkg`复制到`data/raw`。文件名保持不变，原始文件不在Excel或GIS中直接覆盖。若必须修正源数据，将修正规则写入代码，输出到`data/processed`。
+
+CSV常见问题包括中文编码、社区代码前导零和数值中的逗号。先读取少量记录：
+
+```{.python filename="07_02_read_table.ipynb"}
+import pandas as pd
+
+population = pd.read_csv(
+    RAW / "community_population.csv",
+    dtype={"community_id": "string"},
+    encoding="utf-8",
+)
+display(population.head())
+print(population.dtypes)
+print(population.shape)
+```
+
+若出现`UnicodeDecodeError`，先向数据提供者确认编码。确认为GB18030后可显式写`encoding="gb18030"`，并在数据说明中记录；不建议依次尝试多个编码直到“看起来能打开”。
+
+### 按固定顺序检查普通表格
+
+课堂统一采用六步检查：形状、字段、类型、主键、缺失、数值范围。
+
+```{.python filename="07_03_table_audit.ipynb"}
+print("记录×字段:", population.shape)
+print("字段:", population.columns.tolist())
+print("主键重复:", population["community_id"].duplicated().sum())
+print("缺失率:\n", population.isna().mean().sort_values(ascending=False))
+
+numeric = ["population", "elderly"]
+print(population[numeric].describe())
+assert population["community_id"].is_unique
+assert (population[numeric] >= 0).all().all()
+assert (population["elderly"] <= population["population"]).all()
+```
+
+最后一个断言检查老年人口是否超过总人口。断言失败时先定位记录：
+
+```{.python filename="07_04_locate_error.ipynb"}
+problem = population.loc[
+    population["elderly"] > population["population"],
+    ["community_id", "population", "elderly"],
+]
+display(problem)
+```
+
+### 读取空间数据并检查坐标系
+
+```{.python filename="07_05_read_geodata.ipynb"}
+import geopandas as gpd
+
+communities = gpd.read_file(RAW / "communities.gpkg", layer="communities")
+print(communities.shape)
+print(communities.geometry.geom_type.value_counts())
+print("CRS:", communities.crs)
+print("范围:", communities.total_bounds)
+print("无效几何:", (~communities.geometry.is_valid).sum())
+communities.plot(figsize=(7, 7), edgecolor="white")
+```
+
+`total_bounds`按最小x、最小y、最大x、最大y排列。经纬度范围通常接近研究区经纬度；以米为单位的投影坐标往往是较大的数值。范围明显落在其他国家或出现极大数量级时，应停止分析并检查CRS声明。
+
+### 连接前后都要核对记录数
+
+```{.python filename="07_06_join_audit.ipynb"}
+n_before = len(communities)
+analysis = communities.merge(
+    population,
+    on="community_id",
+    how="left",
+    validate="one_to_one",
+    indicator=True,
+)
+assert len(analysis) == n_before
+print(analysis["_merge"].value_counts())
+
+unmatched = analysis.loc[analysis["_merge"] != "both", "community_id"]
+print("未匹配社区:", unmatched.tolist()[:20])
+```
+
+`validate="one_to_one"`失败时，分别检查两张表的重复键。不要先删重；同一代码可能对应统计口径重复、年份重复或数据录入错误，处理方法不同。
+
+### 计算指标并保留分母检查
+
+```{.python filename="07_07_indicator.ipynb"}
+analysis["elderly_rate"] = analysis["elderly"].div(
+    analysis["population"].replace(0, pd.NA)
+)
+assert analysis["elderly_rate"].dropna().between(0, 1).all()
+
+display(
+    analysis[["community_id", "population", "elderly", "elderly_rate"]]
+    .sort_values("elderly_rate", ascending=False)
+    .head(10)
+)
+```
+
+零人口社区的比率保留为空值。把它改为零会混淆“分母不存在”与“老年人口比例为零”。
+
+### 输出GeoPackage并重新读取验证
+
+```{.python filename="07_08_write_and_verify.ipynb"}
+out_file = PROCESSED / "community_demography.gpkg"
+analysis.drop(columns="_merge").to_file(
+    out_file,
+    layer="community_demography",
+    driver="GPKG",
+)
+
+check = gpd.read_file(out_file, layer="community_demography")
+assert len(check) == len(analysis)
+assert check.crs == analysis.crs
+assert check["community_id"].is_unique
+print("输出验证通过:", out_file)
+```
+
+GeoPackage支持较长字段名、统一坐标系信息和多个图层，适合作为课程主要交换格式。Shapefile仍常见，但字段名、编码和文件组成存在限制；需要提交Shapefile时，应把`.shp`、`.shx`、`.dbf`、`.prj`等相关文件一起打包。
+
+### 学生容易遇到的五类错误
+
+| 报错或现象 | 含义 | 排查动作 |
+|---|---|---|
+| `FileNotFoundError` | 当前目录与相对路径不匹配 | 打印`Path.cwd()`和目标完整路径 |
+| `KeyError: community_id` | 字段不存在或含空格 | 打印`columns.tolist()`，核对数据字典 |
+| `MergeError` | 连接关系不符合`validate` | 分别统计两表重复键并核查年份 |
+| `CRS mismatch`警告 | 图层坐标系不同 | 确认正确CRS后使用`to_crs`统一 |
+| 地图只有一个小点 | 坐标或范围异常 | 打印`total_bounds`并检查经纬度顺序 |
+
+::: {.lab-brief}
+**完成标准**：Notebook可从第一个单元运行到最后一个单元；原始数据未被覆盖；每次连接都有行数与匹配检查；输出文件重新读取后通过主键、记录数和CRS验证。
+:::

@@ -1,0 +1,7 @@
+{
+  "python.terminal.activateEnvironment": true,
+  "python.analysis.typeCheckingMode": "basic",
+  "files.trimTrailingWhitespace": true,
+  "files.insertFinalNewline": true,
+  "jupyter.askForKernelRestart": false
+}

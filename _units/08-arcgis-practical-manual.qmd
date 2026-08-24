@@ -1,0 +1,124 @@
+## 上机手册：建立可追溯的ArcGIS Pro项目
+
+ArcGIS Pro实验应从项目结构和环境检查开始。学生在这一节创建`.aprx`项目、File Geodatabase、地图、地理处理历史和ArcPy脚本，并掌握与开放Python环境之间的数据交换。
+
+### 创建项目并固定目录
+
+启动ArcGIS Pro，选择“Map”模板。项目命名为`chapter08_spatial_analysis`，保存到个人课程目录，不保存在临时下载目录。勾选为项目创建新文件夹。完成后在Catalog窗格确认：
+
+- 项目文件`chapter08_spatial_analysis.aprx`；
+- 默认数据库`chapter08_spatial_analysis.gdb`；
+- 工具箱`chapter08_spatial_analysis.atbx`；
+- 默认地图`Map`。
+
+在项目目录下另建`data_raw`和`exports`。原始数据从`data_raw`读取，地理处理的中间与最终要素类写入项目GDB，对外交换文件写入`exports`。
+
+### 添加数据后的第一轮检查
+
+将社区边界、人口点和养老设施加入地图。对每个图层依次打开属性表和Layer Properties，记录数据源、记录数、几何类型、坐标系、范围和关键字段。右键图层执行Zoom To Layer，检查是否位于正确城市。
+
+不要因为ArcGIS Pro能够叠加显示就默认坐标正确。动态投影可以让不同CRS图层看起来重合，分析工具仍需明确输出坐标系。右键地图进入Properties → Coordinate Systems，将地图设置为适合研究区的投影坐标系。
+
+### 在Geoprocessing窗格中运行并记录参数
+
+第一次缓冲分析使用Buffer工具。输入养老设施，分别设置500米和1000米，输出到项目GDB。运行前展开Environments，确认输出坐标系、处理范围和是否覆盖已有输出。
+
+工具完成后不要立即关闭窗格。进入History查看输入、参数、环境与执行时间。右键成功记录可以“Copy Python Command”，得到可复制到Notebook或脚本的ArcPy语句。
+
+```{.python filename="08_buffer_from_history.py"}
+import arcpy
+
+arcpy.analysis.Buffer(
+    in_features="elderly_facilities",
+    out_feature_class=r"chapter08_spatial_analysis.gdb\facility_buffer_500m",
+    buffer_distance_or_field="500 Meters",
+    dissolve_option="ALL",
+    method="PLANAR",
+)
+```
+
+路径中的反斜杠使用原始字符串`r"..."`。若脚本与GDB位于同一项目目录，也可以通过`arcpy.env.workspace`减少重复路径。
+
+### 使用项目Notebook理解ArcPy对象
+
+在Insert → New Notebook中新建ArcGIS Pro Notebook。它自动使用当前ArcGIS Python环境。先运行：
+
+```{.python filename="08_01_arcgis_check.ipynb"}
+import arcpy
+import sys
+
+print("Python:", sys.executable)
+print("ArcGIS Pro:", arcpy.GetInstallInfo()["Version"])
+print("当前工程:", arcpy.mp.ArcGISProject("CURRENT").filePath)
+```
+
+`CURRENT`只在ArcGIS Pro内部有效。独立脚本应传入`.aprx`完整路径，或避免依赖当前界面状态。
+
+### 克隆ArcGIS Pro环境
+
+默认`arcgispro-py3`由ArcGIS Pro维护。需要额外包时，进入Project → Package Manager → Environment Manager，选择Clone Environment，命名为`urban-arcgis`。克隆可能需要较长时间，过程中保持网络和磁盘空间充足。
+
+激活克隆环境后重启ArcGIS Pro，再运行前面的检查单元。若课程只使用ArcPy自带功能，无须安装额外包。避免为了“版本更新”批量升级克隆环境中的核心包。
+
+### 将重复操作整理为函数
+
+```{.python filename="08_02_arcpy_function.py"}
+from pathlib import Path
+import arcpy
+
+PROJECT = Path.cwd()
+GDB = PROJECT / "chapter08_spatial_analysis.gdb"
+arcpy.env.workspace = str(GDB)
+arcpy.env.overwriteOutput = True
+
+def make_buffer(source: str, distance_m: int) -> str:
+    output = f"facility_buffer_{distance_m}m"
+    arcpy.analysis.PairwiseBuffer(
+        source,
+        output,
+        f"{distance_m} Meters",
+        dissolve_option="ALL",
+    )
+    count = int(arcpy.management.GetCount(output)[0])
+    if count == 0:
+        raise RuntimeError(f"{output}没有生成要素")
+    return output
+
+for distance in [500, 1000, 1500]:
+    print(make_buffer("elderly_facilities", distance))
+```
+
+函数把变化参数缩小为距离，输出命名和数量检查保持一致。下一步可以把距离设为Script Tool参数，让同学在Geoprocessing窗格中调用。
+
+### ModelBuilder中的可见流程
+
+在项目工具箱中新建Model，依次加入输入设施、Buffer、Spatial Join和Summary Statistics。将输入图层、缓冲距离和输出表设置为Model Parameter。运行后执行Validate，并用不同距离测试。
+
+ModelBuilder适合课堂上查看流程与参数依赖；ArcPy适合批量循环、条件判断和自动质量检查。两者可以互相转换：地理处理历史帮助生成Python命令，ModelBuilder工具也可以导出为Python文件，再进行人工整理。
+
+### 与GeoPandas交换数据
+
+从项目GDB向开放Python环境交换结果时，优先导出GeoPackage或GeoJSON。对于需要保留复杂ArcGIS字段、域和子类型的项目，继续使用File Geodatabase，并在README记录依赖。
+
+在ArcGIS Pro中导出：右键图层 → Data → Export Features，输出到`exports/chapter08_results.gpkg`。随后在`urban-data`环境读取：
+
+```{.python filename="08_03_read_arcgis_output.py"}
+import geopandas as gpd
+
+result = gpd.read_file(
+    "exports/chapter08_results.gpkg",
+    layer="community_service_gap",
+)
+print(result.shape, result.crs)
+print(result.geometry.geom_type.value_counts())
+```
+
+反向进入ArcGIS Pro时，先在Catalog中连接`exports`文件夹，再把GeoPackage图层拖入地图。检查中文字段、日期和空值是否正确保留。
+
+### 保存、备份与提交
+
+结束前保存`.aprx`，导出关键地图为PDF或PNG，并在History中确认关键工具记录存在。提交课程作业时通常不需要上传全部缓存和大型原始数据。可以提交`.aprx`、工具箱、脚本、ModelBuilder、必要的小型示范数据和README；大数据通过课程规定的位置共享。
+
+::: {.lab-brief}
+**完成标准**：项目能够重新打开；输入、输出和交换目录清楚；默认ArcGIS环境未被修改；关键分析可以从History、ModelBuilder或ArcPy重复；导出结果能在`urban-data`环境中正确读取。
+:::

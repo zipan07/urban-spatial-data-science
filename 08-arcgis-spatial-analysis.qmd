@@ -196,6 +196,8 @@ GIS帮助研究者把规划问题转化为明确的空间关系。距离、邻�
 3. 适宜性评价中的权重是一种技术参数还是价值判断？
 4. 如果网络服务区与居民调查结果不一致，应怎样解释？
 
+{{< include _units/08-arcgis-practical-manual.qmd >}}
+
 {{< include _units/08-guided-lab.qmd >}}
 
 ## 来源与延伸阅读

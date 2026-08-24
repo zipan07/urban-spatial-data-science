@@ -59,7 +59,7 @@ print("PySAL:", libpysal.__version__)
 
 这些版本信息看似琐碎，却能帮助我们解释为什么同一段代码在不同电脑上可能产生差异。
 
-## VS Code中的项目，而不是散落的文件
+## 在VS Code中建立完整项目
 
 一个城市研究项目不应只是若干Excel文件、地图和Notebook的集合。建议采用如下结构：
 
@@ -125,7 +125,7 @@ communities["ageing_rate"] = ageing_rate(
 
 数据交换优先采用GeoPackage、GeoJSON或规范的File Geodatabase。每次导出都应保留清晰的图层名、字段说明和处理日期，避免在桌面上积累无法追溯的Shapefile副本。
 
-## AI辅助编程：助手而不是证据来源
+## AI辅助编程及其验证责任
 
 生成式AI能够解释报错、补充函数、比较不同写法，也能把重复代码整理成更清晰的形式。但它并不知道你的字段是否代表常住人口还是活动人口，也不能自动判断500米缓冲是否符合真实步行条件。
 
@@ -176,6 +176,8 @@ validate_communities(communities)
 2. 在哪些情况下，ArcGIS Pro中的交互操作比Python更合适？
 3. 如果原始数据因隐私不能公开，研究仍然可以怎样提高可重复性？
 4. 你会如何记录AI参与代码编写的过程？
+
+{{< include _units/06-environment-manual.qmd >}}
 
 {{< include _units/06-guided-lab.qmd >}}
 
