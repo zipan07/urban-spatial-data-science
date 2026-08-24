@@ -350,6 +350,7 @@ def parse_osm(
             "type": "Feature",
             "properties": {
                 "node_id": node_id,
+                "node_origin": "derived_boundary" if "_clip_" in node_id else "osm_node",
                 "degree": degrees[node_id],
                 "is_intersection": degrees[node_id] >= 3,
                 "source": "OpenStreetMap",
