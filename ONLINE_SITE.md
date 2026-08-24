@@ -1,21 +1,22 @@
 # 在线教材网站
 
-生产版本：https://urban-spatial-data-science.zipan07.chatgpt.site
+正式入口：https://zipan07.github.io/urban-spatial-data-science/
+
+备用入口：https://urban-spatial-data-science.zipan07.chatgpt.site
 
 ## 当前版本
 
 V0.3 已将第6—12章制作成叙事化在线阅读单元。网站不是课程介绍页，而是可连续阅读和自由探索的教材界面，包含：
 
-- 方法、空间与规划三条学习路径；
-- 章节导读、本章问题、连续正文和概念表达；
+- 章节导读、本章问题与连续正文；
 - Python / ArcGIS Pro 代码片段；
-- 阅读进度、本章地图、前后章导航；
-- 概念搜索、开放式课堂实验和延伸阅读；
+- 全文搜索、阅读模式与前后章导航；
+- 课堂实验、章末思考和延伸阅读；
 - 响应式桌面与移动端排版。
 
-## 内容边界
+## 自动发布
 
-在线版与本仓库的 Quarto 书稿使用同一章序和“问题—数据—方法—证据—判断—表达”框架。当前站点界面代码由 ChatGPT Sites 管理；后续版本将把站点源代码与本仓库书稿进一步统一，并逐步补齐第1—5章及第13—16章。
+`main` 分支上的教材由 GitHub Actions 调用 Quarto 构建，并自动发布到 GitHub Pages。代码示例在发布阶段只展示、不执行，避免无数据环境造成构建失败。
 
 ## 来源原则
 
