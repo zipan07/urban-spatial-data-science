@@ -1,5 +1,7 @@
 # 数据科学与城市空间研究
 
+[![Publish online textbook](https://github.com/zipan07/urban-spatial-data-science/actions/workflows/publish.yml/badge.svg)](https://github.com/zipan07/urban-spatial-data-science/actions/workflows/publish.yml)
+
 《数据科学与城市空间研究》（Data Science and Urban Spatial Research）中文在线教材。
 
 **在线阅读：** https://zipan07.github.io/urban-spatial-data-science/
