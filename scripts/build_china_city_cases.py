@@ -721,6 +721,11 @@ def build_city(city: dict[str, Any], ghsl: dict[str, Any]) -> dict[str, Any]:
         "teaching_extent_bbox_south_west_north_east": bbox,
         "scope": "Bounded central-city teaching extract; not a complete administrative or facility census.",
         "coordinate_reference_system": "OGC:CRS84 for vectors; EPSG:4326 for raster",
+        "processing_notes": {
+            "road_geometry": "OSM ways selected by the query bbox are segment-clipped to the exact teaching bbox with the Liang-Barsky algorithm.",
+            "network_boundary_nodes": "A node_id containing '_clip_' is a derived boundary intersection, not an original OSM node identifier.",
+            "grid_road_assignment": "Each clipped road segment is assigned to the analysis grid containing its midpoint.",
+        },
         "sources": {
             "boundary_and_city_statistics": {
                 "provider": "European Commission Joint Research Centre",
