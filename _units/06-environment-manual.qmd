@@ -116,6 +116,7 @@ VS Code会在工作区记住解释器。官方页面对[环境发现与解释器
 打开`.ipynb`后，点击右上角“Select Kernel”。选择“Python Environments”，再选择`urban-data`。Notebook内核与编辑器解释器可能不同，因此必须在第一个单元格运行：
 
 ```{.python filename="00_kernel_check.ipynb"}
+# 检查Notebook实际使用的解释器，确认它与VS Code所选环境一致
 import sys
 import platform
 
@@ -146,6 +147,7 @@ python scripts/check_environment.py
 也可以在Notebook逐步运行：
 
 ```{.python filename="00_spatial_smoke_test.ipynb"}
+# 用最小空间对象验证GeoPandas、Shapely和坐标转换能否正常工作
 import geopandas as gpd
 from shapely.geometry import Point
 
@@ -166,6 +168,7 @@ print(projected.geometry.x.round(0))
 在VS Code中新建`scripts/first_debug.py`，在行号左侧单击设置红色断点，然后选择“Run and Debug”。程序暂停后，把鼠标放到变量上查看内容，在Variables面板检查类型与数值。
 
 ```{.python filename="scripts/first_debug.py"}
+# 这组简单变量用于演示断点、单步执行和变量检查
 population = 12_500
 elderly = 2_875
 elderly_rate = elderly / population
@@ -217,6 +220,6 @@ propy -c "import arcpy; print(arcpy.GetInstallInfo()['Version'])"
 - 知道距离计算前需要检查坐标系；
 - 知道ArcPy脚本应在ArcGIS Pro环境运行。
 
-::: {.callout-tip title="课堂建议"}
+::: {.callout-tip title="实践建议"}
 两人一组交叉检查环境。A同学只根据B同学的README打开项目、激活环境并运行诊断脚本；随后交换。任何口头补充都应写回README，因为未来的复现者无法依赖当时的口头说明。
 :::

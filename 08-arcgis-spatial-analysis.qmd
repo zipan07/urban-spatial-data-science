@@ -198,6 +198,8 @@ GIS帮助研究者把规划问题转化为明确的空间关系。距离、邻�
 
 {{< include _units/08-arcgis-practical-manual.qmd >}}
 
+{{< include _units/08-nanjing-case.qmd >}}
+
 {{< include _units/08-guided-lab.qmd >}}
 
 ## 来源与延伸阅读

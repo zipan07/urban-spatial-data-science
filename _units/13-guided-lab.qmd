@@ -1,10 +1,11 @@
-## 三小时课堂：审计一个城市预测模型
+## 案例研究：审计一个城市预测模型
 
-本单元以热风险预测为例，把评价扩展为基线、空间交叉验证、误差分组、概率校准和模型卡。课堂结束时，学生需要回答模型可以部署到哪里、在哪些地区必须人工复核。
+本案例以热风险预测为例，把评价扩展为基线、空间交叉验证、误差分组、概率校准和模型卡。最终需要明确模型可以部署到哪里，以及哪些地区必须进入人工复核。
 
-### 第一小时：建立基线和空间折
+### 研究设定：建立基线和空间折
 
 ```{.python filename="13_step1_spatial_cv.py"}
+# 以连续空间分区作为交叉验证组，分别记录每一折的误差
 from sklearn.model_selection import GroupKFold, cross_validate
 from sklearn.dummy import DummyRegressor
 from sklearn.ensemble import RandomForestRegressor
@@ -29,9 +30,10 @@ for name, model in models.items():
 
 学生报告每一折误差而非单一平均值，并在地图上定位最差折。若模型只在中心区表现良好，整体平均值无法说明外围风险。
 
-### 第二小时：误差地图与群体差异
+### 分析实施：误差地图与群体差异
 
 ```{.python filename="13_step2_error_audit.py"}
+# 计算空间单元误差，并按区位与脆弱性分组检查系统性失准
 test_result["abs_error"] = (test_result["observed"] - test_result["predicted"]).abs()
 error_by_area = test_result.groupby("area_type")["abs_error"].agg(
     ["count", "mean", "median", "max"]
@@ -56,6 +58,7 @@ print(error_by_vulnerability)
 空间折的尺度也是模型评价的一部分。折块过小，训练集与测试集仍共享邻域信息；折块过大，每一折样本量不足，误差估计可能剧烈波动。可以依据预期部署距离、空间自相关衰减范围和实际管理单元设置多组折块，并把结论分成三类：不同尺度下均稳定、误差数值变化但模型排序稳定、模型排序发生反转。第三类结果表明“最佳模型”依赖部署范围，报告中应保留这一不确定性。
 
 ```{.python filename="13_fold_transfer_diagnostics.py"}
+# 比较空间折的样本、误差与数据覆盖，定位地理迁移风险
 fold_report = (
     test_result.groupby("spatial_fold")
     .agg(
@@ -76,10 +79,10 @@ worst_fold = fold_report["mae"].idxmax()
 worst_area = test_result[test_result["spatial_fold"].eq(worst_fold)]
 ```
 
-### 第三小时：稳健性矩阵与模型卡
+### 结果检验与解释：稳健性矩阵与模型卡
 
 依次改变空间块尺度、时间窗口、缺失处理、特征集合和模型参数。将主要结论记录为稳定、方向稳定但幅度变化、方向变化三类。最终模型卡包含预期用途、禁止用途、训练数据、空间时间范围、评价方式、主要误差、已知偏差、人工复核和更新条件。
 
 ::: {.lab-brief}
-**课堂提交**：基线比较、五折空间误差、误差地图、群体审计、稳健性矩阵和一页模型卡。模型分数不构成单独的部署理由。
+**研究成果**：基线比较、五折空间误差、误差地图、群体审计、稳健性矩阵和一页模型卡。模型分数不构成单独的部署理由。
 :::

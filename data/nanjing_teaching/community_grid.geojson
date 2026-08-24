@@ -1,0 +1,4140 @@
+{
+  "type": "FeatureCollection",
+  "name": "community_grid",
+  "crs": {
+    "type": "name",
+    "properties": {
+      "name": "urn:ogc:def:crs:OGC:1.3:CRS84"
+    }
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "grid_id": "NJ0101",
+        "area_name": "Teaching area 1-1",
+        "population": 3384,
+        "elderly_share": 0.2443,
+        "tree_cover": 0.2825,
+        "heat_c": 34.7316,
+        "transit_access": 0.3526,
+        "health_access": 0.2422,
+        "data_coverage": 0.8674,
+        "vulnerability": 0.4257,
+        "priority_score": -0.1269
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              118.68,
+              31.96
+            ],
+            [
+              118.7,
+              31.96
+            ],
+            [
+              118.7,
+              31.98
+            ],
+            [
+              118.68,
+              31.98
+            ],
+            [
+              118.68,
+              31.96
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "grid_id": "NJ0102",
+        "area_name": "Teaching area 1-2",
+        "population": 3253,
+        "elderly_share": 0.2319,
+        "tree_cover": 0.2168,
+        "heat_c": 35.1937,
+        "transit_access": 0.326,
+        "health_access": 0.1688,
+        "data_coverage": 0.8513,
+        "vulnerability": 0.4309,
+        "priority_score": 0.2994
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              118.7,
+              31.96
+            ],
+            [
+              118.72,
+              31.96
+            ],
+            [
+              118.72,
+              31.98
+            ],
+            [
+              118.7,
+              31.98
+            ],
+            [
+              118.7,
+              31.96
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "grid_id": "NJ0103",
+        "area_name": "Teaching area 1-3",
+        "population": 3169,
+        "elderly_share": 0.2366,
+        "tree_cover": 0.3215,
+        "heat_c": 35.3042,
+        "transit_access": 0.2315,
+        "health_access": 0.227,
+        "data_coverage": 0.7788,
+        "vulnerability": 0.476,
+        "priority_score": 0.921
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              118.72000000000001,
+              31.96
+            ],
+            [
+              118.74000000000001,
+              31.96
+            ],
+            [
+              118.74000000000001,
+              31.98
+            ],
+            [
+              118.72000000000001,
+              31.98
+            ],
+            [
+              118.72000000000001,
+              31.96
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "grid_id": "NJ0104",
+        "area_name": "Teaching area 1-4",
+        "population": 4531,
+        "elderly_share": 0.215,
+        "tree_cover": 0.2963,
+        "heat_c": 35.4481,
+        "transit_access": 0.3068,
+        "health_access": 0.3175,
+        "data_coverage": 0.7702,
+        "vulnerability": 0.4302,
+        "priority_score": 0.4924
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              118.74000000000001,
+              31.96
+            ],
+            [
+              118.76,
+              31.96
+            ],
+            [
+              118.76,
+              31.98
+            ],
+            [
+              118.74000000000001,
+              31.98
+            ],
+            [
+              118.74000000000001,
+              31.96
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "grid_id": "NJ0105",
+        "area_name": "Teaching area 1-5",
+        "population": 3987,
+        "elderly_share": 0.1977,
+        "tree_cover": 0.2302,
+        "heat_c": 35.8967,
+        "transit_access": 0.3839,
+        "health_access": 0.3304,
+        "data_coverage": 0.7117,
+        "vulnerability": 0.3859,
+        "priority_score": 0.3229
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              118.76,
+              31.96
+            ],
+            [
+              118.78,
+              31.96
+            ],
+            [
+              118.78,
+              31.98
+            ],
+            [
+              118.76,
+              31.98
+            ],
+            [
+              118.76,
+              31.96
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "grid_id": "NJ0106",
+        "area_name": "Teaching area 1-6",
+        "population": 3990,
+        "elderly_share": 0.1748,
+        "tree_cover": 0.2751,
+        "heat_c": 35.772,
+        "transit_access": 0.3966,
+        "health_access": 0.4822,
+        "data_coverage": 0.7514,
+        "vulnerability": 0.3677,
+        "priority_score": 0.0078
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              118.78,
+              31.96
+            ],
+            [
+              118.8,
+              31.96
+            ],
+            [
+              118.8,
+              31.98
+            ],
+            [
+              118.78,
+              31.98
+            ],
+            [
+              118.78,
+              31.96
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "grid_id": "NJ0107",
+        "area_name": "Teaching area 1-7",
+        "population": 4468,
+        "elderly_share": 0.2043,
+        "tree_cover": 0.2427,
+        "heat_c": 35.6513,
+        "transit_access": 0.3978,
+        "health_access": 0.35,
+        "data_coverage": 0.7032,
+        "vulnerability": 0.3834,
+        "priority_score": 0.0983
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              118.80000000000001,
+              31.96
+            ],
+            [
+              118.82000000000001,
+              31.96
+            ],
+            [
+              118.82000000000001,
+              31.98
+            ],
+            [
+              118.80000000000001,
+              31.98
+            ],
+            [
+              118.80000000000001,
+              31.96
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "grid_id": "NJ0108",
+        "area_name": "Teaching area 1-8",
+        "population": 4483,
+        "elderly_share": 0.205,
+        "tree_cover": 0.2089,
+        "heat_c": 35.8901,
+        "transit_access": 0.4342,
+        "health_access": 0.284,
+        "data_coverage": 0.6018,
+        "vulnerability": 0.3674,
+        "priority_score": 0.0978
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              118.82000000000001,
+              31.96
+            ],
+            [
+              118.84,
+              31.96
+            ],
+            [
+              118.84,
+              31.98
+            ],
+            [
+              118.82000000000001,
+              31.98
+            ],
+            [
+              118.82000000000001,
+              31.96
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "grid_id": "NJ0109",
+        "area_name": "Teaching area 1-9",
+        "population": 5058,
+        "elderly_share": 0.1959,
+        "tree_cover": 0.2566,
+        "heat_c": 36.181,
+        "transit_access": 0.4996,
+        "health_access": 0.457,
+        "data_coverage": 0.6284,
+        "vulnerability": 0.333,
+        "priority_score": -0.08
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              118.84,
+              31.96
+            ],
+            [
+              118.86,
+              31.96
+            ],
+            [
+              118.86,
+              31.98
+            ],
+            [
+              118.84,
+              31.98
+            ],
+            [
+              118.84,
+              31.96
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "grid_id": "NJ0110",
+        "area_name": "Teaching area 1-10",
+        "population": 4039,
+        "elderly_share": 0.1832,
+        "tree_cover": 0.3017,
+        "heat_c": 36.546,
+        "transit_access": 0.4869,
+        "health_access": 0.3634,
+        "data_coverage": 0.5183,
+        "vulnerability": 0.3317,
+        "priority_score": 0.193
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              118.86000000000001,
+              31.96
+            ],
+            [
+              118.88000000000001,
+              31.96
+            ],
+            [
+              118.88000000000001,
+              31.98
+            ],
+            [
+              118.86000000000001,
+              31.98
+            ],
+            [
+              118.86000000000001,
+              31.96
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "grid_id": "NJ0111",
+        "area_name": "Teaching area 1-11",
+        "population": 4729,
+        "elderly_share": 0.1985,
+        "tree_cover": 0.3414,
+        "heat_c": 35.312,
+        "transit_access": 0.4422,
+        "health_access": 0.2566,
+        "data_coverage": 0.5527,
+        "vulnerability": 0.3601,
+        "priority_score": -0.4449
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              118.88000000000001,
+              31.96
+            ],
+            [
+              118.9,
+              31.96
+            ],
+            [
+              118.9,
+              31.98
+            ],
+            [
+              118.88000000000001,
+              31.98
+            ],
+            [
+              118.88000000000001,
+              31.96
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "grid_id": "NJ0112",
+        "area_name": "Teaching area 1-12",
+        "population": 4512,
+        "elderly_share": 0.2127,
+        "tree_cover": 0.2287,
+        "heat_c": 36.9565,
+        "transit_access": 0.4988,
+        "health_access": 0.3636,
+        "data_coverage": 0.5335,
+        "vulnerability": 0.3425,
+        "priority_score": 0.6462
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              118.9,
+              31.96
+            ],
+            [
+              118.92,
+              31.96
+            ],
+            [
+              118.92,
+              31.98
+            ],
+            [
+              118.9,
+              31.98
+            ],
+            [
+              118.9,
+              31.96
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "grid_id": "NJ0201",
+        "area_name": "Teaching area 2-1",
+        "population": 2819,
+        "elderly_share": 0.2588,
+        "tree_cover": 0.2891,
+        "heat_c": 35.9229,
+        "transit_access": 0.2931,
+        "health_access": 0.1818,
+        "data_coverage": 0.8934,
+        "vulnerability": 0.4604,
+        "priority_score": 1.2262
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              118.68,
+              31.98
+            ],
+            [
+              118.7,
+              31.98
+            ],
+            [
+              118.7,
+              32.0
+            ],
+            [
+              118.68,
+              32.0
+            ],
+            [
+              118.68,
+              31.98
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "grid_id": "NJ0202",
+        "area_name": "Teaching area 2-2",
+        "population": 3128,
+        "elderly_share": 0.2176,
+        "tree_cover": 0.3112,
+        "heat_c": 35.4347,
+        "transit_access": 0.28,
+        "health_access": 0.2368,
+        "data_coverage": 0.8792,
+        "vulnerability": 0.4437,
+        "priority_score": 0.6422
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              118.7,
+              31.98
+            ],
+            [
+              118.72,
+              31.98
+            ],
+            [
+              118.72,
+              32.0
+            ],
+            [
+              118.7,
+              32.0
+            ],
+            [
+              118.7,
+              31.98
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "grid_id": "NJ0203",
+        "area_name": "Teaching area 2-3",
+        "population": 3460,
+        "elderly_share": 0.2412,
+        "tree_cover": 0.3223,
+        "heat_c": 35.0281,
+        "transit_access": 0.3553,
+        "health_access": 0.3706,
+        "data_coverage": 0.8097,
+        "vulnerability": 0.4228,
+        "priority_score": 0.0725
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              118.72000000000001,
+              31.98
+            ],
+            [
+              118.74000000000001,
+              31.98
+            ],
+            [
+              118.74000000000001,
+              32.0
+            ],
+            [
+              118.72000000000001,
+              32.0
+            ],
+            [
+              118.72000000000001,
+              31.98
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "grid_id": "NJ0204",
+        "area_name": "Teaching area 2-4",
+        "population": 5440,
+        "elderly_share": 0.1829,
+        "tree_cover": 0.2952,
+        "heat_c": 35.8206,
+        "transit_access": 0.4471,
+        "health_access": 0.4016,
+        "data_coverage": 0.8611,
+        "vulnerability": 0.3494,
+        "priority_score": -0.1702
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              118.74000000000001,
+              31.98
+            ],
+            [
+              118.76,
+              31.98
+            ],
+            [
+              118.76,
+              32.0
+            ],
+            [
+              118.74000000000001,
+              32.0
+            ],
+            [
+              118.74000000000001,
+              31.98
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "grid_id": "NJ0205",
+        "area_name": "Teaching area 2-5",
+        "population": 5330,
+        "elderly_share": 0.1629,
+        "tree_cover": 0.262,
+        "heat_c": 36.2433,
+        "transit_access": 0.4154,
+        "health_access": 0.2731,
+        "data_coverage": 0.7591,
+        "vulnerability": 0.3526,
+        "priority_score": 0.2024
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              118.76,
+              31.98
+            ],
+            [
+              118.78,
+              31.98
+            ],
+            [
+              118.78,
+              32.0
+            ],
+            [
+              118.76,
+              32.0
+            ],
+            [
+              118.76,
+              31.98
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "grid_id": "NJ0206",
+        "area_name": "Teaching area 2-6",
+        "population": 6534,
+        "elderly_share": 0.1873,
+        "tree_cover": 0.256,
+        "heat_c": 36.7109,
+        "transit_access": 0.6242,
+        "health_access": 0.4458,
+        "data_coverage": 0.7425,
+        "vulnerability": 0.2721,
+        "priority_score": -0.3818
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              118.78,
+              31.98
+            ],
+            [
+              118.8,
+              31.98
+            ],
+            [
+              118.8,
+              32.0
+            ],
+            [
+              118.78,
+              32.0
+            ],
+            [
+              118.78,
+              31.98
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "grid_id": "NJ0207",
+        "area_name": "Teaching area 2-7",
+        "population": 6154,
+        "elderly_share": 0.1858,
+        "tree_cover": 0.3248,
+        "heat_c": 36.6435,
+        "transit_access": 0.59,
+        "health_access": 0.4578,
+        "data_coverage": 0.682,
+        "vulnerability": 0.2867,
+        "priority_score": -0.2627
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              118.80000000000001,
+              31.98
+            ],
+            [
+              118.82000000000001,
+              31.98
+            ],
+            [
+              118.82000000000001,
+              32.0
+            ],
+            [
+              118.80000000000001,
+              32.0
+            ],
+            [
+              118.80000000000001,
+              31.98
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "grid_id": "NJ0208",
+        "area_name": "Teaching area 2-8",
+        "population": 5927,
+        "elderly_share": 0.1628,
+        "tree_cover": 0.2009,
+        "heat_c": 36.9568,
+        "transit_access": 0.601,
+        "health_access": 0.4015,
+        "data_coverage": 0.5987,
+        "vulnerability": 0.2691,
+        "priority_score": -0.2235
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              118.82000000000001,
+              31.98
+            ],
+            [
+              118.84,
+              31.98
+            ],
+            [
+              118.84,
+              32.0
+            ],
+            [
+              118.82000000000001,
+              32.0
+            ],
+            [
+              118.82000000000001,
+              31.98
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "grid_id": "NJ0209",
+        "area_name": "Teaching area 2-9",
+        "population": 5928,
+        "elderly_share": 0.1903,
+        "tree_cover": 0.2338,
+        "heat_c": 36.7383,
+        "transit_access": 0.5272,
+        "health_access": 0.3733,
+        "data_coverage": 0.5925,
+        "vulnerability": 0.3174,
+        "priority_score": 0.1766
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              118.84,
+              31.98
+            ],
+            [
+              118.86,
+              31.98
+            ],
+            [
+              118.86,
+              32.0
+            ],
+            [
+              118.84,
+              32.0
+            ],
+            [
+              118.84,
+              31.98
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "grid_id": "NJ0210",
+        "area_name": "Teaching area 2-10",
+        "population": 5397,
+        "elderly_share": 0.2033,
+        "tree_cover": 0.2518,
+        "heat_c": 37.4284,
+        "transit_access": 0.4962,
+        "health_access": 0.4151,
+        "data_coverage": 0.5659,
+        "vulnerability": 0.3385,
+        "priority_score": 0.9716
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              118.86000000000001,
+              31.98
+            ],
+            [
+              118.88000000000001,
+              31.98
+            ],
+            [
+              118.88000000000001,
+              32.0
+            ],
+            [
+              118.86000000000001,
+              32.0
+            ],
+            [
+              118.86000000000001,
+              31.98
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "grid_id": "NJ0211",
+        "area_name": "Teaching area 2-11",
+        "population": 4619,
+        "elderly_share": 0.2022,
+        "tree_cover": 0.1958,
+        "heat_c": 37.2853,
+        "transit_access": 0.5851,
+        "health_access": 0.5004,
+        "data_coverage": 0.5198,
+        "vulnerability": 0.2979,
+        "priority_score": 0.3776
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              118.88000000000001,
+              31.98
+            ],
+            [
+              118.9,
+              31.98
+            ],
+            [
+              118.9,
+              32.0
+            ],
+            [
+              118.88000000000001,
+              32.0
+            ],
+            [
+              118.88000000000001,
+              31.98
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "grid_id": "NJ0212",
+        "area_name": "Teaching area 2-12",
+        "population": 5268,
+        "elderly_share": 0.2202,
+        "tree_cover": 0.2658,
+        "heat_c": 36.2616,
+        "transit_access": 0.4989,
+        "health_access": 0.3276,
+        "data_coverage": 0.5007,
+        "vulnerability": 0.3466,
+        "priority_score": 0.1453
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              118.9,
+              31.98
+            ],
+            [
+              118.92,
+              31.98
+            ],
+            [
+              118.92,
+              32.0
+            ],
+            [
+              118.9,
+              32.0
+            ],
+            [
+              118.9,
+              31.98
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "grid_id": "NJ0301",
+        "area_name": "Teaching area 3-1",
+        "population": 2142,
+        "elderly_share": 0.2183,
+        "tree_cover": 0.2899,
+        "heat_c": 34.844,
+        "transit_access": 0.278,
+        "health_access": 0.225,
+        "data_coverage": 0.8892,
+        "vulnerability": 0.445,
+        "priority_score": 0.1906
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              118.68,
+              32.0
+            ],
+            [
+              118.7,
+              32.0
+            ],
+            [
+              118.7,
+              32.02
+            ],
+            [
+              118.68,
+              32.02
+            ],
+            [
+              118.68,
+              32.0
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "grid_id": "NJ0302",
+        "area_name": "Teaching area 3-2",
+        "population": 4079,
+        "elderly_share": 0.2474,
+        "tree_cover": 0.2331,
+        "heat_c": 35.7783,
+        "transit_access": 0.3463,
+        "health_access": 0.3683,
+        "data_coverage": 0.8995,
+        "vulnerability": 0.4302,
+        "priority_score": 0.7541
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              118.7,
+              32.0
+            ],
+            [
+              118.72,
+              32.0
+            ],
+            [
+              118.72,
+              32.02
+            ],
+            [
+              118.7,
+              32.02
+            ],
+            [
+              118.7,
+              32.0
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "grid_id": "NJ0303",
+        "area_name": "Teaching area 3-3",
+        "population": 5783,
+        "elderly_share": 0.2408,
+        "tree_cover": 0.3448,
+        "heat_c": 35.3956,
+        "transit_access": 0.4524,
+        "health_access": 0.3493,
+        "data_coverage": 0.8272,
+        "vulnerability": 0.3789,
+        "priority_score": -0.1572
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              118.72000000000001,
+              32.0
+            ],
+            [
+              118.74000000000001,
+              32.0
+            ],
+            [
+              118.74000000000001,
+              32.02
+            ],
+            [
+              118.72000000000001,
+              32.02
+            ],
+            [
+              118.72000000000001,
+              32.0
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "grid_id": "NJ0304",
+        "area_name": "Teaching area 3-4",
+        "population": 5765,
+        "elderly_share": 0.1954,
+        "tree_cover": 0.1848,
+        "heat_c": 37.1478,
+        "transit_access": 0.522,
+        "health_access": 0.4895,
+        "data_coverage": 0.7812,
+        "vulnerability": 0.3226,
+        "priority_score": 0.5614
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              118.74000000000001,
+              32.0
+            ],
+            [
+              118.76,
+              32.0
+            ],
+            [
+              118.76,
+              32.02
+            ],
+            [
+              118.74000000000001,
+              32.02
+            ],
+            [
+              118.74000000000001,
+              32.0
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "grid_id": "NJ0305",
+        "area_name": "Teaching area 3-5",
+        "population": 8005,
+        "elderly_share": 0.1651,
+        "tree_cover": 0.181,
+        "heat_c": 37.3413,
+        "transit_access": 0.7357,
+        "health_access": 0.5534,
+        "data_coverage": 0.7418,
+        "vulnerability": 0.2098,
+        "priority_score": -0.6225
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              118.76,
+              32.0
+            ],
+            [
+              118.78,
+              32.0
+            ],
+            [
+              118.78,
+              32.02
+            ],
+            [
+              118.76,
+              32.02
+            ],
+            [
+              118.76,
+              32.0
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "grid_id": "NJ0306",
+        "area_name": "Teaching area 3-6",
+        "population": 8031,
+        "elderly_share": 0.1495,
+        "tree_cover": 0.2489,
+        "heat_c": 37.6216,
+        "transit_access": 0.7637,
+        "health_access": 0.6463,
+        "data_coverage": 0.7742,
+        "vulnerability": 0.1886,
+        "priority_score": -0.6521
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              118.78,
+              32.0
+            ],
+            [
+              118.8,
+              32.0
+            ],
+            [
+              118.8,
+              32.02
+            ],
+            [
+              118.78,
+              32.02
+            ],
+            [
+              118.78,
+              32.0
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "grid_id": "NJ0307",
+        "area_name": "Teaching area 3-7",
+        "population": 9539,
+        "elderly_share": 0.154,
+        "tree_cover": 0.1874,
+        "heat_c": 38.1395,
+        "transit_access": 0.6993,
+        "health_access": 0.6351,
+        "data_coverage": 0.731,
+        "vulnerability": 0.22,
+        "priority_score": 0.13
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              118.80000000000001,
+              32.0
+            ],
+            [
+              118.82000000000001,
+              32.0
+            ],
+            [
+              118.82000000000001,
+              32.02
+            ],
+            [
+              118.80000000000001,
+              32.02
+            ],
+            [
+              118.80000000000001,
+              32.0
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "grid_id": "NJ0308",
+        "area_name": "Teaching area 3-8",
+        "population": 8232,
+        "elderly_share": 0.1477,
+        "tree_cover": 0.2314,
+        "heat_c": 37.9595,
+        "transit_access": 0.6616,
+        "health_access": 0.5812,
+        "data_coverage": 0.6723,
+        "vulnerability": 0.2335,
+        "priority_score": 0.147
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              118.82000000000001,
+              32.0
+            ],
+            [
+              118.84,
+              32.0
+            ],
+            [
+              118.84,
+              32.02
+            ],
+            [
+              118.82000000000001,
+              32.02
+            ],
+            [
+              118.82000000000001,
+              32.0
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "grid_id": "NJ0309",
+        "area_name": "Teaching area 3-9",
+        "population": 7446,
+        "elderly_share": 0.1572,
+        "tree_cover": 0.1836,
+        "heat_c": 37.8868,
+        "transit_access": 0.5767,
+        "health_access": 0.5752,
+        "data_coverage": 0.6169,
+        "vulnerability": 0.277,
+        "priority_score": 0.6048
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              118.84,
+              32.0
+            ],
+            [
+              118.86,
+              32.0
+            ],
+            [
+              118.86,
+              32.02
+            ],
+            [
+              118.84,
+              32.02
+            ],
+            [
+              118.84,
+              32.0
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "grid_id": "NJ0310",
+        "area_name": "Teaching area 3-10",
+        "population": 6011,
+        "elderly_share": 0.1932,
+        "tree_cover": 0.2219,
+        "heat_c": 37.4353,
+        "transit_access": 0.5971,
+        "health_access": 0.3545,
+        "data_coverage": 0.5771,
+        "vulnerability": 0.2876,
+        "priority_score": 0.3735
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              118.86000000000001,
+              32.0
+            ],
+            [
+              118.88000000000001,
+              32.0
+            ],
+            [
+              118.88000000000001,
+              32.02
+            ],
+            [
+              118.86000000000001,
+              32.02
+            ],
+            [
+              118.86000000000001,
+              32.0
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "grid_id": "NJ0311",
+        "area_name": "Teaching area 3-11",
+        "population": 5112,
+        "elderly_share": 0.1713,
+        "tree_cover": 0.2576,
+        "heat_c": 36.591,
+        "transit_access": 0.5473,
+        "health_access": 0.3694,
+        "data_coverage": 0.5653,
+        "vulnerability": 0.2979,
+        "priority_score": -0.171
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              118.88000000000001,
+              32.0
+            ],
+            [
+              118.9,
+              32.0
+            ],
+            [
+              118.9,
+              32.02
+            ],
+            [
+              118.88000000000001,
+              32.02
+            ],
+            [
+              118.88000000000001,
+              32.0
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "grid_id": "NJ0312",
+        "area_name": "Teaching area 3-12",
+        "population": 5276,
+        "elderly_share": 0.2088,
+        "tree_cover": 0.3068,
+        "heat_c": 36.4758,
+        "transit_access": 0.5327,
+        "health_access": 0.3769,
+        "data_coverage": 0.5123,
+        "vulnerability": 0.3251,
+        "priority_score": 0.0599
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              118.9,
+              32.0
+            ],
+            [
+              118.92,
+              32.0
+            ],
+            [
+              118.92,
+              32.02
+            ],
+            [
+              118.9,
+              32.02
+            ],
+            [
+              118.9,
+              32.0
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "grid_id": "NJ0401",
+        "area_name": "Teaching area 4-1",
+        "population": 3122,
+        "elderly_share": 0.2379,
+        "tree_cover": 0.204,
+        "heat_c": 36.2217,
+        "transit_access": 0.2963,
+        "health_access": 0.2569,
+        "data_coverage": 0.965,
+        "vulnerability": 0.4475,
+        "priority_score": 1.3094
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              118.68,
+              32.02
+            ],
+            [
+              118.7,
+              32.02
+            ],
+            [
+              118.7,
+              32.040000000000006
+            ],
+            [
+              118.68,
+              32.040000000000006
+            ],
+            [
+              118.68,
+              32.02
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "grid_id": "NJ0402",
+        "area_name": "Teaching area 4-2",
+        "population": 4175,
+        "elderly_share": 0.2118,
+        "tree_cover": 0.2097,
+        "heat_c": 35.5374,
+        "transit_access": 0.379,
+        "health_access": 0.2481,
+        "data_coverage": 0.9232,
+        "vulnerability": 0.3959,
+        "priority_score": 0.157
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              118.7,
+              32.02
+            ],
+            [
+              118.72,
+              32.02
+            ],
+            [
+              118.72,
+              32.040000000000006
+            ],
+            [
+              118.7,
+              32.040000000000006
+            ],
+            [
+              118.7,
+              32.02
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "grid_id": "NJ0403",
+        "area_name": "Teaching area 4-3",
+        "population": 6639,
+        "elderly_share": 0.2143,
+        "tree_cover": 0.2825,
+        "heat_c": 36.8927,
+        "transit_access": 0.4595,
+        "health_access": 0.3671,
+        "data_coverage": 0.8496,
+        "vulnerability": 0.3611,
+        "priority_score": 0.8158
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              118.72000000000001,
+              32.02
+            ],
+            [
+              118.74000000000001,
+              32.02
+            ],
+            [
+              118.74000000000001,
+              32.040000000000006
+            ],
+            [
+              118.72000000000001,
+              32.040000000000006
+            ],
+            [
+              118.72000000000001,
+              32.02
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "grid_id": "NJ0404",
+        "area_name": "Teaching area 4-4",
+        "population": 7091,
+        "elderly_share": 0.1557,
+        "tree_cover": 0.2254,
+        "heat_c": 37.6529,
+        "transit_access": 0.584,
+        "health_access": 0.5959,
+        "data_coverage": 0.846,
+        "vulnerability": 0.2728,
+        "priority_score": 0.3711
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              118.74000000000001,
+              32.02
+            ],
+            [
+              118.76,
+              32.02
+            ],
+            [
+              118.76,
+              32.040000000000006
+            ],
+            [
+              118.74000000000001,
+              32.040000000000006
+            ],
+            [
+              118.74000000000001,
+              32.02
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "grid_id": "NJ0405",
+        "area_name": "Teaching area 4-5",
+        "population": 9049,
+        "elderly_share": 0.1431,
+        "tree_cover": 0.1835,
+        "heat_c": 38.6595,
+        "transit_access": 0.6628,
+        "health_access": 0.6871,
+        "data_coverage": 0.7646,
+        "vulnerability": 0.2305,
+        "priority_score": 0.6646
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              118.76,
+              32.02
+            ],
+            [
+              118.78,
+              32.02
+            ],
+            [
+              118.78,
+              32.040000000000006
+            ],
+            [
+              118.76,
+              32.040000000000006
+            ],
+            [
+              118.76,
+              32.02
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "grid_id": "NJ0406",
+        "area_name": "Teaching area 4-6",
+        "population": 10749,
+        "elderly_share": 0.1407,
+        "tree_cover": 0.1743,
+        "heat_c": 39.4803,
+        "transit_access": 0.8714,
+        "health_access": 0.7341,
+        "data_coverage": 0.7613,
+        "vulnerability": 0.1353,
+        "priority_score": 0.1858
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              118.78,
+              32.02
+            ],
+            [
+              118.8,
+              32.02
+            ],
+            [
+              118.8,
+              32.040000000000006
+            ],
+            [
+              118.78,
+              32.040000000000006
+            ],
+            [
+              118.78,
+              32.02
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "grid_id": "NJ0407",
+        "area_name": "Teaching area 4-7",
+        "population": 10786,
+        "elderly_share": 0.1548,
+        "tree_cover": 0.175,
+        "heat_c": 38.9392,
+        "transit_access": 0.8051,
+        "health_access": 0.7413,
+        "data_coverage": 0.7585,
+        "vulnerability": 0.1729,
+        "priority_score": 0.2036
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              118.80000000000001,
+              32.02
+            ],
+            [
+              118.82000000000001,
+              32.02
+            ],
+            [
+              118.82000000000001,
+              32.040000000000006
+            ],
+            [
+              118.80000000000001,
+              32.040000000000006
+            ],
+            [
+              118.80000000000001,
+              32.02
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "grid_id": "NJ0408",
+        "area_name": "Teaching area 4-8",
+        "population": 9756,
+        "elderly_share": 0.1192,
+        "tree_cover": 0.2289,
+        "heat_c": 37.931,
+        "transit_access": 0.7558,
+        "health_access": 0.6523,
+        "data_coverage": 0.6751,
+        "vulnerability": 0.1755,
+        "priority_score": -0.5629
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              118.82000000000001,
+              32.02
+            ],
+            [
+              118.84,
+              32.02
+            ],
+            [
+              118.84,
+              32.040000000000006
+            ],
+            [
+              118.82000000000001,
+              32.040000000000006
+            ],
+            [
+              118.82000000000001,
+              32.02
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "grid_id": "NJ0409",
+        "area_name": "Teaching area 4-9",
+        "population": 7651,
+        "elderly_share": 0.1741,
+        "tree_cover": 0.2489,
+        "heat_c": 38.2299,
+        "transit_access": 0.773,
+        "health_access": 0.7381,
+        "data_coverage": 0.6251,
+        "vulnerability": 0.1979,
+        "priority_score": -0.0604
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              118.84,
+              32.02
+            ],
+            [
+              118.86,
+              32.02
+            ],
+            [
+              118.86,
+              32.040000000000006
+            ],
+            [
+              118.84,
+              32.040000000000006
+            ],
+            [
+              118.84,
+              32.02
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "grid_id": "NJ0410",
+        "area_name": "Teaching area 4-10",
+        "population": 7357,
+        "elderly_share": 0.1702,
+        "tree_cover": 0.1913,
+        "heat_c": 37.2878,
+        "transit_access": 0.6503,
+        "health_access": 0.5067,
+        "data_coverage": 0.6272,
+        "vulnerability": 0.251,
+        "priority_score": -0.1766
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              118.86000000000001,
+              32.02
+            ],
+            [
+              118.88000000000001,
+              32.02
+            ],
+            [
+              118.88000000000001,
+              32.040000000000006
+            ],
+            [
+              118.86000000000001,
+              32.040000000000006
+            ],
+            [
+              118.86000000000001,
+              32.02
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "grid_id": "NJ0411",
+        "area_name": "Teaching area 4-11",
+        "population": 4937,
+        "elderly_share": 0.1924,
+        "tree_cover": 0.2801,
+        "heat_c": 37.4929,
+        "transit_access": 0.5466,
+        "health_access": 0.4449,
+        "data_coverage": 0.591,
+        "vulnerability": 0.3098,
+        "priority_score": 0.6828
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              118.88000000000001,
+              32.02
+            ],
+            [
+              118.9,
+              32.02
+            ],
+            [
+              118.9,
+              32.040000000000006
+            ],
+            [
+              118.88000000000001,
+              32.040000000000006
+            ],
+            [
+              118.88000000000001,
+              32.02
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "grid_id": "NJ0412",
+        "area_name": "Teaching area 4-12",
+        "population": 5879,
+        "elderly_share": 0.1993,
+        "tree_cover": 0.2189,
+        "heat_c": 36.7383,
+        "transit_access": 0.5411,
+        "health_access": 0.4049,
+        "data_coverage": 0.5247,
+        "vulnerability": 0.3161,
+        "priority_score": 0.1608
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              118.9,
+              32.02
+            ],
+            [
+              118.92,
+              32.02
+            ],
+            [
+              118.92,
+              32.040000000000006
+            ],
+            [
+              118.9,
+              32.040000000000006
+            ],
+            [
+              118.9,
+              32.02
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "grid_id": "NJ0501",
+        "area_name": "Teaching area 5-1",
+        "population": 3242,
+        "elderly_share": 0.2553,
+        "tree_cover": 0.2401,
+        "heat_c": 36.1801,
+        "transit_access": 0.3906,
+        "health_access": 0.2579,
+        "data_coverage": 0.9674,
+        "vulnerability": 0.4147,
+        "priority_score": 0.887
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              118.68,
+              32.04
+            ],
+            [
+              118.7,
+              32.04
+            ],
+            [
+              118.7,
+              32.06
+            ],
+            [
+              118.68,
+              32.06
+            ],
+            [
+              118.68,
+              32.04
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "grid_id": "NJ0502",
+        "area_name": "Teaching area 5-2",
+        "population": 4506,
+        "elderly_share": 0.2423,
+        "tree_cover": 0.2779,
+        "heat_c": 35.4776,
+        "transit_access": 0.3857,
+        "health_access": 0.34,
+        "data_coverage": 0.8382,
+        "vulnerability": 0.4097,
+        "priority_score": 0.2732
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              118.7,
+              32.04
+            ],
+            [
+              118.72,
+              32.04
+            ],
+            [
+              118.72,
+              32.06
+            ],
+            [
+              118.7,
+              32.06
+            ],
+            [
+              118.7,
+              32.04
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "grid_id": "NJ0503",
+        "area_name": "Teaching area 5-3",
+        "population": 5000,
+        "elderly_share": 0.2032,
+        "tree_cover": 0.1957,
+        "heat_c": 36.9413,
+        "transit_access": 0.4919,
+        "health_access": 0.3808,
+        "data_coverage": 0.8794,
+        "vulnerability": 0.3404,
+        "priority_score": 0.6094
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              118.72000000000001,
+              32.04
+            ],
+            [
+              118.74000000000001,
+              32.04
+            ],
+            [
+              118.74000000000001,
+              32.06
+            ],
+            [
+              118.72000000000001,
+              32.06
+            ],
+            [
+              118.72000000000001,
+              32.04
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "grid_id": "NJ0504",
+        "area_name": "Teaching area 5-4",
+        "population": 6644,
+        "elderly_share": 0.1602,
+        "tree_cover": 0.2367,
+        "heat_c": 37.1401,
+        "transit_access": 0.6964,
+        "health_access": 0.5195,
+        "data_coverage": 0.8476,
+        "vulnerability": 0.2247,
+        "priority_score": -0.6043
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              118.74000000000001,
+              32.04
+            ],
+            [
+              118.76,
+              32.04
+            ],
+            [
+              118.76,
+              32.06
+            ],
+            [
+              118.74000000000001,
+              32.06
+            ],
+            [
+              118.74000000000001,
+              32.04
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "grid_id": "NJ0505",
+        "area_name": "Teaching area 5-5",
+        "population": 8353,
+        "elderly_share": 0.1327,
+        "tree_cover": 0.2421,
+        "heat_c": 38.4346,
+        "transit_access": 0.7309,
+        "health_access": 0.7989,
+        "data_coverage": 0.792,
+        "vulnerability": 0.1941,
+        "priority_score": 0.0564
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              118.76,
+              32.04
+            ],
+            [
+              118.78,
+              32.04
+            ],
+            [
+              118.78,
+              32.06
+            ],
+            [
+              118.76,
+              32.06
+            ],
+            [
+              118.76,
+              32.04
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "grid_id": "NJ0506",
+        "area_name": "Teaching area 5-6",
+        "population": 10516,
+        "elderly_share": 0.1427,
+        "tree_cover": 0.2408,
+        "heat_c": 38.62,
+        "transit_access": 0.8677,
+        "health_access": 0.8272,
+        "data_coverage": 0.7586,
+        "vulnerability": 0.138,
+        "priority_score": -0.4622
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              118.78,
+              32.04
+            ],
+            [
+              118.8,
+              32.04
+            ],
+            [
+              118.8,
+              32.06
+            ],
+            [
+              118.78,
+              32.06
+            ],
+            [
+              118.78,
+              32.04
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "grid_id": "NJ0507",
+        "area_name": "Teaching area 5-7",
+        "population": 10137,
+        "elderly_share": 0.1087,
+        "tree_cover": 0.1959,
+        "heat_c": 39.0333,
+        "transit_access": 0.8307,
+        "health_access": 0.6912,
+        "data_coverage": 0.7351,
+        "vulnerability": 0.1359,
+        "priority_score": -0.1596
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              118.80000000000001,
+              32.04
+            ],
+            [
+              118.82000000000001,
+              32.04
+            ],
+            [
+              118.82000000000001,
+              32.06
+            ],
+            [
+              118.80000000000001,
+              32.06
+            ],
+            [
+              118.80000000000001,
+              32.04
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "grid_id": "NJ0508",
+        "area_name": "Teaching area 5-8",
+        "population": 8781,
+        "elderly_share": 0.1516,
+        "tree_cover": 0.2338,
+        "heat_c": 38.7813,
+        "transit_access": 0.7343,
+        "health_access": 0.6516,
+        "data_coverage": 0.6737,
+        "vulnerability": 0.2029,
+        "priority_score": 0.435
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              118.82000000000001,
+              32.04
+            ],
+            [
+              118.84,
+              32.04
+            ],
+            [
+              118.84,
+              32.06
+            ],
+            [
+              118.82000000000001,
+              32.06
+            ],
+            [
+              118.82000000000001,
+              32.04
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "grid_id": "NJ0509",
+        "area_name": "Teaching area 5-9",
+        "population": 8190,
+        "elderly_share": 0.1511,
+        "tree_cover": 0.2824,
+        "heat_c": 38.5267,
+        "transit_access": 0.8016,
+        "health_access": 0.6919,
+        "data_coverage": 0.6252,
+        "vulnerability": 0.1724,
+        "priority_score": -0.1282
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              118.84,
+              32.04
+            ],
+            [
+              118.86,
+              32.04
+            ],
+            [
+              118.86,
+              32.06
+            ],
+            [
+              118.84,
+              32.06
+            ],
+            [
+              118.84,
+              32.04
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "grid_id": "NJ0510",
+        "area_name": "Teaching area 5-10",
+        "population": 6473,
+        "elderly_share": 0.1628,
+        "tree_cover": 0.2855,
+        "heat_c": 37.5626,
+        "transit_access": 0.6684,
+        "health_access": 0.4767,
+        "data_coverage": 0.6201,
+        "vulnerability": 0.2387,
+        "priority_score": -0.1043
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              118.86000000000001,
+              32.04
+            ],
+            [
+              118.88000000000001,
+              32.04
+            ],
+            [
+              118.88000000000001,
+              32.06
+            ],
+            [
+              118.86000000000001,
+              32.06
+            ],
+            [
+              118.86000000000001,
+              32.04
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "grid_id": "NJ0511",
+        "area_name": "Teaching area 5-11",
+        "population": 7004,
+        "elderly_share": 0.2062,
+        "tree_cover": 0.3113,
+        "heat_c": 36.6449,
+        "transit_access": 0.5416,
+        "health_access": 0.3117,
+        "data_coverage": 0.535,
+        "vulnerability": 0.3197,
+        "priority_score": 0.1295
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              118.88000000000001,
+              32.04
+            ],
+            [
+              118.9,
+              32.04
+            ],
+            [
+              118.9,
+              32.06
+            ],
+            [
+              118.88000000000001,
+              32.06
+            ],
+            [
+              118.88000000000001,
+              32.04
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "grid_id": "NJ0512",
+        "area_name": "Teaching area 5-12",
+        "population": 4902,
+        "elderly_share": 0.1935,
+        "tree_cover": 0.2274,
+        "heat_c": 36.675,
+        "transit_access": 0.5145,
+        "health_access": 0.406,
+        "data_coverage": 0.5484,
+        "vulnerability": 0.3249,
+        "priority_score": 0.2149
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              118.9,
+              32.04
+            ],
+            [
+              118.92,
+              32.04
+            ],
+            [
+              118.92,
+              32.06
+            ],
+            [
+              118.9,
+              32.06
+            ],
+            [
+              118.9,
+              32.04
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "grid_id": "NJ0601",
+        "area_name": "Teaching area 6-1",
+        "population": 3116,
+        "elderly_share": 0.239,
+        "tree_cover": 0.3068,
+        "heat_c": 35.2017,
+        "transit_access": 0.298,
+        "health_access": 0.3211,
+        "data_coverage": 0.9482,
+        "vulnerability": 0.4474,
+        "priority_score": 0.5013
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              118.68,
+              32.06
+            ],
+            [
+              118.7,
+              32.06
+            ],
+            [
+              118.7,
+              32.080000000000005
+            ],
+            [
+              118.68,
+              32.080000000000005
+            ],
+            [
+              118.68,
+              32.06
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "grid_id": "NJ0602",
+        "area_name": "Teaching area 6-2",
+        "population": 4063,
+        "elderly_share": 0.2459,
+        "tree_cover": 0.4026,
+        "heat_c": 34.7841,
+        "transit_access": 0.3853,
+        "health_access": 0.1806,
+        "data_coverage": 0.8693,
+        "vulnerability": 0.4119,
+        "priority_score": -0.2494
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              118.7,
+              32.06
+            ],
+            [
+              118.72,
+              32.06
+            ],
+            [
+              118.72,
+              32.080000000000005
+            ],
+            [
+              118.7,
+              32.080000000000005
+            ],
+            [
+              118.7,
+              32.06
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "grid_id": "NJ0603",
+        "area_name": "Teaching area 6-3",
+        "population": 4859,
+        "elderly_share": 0.2173,
+        "tree_cover": 0.3675,
+        "heat_c": 35.5016,
+        "transit_access": 0.4139,
+        "health_access": 0.4523,
+        "data_coverage": 0.8404,
+        "vulnerability": 0.3832,
+        "priority_score": -0.0216
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              118.72000000000001,
+              32.06
+            ],
+            [
+              118.74000000000001,
+              32.06
+            ],
+            [
+              118.74000000000001,
+              32.080000000000005
+            ],
+            [
+              118.72000000000001,
+              32.080000000000005
+            ],
+            [
+              118.72000000000001,
+              32.06
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "grid_id": "NJ0604",
+        "area_name": "Teaching area 6-4",
+        "population": 6097,
+        "elderly_share": 0.1881,
+        "tree_cover": 0.289,
+        "heat_c": 36.9156,
+        "transit_access": 0.4785,
+        "health_access": 0.4824,
+        "data_coverage": 0.8404,
+        "vulnerability": 0.3381,
+        "priority_score": 0.5616
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              118.74000000000001,
+              32.06
+            ],
+            [
+              118.76,
+              32.06
+            ],
+            [
+              118.76,
+              32.080000000000005
+            ],
+            [
+              118.74000000000001,
+              32.080000000000005
+            ],
+            [
+              118.74000000000001,
+              32.06
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "grid_id": "NJ0605",
+        "area_name": "Teaching area 6-5",
+        "population": 7599,
+        "elderly_share": 0.1545,
+        "tree_cover": 0.3293,
+        "heat_c": 36.7328,
+        "transit_access": 0.6228,
+        "health_access": 0.5501,
+        "data_coverage": 0.7703,
+        "vulnerability": 0.2547,
+        "priority_score": -0.5706
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              118.76,
+              32.06
+            ],
+            [
+              118.78,
+              32.06
+            ],
+            [
+              118.78,
+              32.080000000000005
+            ],
+            [
+              118.76,
+              32.080000000000005
+            ],
+            [
+              118.76,
+              32.06
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "grid_id": "NJ0606",
+        "area_name": "Teaching area 6-6",
+        "population": 8836,
+        "elderly_share": 0.1544,
+        "tree_cover": 0.2558,
+        "heat_c": 38.1966,
+        "transit_access": 0.753,
+        "health_access": 0.6399,
+        "data_coverage": 0.745,
+        "vulnerability": 0.1961,
+        "priority_score": -0.1086
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              118.78,
+              32.06
+            ],
+            [
+              118.8,
+              32.06
+            ],
+            [
+              118.8,
+              32.080000000000005
+            ],
+            [
+              118.78,
+              32.080000000000005
+            ],
+            [
+              118.78,
+              32.06
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "grid_id": "NJ0607",
+        "area_name": "Teaching area 6-7",
+        "population": 8827,
+        "elderly_share": 0.1447,
+        "tree_cover": 0.2468,
+        "heat_c": 37.4658,
+        "transit_access": 0.7097,
+        "health_access": 0.5045,
+        "data_coverage": 0.6847,
+        "vulnerability": 0.2103,
+        "priority_score": -0.5183
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              118.80000000000001,
+              32.06
+            ],
+            [
+              118.82000000000001,
+              32.06
+            ],
+            [
+              118.82000000000001,
+              32.080000000000005
+            ],
+            [
+              118.80000000000001,
+              32.080000000000005
+            ],
+            [
+              118.80000000000001,
+              32.06
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "grid_id": "NJ0608",
+        "area_name": "Teaching area 6-8",
+        "population": 8052,
+        "elderly_share": 0.1659,
+        "tree_cover": 0.3147,
+        "heat_c": 38.0138,
+        "transit_access": 0.5996,
+        "health_access": 0.5411,
+        "data_coverage": 0.6742,
+        "vulnerability": 0.2714,
+        "priority_score": 0.6394
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              118.82000000000001,
+              32.06
+            ],
+            [
+              118.84,
+              32.06
+            ],
+            [
+              118.84,
+              32.080000000000005
+            ],
+            [
+              118.82000000000001,
+              32.080000000000005
+            ],
+            [
+              118.82000000000001,
+              32.06
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "grid_id": "NJ0609",
+        "area_name": "Teaching area 6-9",
+        "population": 8258,
+        "elderly_share": 0.163,
+        "tree_cover": 0.315,
+        "heat_c": 37.4565,
+        "transit_access": 0.7197,
+        "health_access": 0.5062,
+        "data_coverage": 0.5824,
+        "vulnerability": 0.2158,
+        "priority_score": -0.4601
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              118.84,
+              32.06
+            ],
+            [
+              118.86,
+              32.06
+            ],
+            [
+              118.86,
+              32.080000000000005
+            ],
+            [
+              118.84,
+              32.080000000000005
+            ],
+            [
+              118.84,
+              32.06
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "grid_id": "NJ0610",
+        "area_name": "Teaching area 6-10",
+        "population": 6000,
+        "elderly_share": 0.1941,
+        "tree_cover": 0.3364,
+        "heat_c": 36.3337,
+        "transit_access": 0.5457,
+        "health_access": 0.4035,
+        "data_coverage": 0.5896,
+        "vulnerability": 0.3112,
+        "priority_score": -0.2176
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              118.86000000000001,
+              32.06
+            ],
+            [
+              118.88000000000001,
+              32.06
+            ],
+            [
+              118.88000000000001,
+              32.080000000000005
+            ],
+            [
+              118.86000000000001,
+              32.080000000000005
+            ],
+            [
+              118.86000000000001,
+              32.06
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "grid_id": "NJ0611",
+        "area_name": "Teaching area 6-11",
+        "population": 5786,
+        "elderly_share": 0.1705,
+        "tree_cover": 0.2871,
+        "heat_c": 36.8971,
+        "transit_access": 0.5059,
+        "health_access": 0.4215,
+        "data_coverage": 0.5207,
+        "vulnerability": 0.3161,
+        "priority_score": 0.2867
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              118.88000000000001,
+              32.06
+            ],
+            [
+              118.9,
+              32.06
+            ],
+            [
+              118.9,
+              32.080000000000005
+            ],
+            [
+              118.88000000000001,
+              32.080000000000005
+            ],
+            [
+              118.88000000000001,
+              32.06
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "grid_id": "NJ0612",
+        "area_name": "Teaching area 6-12",
+        "population": 5113,
+        "elderly_share": 0.2092,
+        "tree_cover": 0.2948,
+        "heat_c": 36.5298,
+        "transit_access": 0.4448,
+        "health_access": 0.2734,
+        "data_coverage": 0.5159,
+        "vulnerability": 0.3649,
+        "priority_score": 0.5739
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              118.9,
+              32.06
+            ],
+            [
+              118.92,
+              32.06
+            ],
+            [
+              118.92,
+              32.080000000000005
+            ],
+            [
+              118.9,
+              32.080000000000005
+            ],
+            [
+              118.9,
+              32.06
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "grid_id": "NJ0701",
+        "area_name": "Teaching area 7-1",
+        "population": 3297,
+        "elderly_share": 0.2519,
+        "tree_cover": 0.602,
+        "heat_c": 33.6036,
+        "transit_access": 0.4325,
+        "health_access": 0.2272,
+        "data_coverage": 0.9247,
+        "vulnerability": 0.394,
+        "priority_score": -1.3948
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              118.68,
+              32.08
+            ],
+            [
+              118.7,
+              32.08
+            ],
+            [
+              118.7,
+              32.1
+            ],
+            [
+              118.68,
+              32.1
+            ],
+            [
+              118.68,
+              32.08
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "grid_id": "NJ0702",
+        "area_name": "Teaching area 7-2",
+        "population": 4060,
+        "elderly_share": 0.2525,
+        "tree_cover": 0.4921,
+        "heat_c": 34.5016,
+        "transit_access": 0.2555,
+        "health_access": 0.1635,
+        "data_coverage": 0.8626,
+        "vulnerability": 0.4739,
+        "priority_score": 0.262
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              118.7,
+              32.08
+            ],
+            [
+              118.72,
+              32.08
+            ],
+            [
+              118.72,
+              32.1
+            ],
+            [
+              118.7,
+              32.1
+            ],
+            [
+              118.7,
+              32.08
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "grid_id": "NJ0703",
+        "area_name": "Teaching area 7-3",
+        "population": 3477,
+        "elderly_share": 0.2278,
+        "tree_cover": 0.5272,
+        "heat_c": 35.1334,
+        "transit_access": 0.3932,
+        "health_access": 0.3081,
+        "data_coverage": 0.8305,
+        "vulnerability": 0.3983,
+        "priority_score": -0.134
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              118.72000000000001,
+              32.08
+            ],
+            [
+              118.74000000000001,
+              32.08
+            ],
+            [
+              118.74000000000001,
+              32.1
+            ],
+            [
+              118.72000000000001,
+              32.1
+            ],
+            [
+              118.72000000000001,
+              32.08
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "grid_id": "NJ0704",
+        "area_name": "Teaching area 7-4",
+        "population": 4707,
+        "elderly_share": 0.1979,
+        "tree_cover": 0.4882,
+        "heat_c": 35.0321,
+        "transit_access": 0.5027,
+        "health_access": 0.4262,
+        "data_coverage": 0.8157,
+        "vulnerability": 0.3327,
+        "priority_score": -0.992
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              118.74000000000001,
+              32.08
+            ],
+            [
+              118.76,
+              32.08
+            ],
+            [
+              118.76,
+              32.1
+            ],
+            [
+              118.74000000000001,
+              32.1
+            ],
+            [
+              118.74000000000001,
+              32.08
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "grid_id": "NJ0705",
+        "area_name": "Teaching area 7-5",
+        "population": 5712,
+        "elderly_share": 0.1877,
+        "tree_cover": 0.4813,
+        "heat_c": 35.861,
+        "transit_access": 0.4413,
+        "health_access": 0.4024,
+        "data_coverage": 0.7558,
+        "vulnerability": 0.3546,
+        "priority_score": -0.0763
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              118.76,
+              32.08
+            ],
+            [
+              118.78,
+              32.08
+            ],
+            [
+              118.78,
+              32.1
+            ],
+            [
+              118.76,
+              32.1
+            ],
+            [
+              118.76,
+              32.08
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "grid_id": "NJ0706",
+        "area_name": "Teaching area 7-6",
+        "population": 7143,
+        "elderly_share": 0.1736,
+        "tree_cover": 0.487,
+        "heat_c": 36.0327,
+        "transit_access": 0.6095,
+        "health_access": 0.3899,
+        "data_coverage": 0.7215,
+        "vulnerability": 0.2712,
+        "priority_score": -0.9292
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              118.78,
+              32.08
+            ],
+            [
+              118.8,
+              32.08
+            ],
+            [
+              118.8,
+              32.1
+            ],
+            [
+              118.78,
+              32.1
+            ],
+            [
+              118.78,
+              32.08
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "grid_id": "NJ0707",
+        "area_name": "Teaching area 7-7",
+        "population": 5451,
+        "elderly_share": 0.1651,
+        "tree_cover": 0.4825,
+        "heat_c": 37.1133,
+        "transit_access": 0.599,
+        "health_access": 0.4544,
+        "data_coverage": 0.6863,
+        "vulnerability": 0.2713,
+        "priority_score": -0.0741
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              118.80000000000001,
+              32.08
+            ],
+            [
+              118.82000000000001,
+              32.08
+            ],
+            [
+              118.82000000000001,
+              32.1
+            ],
+            [
+              118.80000000000001,
+              32.1
+            ],
+            [
+              118.80000000000001,
+              32.08
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "grid_id": "NJ0708",
+        "area_name": "Teaching area 7-8",
+        "population": 6456,
+        "elderly_share": 0.1609,
+        "tree_cover": 0.514,
+        "heat_c": 36.0693,
+        "transit_access": 0.574,
+        "health_access": 0.4792,
+        "data_coverage": 0.6428,
+        "vulnerability": 0.2802,
+        "priority_score": -0.7934
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              118.82000000000001,
+              32.08
+            ],
+            [
+              118.84,
+              32.08
+            ],
+            [
+              118.84,
+              32.1
+            ],
+            [
+              118.82000000000001,
+              32.1
+            ],
+            [
+              118.82000000000001,
+              32.08
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "grid_id": "NJ0709",
+        "area_name": "Teaching area 7-9",
+        "population": 6194,
+        "elderly_share": 0.1719,
+        "tree_cover": 0.4711,
+        "heat_c": 36.4328,
+        "transit_access": 0.5494,
+        "health_access": 0.4669,
+        "data_coverage": 0.6304,
+        "vulnerability": 0.2973,
+        "priority_score": -0.3036
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              118.84,
+              32.08
+            ],
+            [
+              118.86,
+              32.08
+            ],
+            [
+              118.86,
+              32.1
+            ],
+            [
+              118.84,
+              32.1
+            ],
+            [
+              118.84,
+              32.08
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "grid_id": "NJ0710",
+        "area_name": "Teaching area 7-10",
+        "population": 5464,
+        "elderly_share": 0.1984,
+        "tree_cover": 0.5589,
+        "heat_c": 35.2389,
+        "transit_access": 0.4245,
+        "health_access": 0.3914,
+        "data_coverage": 0.5778,
+        "vulnerability": 0.3681,
+        "priority_score": -0.4081
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              118.86000000000001,
+              32.08
+            ],
+            [
+              118.88000000000001,
+              32.08
+            ],
+            [
+              118.88000000000001,
+              32.1
+            ],
+            [
+              118.86000000000001,
+              32.1
+            ],
+            [
+              118.86000000000001,
+              32.08
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "grid_id": "NJ0711",
+        "area_name": "Teaching area 7-11",
+        "population": 5112,
+        "elderly_share": 0.1987,
+        "tree_cover": 0.5163,
+        "heat_c": 36.0357,
+        "transit_access": 0.4969,
+        "health_access": 0.3442,
+        "data_coverage": 0.5046,
+        "vulnerability": 0.3357,
+        "priority_score": -0.1627
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              118.88000000000001,
+              32.08
+            ],
+            [
+              118.9,
+              32.08
+            ],
+            [
+              118.9,
+              32.1
+            ],
+            [
+              118.88000000000001,
+              32.1
+            ],
+            [
+              118.88000000000001,
+              32.08
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "grid_id": "NJ0712",
+        "area_name": "Teaching area 7-12",
+        "population": 4940,
+        "elderly_share": 0.2243,
+        "tree_cover": 0.4818,
+        "heat_c": 34.9598,
+        "transit_access": 0.4863,
+        "health_access": 0.3607,
+        "data_coverage": 0.5318,
+        "vulnerability": 0.3546,
+        "priority_score": -0.7894
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              118.9,
+              32.08
+            ],
+            [
+              118.92,
+              32.08
+            ],
+            [
+              118.92,
+              32.1
+            ],
+            [
+              118.9,
+              32.1
+            ],
+            [
+              118.9,
+              32.08
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "grid_id": "NJ0801",
+        "area_name": "Teaching area 8-1",
+        "population": 3225,
+        "elderly_share": 0.2507,
+        "tree_cover": 0.6173,
+        "heat_c": 34.0484,
+        "transit_access": 0.3,
+        "health_access": 0.1929,
+        "data_coverage": 0.8844,
+        "vulnerability": 0.4529,
+        "priority_score": -0.345
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              118.68,
+              32.1
+            ],
+            [
+              118.7,
+              32.1
+            ],
+            [
+              118.7,
+              32.120000000000005
+            ],
+            [
+              118.68,
+              32.120000000000005
+            ],
+            [
+              118.68,
+              32.1
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "grid_id": "NJ0802",
+        "area_name": "Teaching area 8-2",
+        "population": 3254,
+        "elderly_share": 0.2434,
+        "tree_cover": 0.5657,
+        "heat_c": 33.9055,
+        "transit_access": 0.2857,
+        "health_access": 0.2162,
+        "data_coverage": 0.8636,
+        "vulnerability": 0.4553,
+        "priority_score": -0.4294
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              118.7,
+              32.1
+            ],
+            [
+              118.72,
+              32.1
+            ],
+            [
+              118.72,
+              32.120000000000005
+            ],
+            [
+              118.7,
+              32.120000000000005
+            ],
+            [
+              118.7,
+              32.1
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "grid_id": "NJ0803",
+        "area_name": "Teaching area 8-3",
+        "population": 3496,
+        "elderly_share": 0.2384,
+        "tree_cover": 0.6531,
+        "heat_c": 34.3939,
+        "transit_access": 0.3777,
+        "health_access": 0.3213,
+        "data_coverage": 0.8355,
+        "vulnerability": 0.4112,
+        "priority_score": -0.5662
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              118.72000000000001,
+              32.1
+            ],
+            [
+              118.74000000000001,
+              32.1
+            ],
+            [
+              118.74000000000001,
+              32.120000000000005
+            ],
+            [
+              118.72000000000001,
+              32.120000000000005
+            ],
+            [
+              118.72000000000001,
+              32.1
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "grid_id": "NJ0804",
+        "area_name": "Teaching area 8-4",
+        "population": 2911,
+        "elderly_share": 0.1981,
+        "tree_cover": 0.5557,
+        "heat_c": 34.8821,
+        "transit_access": 0.2671,
+        "health_access": 0.257,
+        "data_coverage": 0.7664,
+        "vulnerability": 0.4388,
+        "priority_score": 0.1467
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              118.74000000000001,
+              32.1
+            ],
+            [
+              118.76,
+              32.1
+            ],
+            [
+              118.76,
+              32.120000000000005
+            ],
+            [
+              118.74000000000001,
+              32.120000000000005
+            ],
+            [
+              118.74000000000001,
+              32.1
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "grid_id": "NJ0805",
+        "area_name": "Teaching area 8-5",
+        "population": 4128,
+        "elderly_share": 0.1885,
+        "tree_cover": 0.5691,
+        "heat_c": 35.0645,
+        "transit_access": 0.399,
+        "health_access": 0.2316,
+        "data_coverage": 0.7504,
+        "vulnerability": 0.3741,
+        "priority_score": -0.4752
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              118.76,
+              32.1
+            ],
+            [
+              118.78,
+              32.1
+            ],
+            [
+              118.78,
+              32.120000000000005
+            ],
+            [
+              118.76,
+              32.120000000000005
+            ],
+            [
+              118.76,
+              32.1
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "grid_id": "NJ0806",
+        "area_name": "Teaching area 8-6",
+        "population": 3837,
+        "elderly_share": 0.1901,
+        "tree_cover": 0.5481,
+        "heat_c": 35.0026,
+        "transit_access": 0.466,
+        "health_access": 0.3339,
+        "data_coverage": 0.7155,
+        "vulnerability": 0.3448,
+        "priority_score": -0.8709
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              118.78,
+              32.1
+            ],
+            [
+              118.8,
+              32.1
+            ],
+            [
+              118.8,
+              32.120000000000005
+            ],
+            [
+              118.78,
+              32.120000000000005
+            ],
+            [
+              118.78,
+              32.1
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "grid_id": "NJ0807",
+        "area_name": "Teaching area 8-7",
+        "population": 4501,
+        "elderly_share": 0.1975,
+        "tree_cover": 0.5737,
+        "heat_c": 35.4147,
+        "transit_access": 0.3788,
+        "health_access": 0.2248,
+        "data_coverage": 0.6979,
+        "vulnerability": 0.3882,
+        "priority_score": -0.0319
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              118.80000000000001,
+              32.1
+            ],
+            [
+              118.82000000000001,
+              32.1
+            ],
+            [
+              118.82000000000001,
+              32.120000000000005
+            ],
+            [
+              118.80000000000001,
+              32.120000000000005
+            ],
+            [
+              118.80000000000001,
+              32.1
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "grid_id": "NJ0808",
+        "area_name": "Teaching area 8-8",
+        "population": 4050,
+        "elderly_share": 0.1933,
+        "tree_cover": 0.6058,
+        "heat_c": 34.6218,
+        "transit_access": 0.4269,
+        "health_access": 0.3201,
+        "data_coverage": 0.6254,
+        "vulnerability": 0.3642,
+        "priority_score": -0.9423
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              118.82000000000001,
+              32.1
+            ],
+            [
+              118.84,
+              32.1
+            ],
+            [
+              118.84,
+              32.120000000000005
+            ],
+            [
+              118.82000000000001,
+              32.120000000000005
+            ],
+            [
+              118.82000000000001,
+              32.1
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "grid_id": "NJ0809",
+        "area_name": "Teaching area 8-9",
+        "population": 4447,
+        "elderly_share": 0.1997,
+        "tree_cover": 0.5454,
+        "heat_c": 35.349,
+        "transit_access": 0.5327,
+        "health_access": 0.3313,
+        "data_coverage": 0.6091,
+        "vulnerability": 0.3201,
+        "priority_score": -0.8898
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              118.84,
+              32.1
+            ],
+            [
+              118.86,
+              32.1
+            ],
+            [
+              118.86,
+              32.120000000000005
+            ],
+            [
+              118.84,
+              32.120000000000005
+            ],
+            [
+              118.84,
+              32.1
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "grid_id": "NJ0810",
+        "area_name": "Teaching area 8-10",
+        "population": 3682,
+        "elderly_share": 0.1935,
+        "tree_cover": 0.5683,
+        "heat_c": 35.6067,
+        "transit_access": 0.4756,
+        "health_access": 0.3386,
+        "data_coverage": 0.5179,
+        "vulnerability": 0.3424,
+        "priority_score": -0.4221
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              118.86000000000001,
+              32.1
+            ],
+            [
+              118.88000000000001,
+              32.1
+            ],
+            [
+              118.88000000000001,
+              32.120000000000005
+            ],
+            [
+              118.86000000000001,
+              32.120000000000005
+            ],
+            [
+              118.86000000000001,
+              32.1
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "grid_id": "NJ0811",
+        "area_name": "Teaching area 8-11",
+        "population": 5211,
+        "elderly_share": 0.1988,
+        "tree_cover": 0.6106,
+        "heat_c": 35.5231,
+        "transit_access": 0.5164,
+        "health_access": 0.3975,
+        "data_coverage": 0.515,
+        "vulnerability": 0.327,
+        "priority_score": -0.6711
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              118.88000000000001,
+              32.1
+            ],
+            [
+              118.9,
+              32.1
+            ],
+            [
+              118.9,
+              32.120000000000005
+            ],
+            [
+              118.88000000000001,
+              32.120000000000005
+            ],
+            [
+              118.88000000000001,
+              32.1
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "grid_id": "NJ0812",
+        "area_name": "Teaching area 8-12",
+        "population": 5574,
+        "elderly_share": 0.1866,
+        "tree_cover": 0.5586,
+        "heat_c": 35.6924,
+        "transit_access": 0.4839,
+        "health_access": 0.3601,
+        "data_coverage": 0.4594,
+        "vulnerability": 0.3349,
+        "priority_score": -0.4436
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              118.9,
+              32.1
+            ],
+            [
+              118.92,
+              32.1
+            ],
+            [
+              118.92,
+              32.120000000000005
+            ],
+            [
+              118.9,
+              32.120000000000005
+            ],
+            [
+              118.9,
+              32.1
+            ]
+          ]
+        ]
+      }
+    }
+  ]
+}

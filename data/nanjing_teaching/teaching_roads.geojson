@@ -1,0 +1,222 @@
+{
+  "type": "FeatureCollection",
+  "name": "teaching_roads",
+  "crs": {
+    "type": "name",
+    "properties": {
+      "name": "urn:ogc:def:crs:OGC:1.3:CRS84"
+    }
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "road_id": "R001",
+        "road_class": "east_west",
+        "walk_speed_kmh": 4.5
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            118.68,
+            31.98
+          ],
+          [
+            118.92,
+            31.98
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "road_id": "R002",
+        "road_class": "east_west",
+        "walk_speed_kmh": 4.5
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            118.68,
+            32.02
+          ],
+          [
+            118.92,
+            32.02
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "road_id": "R003",
+        "road_class": "east_west",
+        "walk_speed_kmh": 4.5
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            118.68,
+            32.06
+          ],
+          [
+            118.92,
+            32.06
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "road_id": "R004",
+        "road_class": "east_west",
+        "walk_speed_kmh": 4.5
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            118.68,
+            32.1
+          ],
+          [
+            118.92,
+            32.1
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "road_id": "R005",
+        "road_class": "north_south",
+        "walk_speed_kmh": 4.5
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            118.7,
+            31.96
+          ],
+          [
+            118.7,
+            32.12
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "road_id": "R006",
+        "road_class": "north_south",
+        "walk_speed_kmh": 4.5
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            118.74000000000001,
+            31.96
+          ],
+          [
+            118.74000000000001,
+            32.12
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "road_id": "R007",
+        "road_class": "north_south",
+        "walk_speed_kmh": 4.5
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            118.78,
+            31.96
+          ],
+          [
+            118.78,
+            32.12
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "road_id": "R008",
+        "road_class": "north_south",
+        "walk_speed_kmh": 4.5
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            118.82000000000001,
+            31.96
+          ],
+          [
+            118.82000000000001,
+            32.12
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "road_id": "R009",
+        "road_class": "north_south",
+        "walk_speed_kmh": 4.5
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            118.86000000000001,
+            31.96
+          ],
+          [
+            118.86000000000001,
+            32.12
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "road_id": "R010",
+        "road_class": "north_south",
+        "walk_speed_kmh": 4.5
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            118.9,
+            31.96
+          ],
+          [
+            118.9,
+            32.12
+          ]
+        ]
+      }
+    }
+  ]
+}

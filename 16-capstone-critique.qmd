@@ -58,7 +58,7 @@ capstone-project/
 │   ├── 02_features.py
 │   ├── 03_analysis.py
 │   └── 04_validate.py
-├── notebooks/               # 叙事、探索和课堂演示
+├── notebooks/               # 叙事、探索和方法演示
 ├── outputs/
 │   ├── figures/
 │   ├── maps/
@@ -196,6 +196,8 @@ Path("outputs/manifest.json").write_text(
 - 用稳健性、不确定性和群体误差限制过度陈述。
 - 将分析结果转化为可比较、可实施、可质疑的规划选择。
 :::
+
+{{< include _units/16-nanjing-case.qmd >}}
 
 {{< include _units/16-guided-lab.qmd >}}
 

@@ -1,0 +1,13 @@
+{
+  "title": "Nanjing central-city teaching sample",
+  "crs": "OGC:CRS84 / WGS84 longitude-latitude",
+  "spatial_extent": [
+    118.68,
+    31.96,
+    118.92,
+    32.12
+  ],
+  "status": "Deterministic synthetic attributes and facilities for teaching; not official statistics.",
+  "generator": "scripts/generate_nanjing_case_assets.py",
+  "seed": 20260824
+}

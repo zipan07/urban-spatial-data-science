@@ -1,4 +1,4 @@
-## 上机手册：建立可追溯的ArcGIS Pro项目
+## 实践指南：建立可追溯的ArcGIS Pro项目
 
 ArcGIS Pro实验应从项目结构和环境检查开始。学生在这一节创建`.aprx`项目、File Geodatabase、地图、地理处理历史和ArcPy脚本，并掌握与开放Python环境之间的数据交换。
 
@@ -26,6 +26,7 @@ ArcGIS Pro实验应从项目结构和环境检查开始。学生在这一节创�
 工具完成后不要立即关闭窗格。进入History查看输入、参数、环境与执行时间。右键成功记录可以“Copy Python Command”，得到可复制到Notebook或脚本的ArcPy语句。
 
 ```{.python filename="08_buffer_from_history.py"}
+# 从ArcGIS Pro地理处理历史整理出的等距缓冲示例
 import arcpy
 
 arcpy.analysis.Buffer(
@@ -44,6 +45,7 @@ arcpy.analysis.Buffer(
 在Insert → New Notebook中新建ArcGIS Pro Notebook。它自动使用当前ArcGIS Python环境。先运行：
 
 ```{.python filename="08_01_arcgis_check.ipynb"}
+# 检查ArcPy解释器、ArcGIS Pro版本以及课程环境中的核心包
 import arcpy
 import sys
 
@@ -63,6 +65,7 @@ print("当前工程:", arcpy.mp.ArcGISProject("CURRENT").filePath)
 ### 将重复操作整理为函数
 
 ```{.python filename="08_02_arcpy_function.py"}
+# 将地理处理流程封装为函数，并在运行前检查输入图层
 from pathlib import Path
 import arcpy
 
@@ -94,7 +97,7 @@ for distance in [500, 1000, 1500]:
 
 在项目工具箱中新建Model，依次加入输入设施、Buffer、Spatial Join和Summary Statistics。将输入图层、缓冲距离和输出表设置为Model Parameter。运行后执行Validate，并用不同距离测试。
 
-ModelBuilder适合课堂上查看流程与参数依赖；ArcPy适合批量循环、条件判断和自动质量检查。两者可以互相转换：地理处理历史帮助生成Python命令，ModelBuilder工具也可以导出为Python文件，再进行人工整理。
+ModelBuilder适合直观查看流程与参数依赖；ArcPy适合批量循环、条件判断和自动质量检查。两者可以互相转换：地理处理历史帮助生成Python命令，ModelBuilder工具也可以导出为Python文件，再进行人工整理。
 
 ### 与GeoPandas交换数据
 
@@ -103,6 +106,7 @@ ModelBuilder适合课堂上查看流程与参数依赖；ArcPy适合批量循环
 在ArcGIS Pro中导出：右键图层 → Data → Export Features，输出到`exports/chapter08_results.gpkg`。随后在`urban-data`环境读取：
 
 ```{.python filename="08_03_read_arcgis_output.py"}
+# 在GeoPandas中重新读取ArcGIS输出，完成跨软件质量验证
 import geopandas as gpd
 
 result = gpd.read_file(

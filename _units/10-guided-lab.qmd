@@ -1,10 +1,11 @@
-## 三小时课堂：从空间权重到LISA诊断
+## 案例研究：从空间权重到LISA诊断
 
-本单元检验社区老龄化率是否存在空间集聚。课堂依次构建权重、计算全局Moran's I、识别局部集聚并开展权重敏感性分析。
+本案例检验社区老龄化率是否存在空间集聚，依次构建空间权重、计算全局Moran's I、识别局部集聚并开展权重敏感性分析。
 
-### 第一小时：构建并检查空间权重
+### 研究设定：构建并检查空间权重
 
 ```{.python filename="10_step1_weights.py"}
+# 构建Queen邻接与K近邻权重，并检查孤岛和邻居数量分布
 from libpysal.weights import Queen, KNN
 
 w_q = Queen.from_dataframe(communities, ids="community_id")
@@ -21,9 +22,10 @@ for name, w in {"queen": w_q, "knn6": w_k}.items():
 
 岛屿单元和多连通分量必须先处理。Queen邻接适合共享边界关系，KNN确保每个单元拥有邻居。二者对应不同城市联系假设。
 
-### 第二小时：全局检验与置换分布
+### 分析实施：全局检验与置换分布
 
 ```{.python filename="10_step2_global_moran.py"}
+# 使用固定随机种子运行置换检验，记录统计量、期望值和模拟p值
 from esda import Moran
 
 y = communities.set_index("community_id")["elderly_rate"]
@@ -36,9 +38,10 @@ for w in [w_q, w_k]:
 
 学生先用散点图理解空间滞后，再解释I值、期望值和置换p值。显著正相关表示相似值相邻，并不提供形成原因。
 
-### 第三小时：局部集聚、多重检验和敏感性
+### 结果检验与解释：局部集聚、多重检验和敏感性
 
 ```{.python filename="10_step3_lisa.py"}
+# 计算局部Moran统计量，并用FDR控制大量局部检验的假阳性
 from esda import Moran_Local
 from statsmodels.stats.multitest import multipletests
 
@@ -60,9 +63,10 @@ print(result.groupby(["quadrant", "significant_fdr"]).size())
 
 @fig-moran-lisa-output 中散点图拟合线的斜率为正，与左图中相邻高值和相邻低值成片出现的现象一致。右图只标示同时满足局部统计条件的单元，因此不应把左图所有颜色相近的区域都称为热点。高—高表示一个高值单元被高值邻居包围，低—低表示低值集聚；高—低和低—高属于空间离群，可能对应功能突变、边界效应、数据错误或真实的局部异常。
 
-统计显著性仍需结合效应大小和敏感性阅读。第一次运行可采用999次置换进行课堂调试，正式结果建议提高到9999次并固定随机种子。随后依次改变邻接规则、距离阈值和行标准化设置，把每个空间单元在不同设定下被识别为同一类型的次数记录为“稳定度”。若一个高—高区只在单一权重矩阵下出现，它可以作为探索线索，却不适合直接进入刚性的资源配置清单。
+统计显著性仍需结合效应大小和敏感性阅读。探索阶段可采用999次置换检查流程，正式结果建议提高到9999次并固定随机种子。随后依次改变邻接规则、距离阈值和行标准化设置，把每个空间单元在不同设定下被识别为同一类型的次数记录为“稳定度”。若一个高—高区只在单一权重矩阵下出现，它可以作为探索线索，却不适合直接进入刚性的资源配置清单。
 
 ```{.python filename="10_lisa_stability_table.py"}
+# 在多套合理空间权重下重复LISA，统计高—高集聚的稳定出现次数
 weight_sets = {"queen": w_q, "rook": w_r, "knn6": w_knn6}
 stability = []
 
@@ -88,5 +92,5 @@ print(stable_hh.value_counts().sort_index())
 ```
 
 ::: {.lab-brief}
-**课堂提交**：权重诊断、Moran散点图、全局检验、LISA地图和权重敏感性表。结论必须区分空间配置、统计证据和机制解释。
+**研究成果**：权重诊断、Moran散点图、全局检验、LISA地图和权重敏感性表。结论必须区分空间配置、统计证据和机制解释。
 :::

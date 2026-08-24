@@ -134,6 +134,8 @@ profile = (
 - 稳健研究应跨至少一个备选空间尺度和时间窗口复核结论。
 :::
 
+{{< include _units/05-nanjing-case.qmd >}}
+
 {{< include _units/05-guided-lab.qmd >}}
 
 ## 延伸阅读

@@ -1,10 +1,11 @@
-## 三小时课堂：城市功能类型识别与空间预测
+## 案例研究：城市功能类型识别与空间预测
 
 本单元以网格为分析单元，使用设施构成、建筑形态、道路和活动强度识别城市功能类型，再训练监督模型预测未标注网格。全过程强调空间标准化、聚类解释和空间验证。
 
-### 第一小时：构造可解释特征
+### 研究设定：构造可解释特征
 
 ```{.python filename="12_step1_features.py"}
+# 只保留具有明确城市含义、可在部署时取得且时间一致的特征
 feature_cols = [
     "residential_share", "office_share", "retail_share",
     "building_coverage", "mean_height", "intersection_density",
@@ -17,9 +18,10 @@ print(X.corr().round(2))
 
 比例变量检查总和，密度变量核对分母，活动变量进行对数转换。高度相关特征可能重复表达同一城市属性。
 
-### 第二小时：聚类、命名和空间连续性
+### 分析实施：聚类、命名和空间连续性
 
 ```{.python filename="12_step2_cluster.py"}
+# 标准化特征后运行聚类，并将结果与空间连通约束进行比较
 from sklearn.pipeline import make_pipeline
 from sklearn.impute import SimpleImputer
 from sklearn.preprocessing import StandardScaler
@@ -37,9 +39,10 @@ print(profile.round(2))
 
 类别命名依据特征剖面、典型地点和街景抽查完成。聚类编号本身没有语义。学生检查孤立斑块，区分真实混合地区与噪声。
 
-### 第三小时：监督预测与空间验证
+### 结果检验与解释：监督预测与空间验证
 
 ```{.python filename="12_step3_spatial_prediction.py"}
+# 用空间折划分训练集和测试集，避免邻近样本造成评价泄漏
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import classification_report
 
@@ -53,7 +56,7 @@ pred = clf.predict(test[feature_cols])
 print(classification_report(test["label"], pred))
 ```
 
-课堂比较随机划分和空间留出结果，制图显示错误集中区与最大预测概率。低置信度网格进入人工复核，不直接赋予规划用地含义。
+分析中比较随机划分和空间留出结果，并制图显示错误集中区与最大预测概率。低置信度网格进入人工复核，不直接赋予规划用地含义。
 
 ### 预测图必须与误差图共同出现
 
@@ -66,6 +69,7 @@ print(classification_report(test["label"], pred))
 误差地图的颜色范围应在模型之间保持一致，并同时报告带符号残差。绝对误差说明偏离程度，带符号残差能够区分系统高估和系统低估。对规划预警而言，低估高风险通常比高估具有更高代价，可以建立非对称损失函数，或单独报告高风险地区的漏报率。模型输出进入决策界面时，还应允许工作人员点击空间单元查看样本量、主要特征、预测概率、所属空间验证折和最近一次数据更新时间。
 
 ```{.python filename="12_map_prediction_diagnostics.py"}
+# 同时输出预测类别、最大概率和需要人工复核的空间单元
 test_result = test[["grid_id", "geometry", "label"]].copy()
 test_result["pred"] = pred
 test_result["confidence"] = clf.predict_proba(test[feature_cols]).max(axis=1)
@@ -88,5 +92,5 @@ plt.tight_layout()
 ```
 
 ::: {.lab-brief}
-**课堂提交**：特征字典、聚类剖面、典型样本核查、空间测试报告和概率地图。报告要区分数据驱动类型、实际使用和法定规划类别。
+**研究成果**：特征字典、聚类剖面、典型样本核查、空间测试报告和概率地图。报告要区分数据驱动类型、实际使用和法定规划类别。
 :::

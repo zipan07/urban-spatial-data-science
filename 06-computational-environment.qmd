@@ -103,7 +103,7 @@ Notebook的优势在于把代码、结果和解释放在同一页面。例如，
 
 ## 从探索到可重复函数
 
-课堂初期，我们会在Notebook中逐步探索数据。随着分析稳定，应把重复步骤整理成函数。
+研究初期可以在Notebook中逐步探索数据。随着分析稳定，应把重复步骤整理成函数。
 
 ```{.python}
 def ageing_rate(data, older_col, total_col):
@@ -181,6 +181,8 @@ validate_communities(communities)
 4. 你会如何记录AI参与代码编写的过程？
 
 {{< include _units/06-environment-manual.qmd >}}
+
+{{< include _units/06-nanjing-case.qmd >}}
 
 {{< include _units/06-guided-lab.qmd >}}
 

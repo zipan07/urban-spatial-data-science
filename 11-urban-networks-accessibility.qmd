@@ -255,6 +255,8 @@ communities["medical_access"] = accessibility
 3. 网络中心性与城市活力之间需要哪些中间条件？
 4. 提高平均可达性是否一定改善空间公平？
 
+{{< include _units/11-nanjing-case.qmd >}}
+
 {{< include _units/11-guided-lab.qmd >}}
 
 ## 来源与延伸阅读

@@ -188,6 +188,8 @@ sensitivity = pd.DataFrame(records)
 - 模型卡明确适用范围、限制和责任。
 :::
 
+{{< include _units/13-nanjing-case.qmd >}}
+
 {{< include _units/13-guided-lab.qmd >}}
 
 ## 延伸阅读

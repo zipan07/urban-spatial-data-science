@@ -1,10 +1,11 @@
-## 三小时课堂：构建可审计的城市数据管线
+## 案例研究：构建可审计的城市数据管线
 
 本单元把社区人口、养老设施和边界数据组织为分析表。每一步都输出检查结果，连接失败和重复键会立即停止流程。
 
-### 第一小时：读取、字段契约与主键检查
+### 研究设定：读取、字段契约与主键检查
 
 ```{.python filename="07_step1_schema.py"}
+# 读取人口表并逐项验证字段、主键、类型和允许的数值范围
 import pandas as pd
 import geopandas as gpd
 
@@ -21,9 +22,10 @@ assert (population[["population", "elderly"]] >= 0).all().all()
 
 学生检查编码、单位和数据年份，并把字段契约写入README。若社区代码含前导零，读取时必须使用字符串类型。
 
-### 第二小时：属性连接与空间连接
+### 分析实施：属性连接与空间连接
 
 ```{.python filename="07_step2_join.py"}
+# 属性连接使用m:1约束，空间连接保留未匹配点供后续检查
 base = communities.merge(
     population,
     on="community_id",
@@ -42,9 +44,10 @@ print(matched["community_id"].isna().mean())
 
 未匹配设施先制图检查。位于边界线上时可测试 `intersects`，但必须记录规则变化，不能仅为提高匹配率随意更换谓词。
 
-### 第三小时：生成指标、数据血缘和输出
+### 结果检验与解释：生成指标、数据血缘和输出
 
 ```{.python filename="07_step3_publish.py"}
+# 汇总设施数量，计算供给指标，并把处理结果写入GeoPackage
 facility_count = matched.groupby("community_id").size().rename("facility_n")
 analysis = base.join(facility_count, on="community_id")
 analysis["facility_n"] = analysis["facility_n"].fillna(0).astype(int)
@@ -58,8 +61,8 @@ analysis.drop(columns="_merge").to_file(
 )
 ```
 
-输出同时附带行数、缺失率、坐标系、处理时间和输入文件版本。课堂最后由同伴随机抽查三个社区，手工核对设施数。
+输出同时附带行数、缺失率、坐标系、处理时间和输入文件版本。质量复核阶段由另一位研究者随机抽查三个社区，手工核对设施数。
 
 ::: {.lab-brief}
-**课堂提交**：字段契约、连接审计、未匹配点地图、处理后GeoPackage和数据血缘说明。代码运行成功只代表技术完成，人工抽查用于验证语义正确性。
+**研究成果**：字段契约、连接审计、未匹配点地图、处理后GeoPackage和数据血缘说明。代码运行成功只代表技术完成，人工抽查用于验证语义正确性。
 :::

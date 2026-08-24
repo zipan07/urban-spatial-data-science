@@ -278,6 +278,8 @@ assert population["older_population"].le(population["population"]).all()
 
 {{< include _units/07-practical-manual.qmd >}}
 
+{{< include _units/07-nanjing-case.qmd >}}
+
 {{< include _units/07-guided-lab.qmd >}}
 
 ## 来源与延伸阅读

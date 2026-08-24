@@ -1,8 +1,8 @@
-## 三小时课堂：从空文件夹到可复现项目
+## 案例研究：从空文件夹到可复现项目
 
-本单元建立一套能够由同伴重新运行的课程仓库。课堂完成后，项目应在新终端中通过一条命令完成数据检查、指标计算和图表输出。
+本案例建立一套能够由第三方重新运行的研究仓库。完成整理后，项目应能在新终端中通过一条命令执行数据检查、指标计算和图表输出。
 
-### 第一小时：环境与项目骨架
+### 研究设定：环境与项目骨架
 
 学生创建独立环境并核对解释器。VS Code 状态栏、终端中的 `which python` 或 `where python`、Notebook Kernel 必须指向同一环境。
 
@@ -16,11 +16,12 @@ python -m pip freeze > requirements-lock.txt
 
 项目采用 `data/raw`、`data/processed`、`src`、`notebooks`、`outputs` 和 `tests`。原始数据只读，派生数据由脚本生成，图表进入 `outputs/figures`。
 
-### 第二小时：把探索代码整理成函数
+### 分析实施：把探索代码整理成函数
 
 Notebook先帮助理解字段，稳定步骤随后移入函数。函数明确输入列、单位和错误条件。
 
 ```{.python filename="src/indicators.py"}
+# 将指标计算封装为纯函数，便于单元测试和跨项目复用
 import pandas as pd
 
 def elderly_rate(df: pd.DataFrame) -> pd.Series:
@@ -34,11 +35,12 @@ def elderly_rate(df: pd.DataFrame) -> pd.Series:
     return rate
 ```
 
-### 第三小时：测试、重跑与交接
+### 结果检验与解释：测试、重跑与交接
 
 测试覆盖正常值、零人口和非法负值。随后关闭所有Notebook，用命令行从头执行流程，并由另一组仅依据README复现。
 
 ```{.python filename="tests/test_indicators.py"}
+# 用已知输入与预期输出检验指标公式和零分母处理
 import pandas as pd
 import pytest
 from src.indicators import elderly_rate
@@ -56,5 +58,5 @@ def test_negative_population_fails():
 ```
 
 ::: {.lab-brief}
-**课堂提交**：环境锁定文件、项目树、一个可测试函数、测试结果和同伴复现记录。教师评价以“他人能否从零得到相同输出”为核心。
+**研究成果**：环境锁定文件、项目树、一个可测试函数、测试结果和同伴复现记录。教师评价以“他人能否从零得到相同输出”为核心。
 :::

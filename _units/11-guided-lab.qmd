@@ -1,10 +1,11 @@
-## 三小时课堂：从道路网络到供需可达性
+## 案例研究：从道路网络到供需可达性
 
-本单元计算社区到基层医疗设施的网络可达性，并加入设施容量与人口竞争。课堂从图结构检查开始，逐步进入最短路和两步移动搜寻法。
+本案例计算社区到基层医疗设施的网络可达性，并把设施容量与人口竞争纳入评价。分析从图结构检查开始，逐步进入最短路和两步移动搜寻法。
 
-### 第一小时：检查网络与出行成本
+### 研究设定：检查网络与出行成本
 
 ```{.python filename="11_step1_network.py"}
+# 下载并投影步行网络，随后检查连通分量、边长度和异常速度
 import osmnx as ox
 import networkx as nx
 
@@ -19,9 +20,10 @@ print({"nodes": len(G.nodes), "edges": len(G.edges),
 
 道路缺口、立交过街和小区内部路径会影响结果。学生在地图上抽查十个关键连接，并说明固定步速对老年人估计的局限。
 
-### 第二小时：计算设施时间矩阵
+### 分析实施：计算设施时间矩阵
 
 ```{.python filename="11_step2_od_matrix.py"}
+# 将人口与设施吸附到最近网络节点，计算起讫点最短出行时间
 origins = ox.distance.nearest_nodes(G, residents.geometry.x, residents.geometry.y)
 destinations = ox.distance.nearest_nodes(G, clinics.geometry.x, clinics.geometry.y)
 
@@ -36,11 +38,12 @@ for oid, onode in zip(residents["community_id"], origins):
 od = pd.DataFrame(records, columns=["community_id", "clinic_id", "minutes"])
 ```
 
-### 第三小时：加入容量和竞争
+### 结果检验与解释：加入容量和竞争
 
 第一步对每个诊所计算30分钟范围内的需求与供需比，第二步对每个社区汇总可到达诊所的供需比。再分别使用15、30、45分钟阈值，并针对老年人降低步速。
 
 ```{.python filename="11_step3_two_step_fca.py"}
+# 第一步估计设施供需比，第二步汇总居民可到达设施的供需比
 od30 = od[od["minutes"] <= 30]
 demand = od30.merge(residents[["community_id", "elderly"]], on="community_id")
 clinic_demand = demand.groupby("clinic_id")["elderly"].sum()
@@ -51,7 +54,7 @@ residents["access_2sfca"] = residents["community_id"].map(access).fillna(0)
 
 ### 从一张可达性地图辨认网络屏障
 
-欧氏距离把城市看成一张可以直线穿越的平面，网络距离则把桥梁、铁路、河流、封闭街区、单行线和出入口纳入出行成本。设施新增后，受益范围通常沿道路网络扩散，并可能在一条物理距离很短的屏障前突然停止。课堂中的结果图应同时保留基准情景、新增设施情景和两者之差，使学生能区分“原本可达性高”和“本次方案改善大”。
+欧氏距离把城市看成一张可以直线穿越的平面，网络距离则把桥梁、铁路、河流、封闭街区、单行线和出入口纳入出行成本。设施新增后，受益范围通常沿道路网络扩散，并可能在一条物理距离很短的屏障前突然停止。案例结果图应同时保留基准情景、新增设施情景和两者之差，使读者能区分“原本可达性高”和“本次方案改善大”。
 
 ![设施新增前后的网络可达性。星号表示设施，左图为基准出行成本，中图加入一处设施，右图为节省的网络步数；图中使用教学合成数据。](figures/11-network-accessibility-output.png){#fig-network-accessibility-output fig-alt="三个并列网络地图分别显示基准到设施的网络步数、新增设施后的步数和各节点节省的步数，网络中部存在断裂屏障。"}
 
@@ -60,6 +63,7 @@ residents["access_2sfca"] = residents["community_id"].map(access).fillna(0)
 可达性提高也不等于服务公平已经改善。2SFCA把设施容量和潜在需求纳入计算，但仍依赖搜索阈值、距离衰减函数、容量口径和需求代理变量。学生应比较15、30、45分钟阈值，并报告每个阈值下零可达人口、最低四分位人口和高脆弱性群体的改善幅度。若新增设施显著提高平均可达性，却几乎没有减少高脆弱群体中的零可达比例，方案仍需要调整。
 
 ```{.python filename="11_scenario_change_audit.py"}
+# 按脆弱性分组比较方案前后可达性，避免平均改善掩盖群体差异
 scenario = residents[["community_id", "elderly", "vulnerability"]].copy()
 scenario["baseline"] = baseline_access.reindex(
     scenario["community_id"]
@@ -81,5 +85,5 @@ print(summary)
 ```
 
 ::: {.lab-brief}
-**课堂提交**：网络质量检查、OD时间矩阵、最近设施时间、2SFCA结果和三种阈值敏感性。规划讨论应同时考虑交通改善、基层扩容和服务组织调整。
+**研究成果**：网络质量检查、OD时间矩阵、最近设施时间、2SFCA结果和三种阈值敏感性。规划讨论应同时考虑交通改善、基层扩容和服务组织调整。
 :::

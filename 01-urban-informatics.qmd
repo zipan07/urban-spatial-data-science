@@ -125,6 +125,8 @@ print(pd.Series(quality, name="value"))
 3. 选择一项城市平台数据，说明它系统性遗漏了谁或什么活动。
 4. 当模型预测与规划师现场判断冲突时，应如何组织复核？
 
+{{< include _units/01-nanjing-case.qmd >}}
+
 {{< include _units/01-guided-lab.qmd >}}
 
 ## 延伸阅读

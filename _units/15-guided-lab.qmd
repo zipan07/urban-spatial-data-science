@@ -1,10 +1,11 @@
-## 三小时课堂：生成并评价凉爽步行网络方案
+## 案例研究：生成并评价凉爽步行网络方案
 
 本单元把热风险、步行网络、脆弱人群和公共服务组织成空间干预方案。学生比较节点降温、连续遮阴和公共服务连接三类策略。
 
-### 第一小时：建立问题图层和基础指标
+### 研究设定：建立问题图层和基础指标
 
 ```{.python filename="15_step1_priority_segments.py"}
+# 标准化热暴露、脆弱性和网络作用，使不同量纲可以进入多目标评价
 segments["heat_z"] = (segments["lst_c"] - segments["lst_c"].mean()) / segments["lst_c"].std()
 segments["elderly_z"] = (segments["elderly_500m"] - segments["elderly_500m"].mean()) / segments["elderly_500m"].std()
 segments["shade_deficit"] = 1 - segments["tree_cover"].clip(0, 1)
@@ -17,9 +18,10 @@ segments["priority"] = (
 
 标准化使变量可组合，却不能替代权重讨论。学生分别采用健康优先、可实施优先和服务连接优先三组权重。
 
-### 第二小时：在预算约束下形成方案
+### 分析实施：在预算约束下形成方案
 
 ```{.python filename="15_step2_scenarios.py"}
+# 用不同权重表达健康、可实施性和公共服务连接三类规划目标
 scenarios = {
     "health_first": {"heat": .5, "elderly": .4, "cost": .1},
     "feasible_first": {"heat": .3, "elderly": .2, "cost": .5},
@@ -47,6 +49,7 @@ for name, w in scenarios.items():
 评价方案时可从“路段得分”提升到“网络结果”。先检查被选路段是否构成连续路径，再计算500米或10分钟步行范围内覆盖的老年人口、儿童人口、公交站和公共服务设施。随后模拟树木成活率下降、某条道路无法施工以及年度预算缩减等扰动。若方案在移除一条关键路段后完全断裂，它的平均得分虽高，实施韧性仍然较弱。
 
 ```{.python filename="15_compare_corridor_scenarios.py"}
+# 在相同预算口径下比较方案长度、成本、受益人口和设施连接
 evaluation = []
 for plan_name in ["health_first", "feasibility_first", "service_first"]:
     selected = segments[segments[plan_name]].copy()
@@ -71,10 +74,10 @@ evaluation["每公里覆盖老年人口"] = (
 print(evaluation)
 ```
 
-### 第三小时：情景、维护与适应性路径
+### 结果检验与解释：情景、维护与适应性路径
 
 比较正常年份、极端热浪、预算下降和树木成活率偏低四种情景。每组提出近期低成本节点、中期连线和长期片区治理，并设置监测指标：夏季体感温度、遮阴连续长度、脆弱人口覆盖、设施使用和养护成本。
 
 ::: {.lab-brief}
-**课堂提交**：三套权重方案、网络连续性检查、四种情景评价和分阶段实施图。最终选择需要说明受益群体、放弃的目标和失败时的调整方式。
+**研究成果**：三套权重方案、网络连续性检查、四种情景评价和分阶段实施图。最终选择需要说明受益群体、放弃的目标和失败时的调整方式。
 :::

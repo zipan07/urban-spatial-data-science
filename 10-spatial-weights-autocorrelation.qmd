@@ -286,6 +286,8 @@ print(areas[["lisa_raw", "lisa_fdr"]].sum())
 3. 为什么局部热点不能直接作为政策优先区？
 4. 如果社区边界调整，空间自相关结果可能发生什么变化？
 
+{{< include _units/10-nanjing-case.qmd >}}
+
 {{< include _units/10-guided-lab.qmd >}}
 
 ## 来源与延伸阅读

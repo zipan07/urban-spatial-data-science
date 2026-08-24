@@ -1,4 +1,4 @@
-## 上机手册：第一次完成Pandas与GeoPandas数据处理
+## 实践指南：第一次完成Pandas与GeoPandas数据处理
 
 本节假定第6章环境诊断已经通过。学生将创建自己的实验项目，读取一张社区人口表和一个社区边界图层，完成字段检查、连接、指标计算与GeoPackage输出。
 
@@ -19,6 +19,7 @@ Windows PowerShell若不支持相同的`mkdir -p`写法，可以在文件管理�
 在Notebook第一个单元检查当前目录。相对路径从这里开始解释。
 
 ```{.python filename="07_01_paths.ipynb"}
+# 从项目根目录构造相对路径，避免在代码中写入个人电脑的绝对路径
 from pathlib import Path
 
 ROOT = Path.cwd()
@@ -40,6 +41,7 @@ print("可见文件:", [p.name for p in RAW.glob("*")])
 CSV常见问题包括中文编码、社区代码前导零和数值中的逗号。先读取少量记录：
 
 ```{.python filename="07_02_read_table.ipynb"}
+# 显式指定主键类型，防止行政代码开头的零在读取时丢失
 import pandas as pd
 
 population = pd.read_csv(
@@ -56,9 +58,10 @@ print(population.shape)
 
 ### 按固定顺序检查普通表格
 
-课堂统一采用六步检查：形状、字段、类型、主键、缺失、数值范围。
+本书统一采用六步检查：形状、字段、类型、主键、缺失和数值范围。
 
 ```{.python filename="07_03_table_audit.ipynb"}
+# 按记录数、字段、类型、主键、缺失和取值范围完成六步审计
 print("记录×字段:", population.shape)
 print("字段:", population.columns.tolist())
 print("主键重复:", population["community_id"].duplicated().sum())
@@ -74,6 +77,7 @@ assert (population["elderly"] <= population["population"]).all()
 最后一个断言检查老年人口是否超过总人口。断言失败时先定位记录：
 
 ```{.python filename="07_04_locate_error.ipynb"}
+# 定位违反业务规则的记录，同时保留主键以便回查原始数据
 problem = population.loc[
     population["elderly"] > population["population"],
     ["community_id", "population", "elderly"],
@@ -84,6 +88,7 @@ display(problem)
 ### 读取空间数据并检查坐标系
 
 ```{.python filename="07_05_read_geodata.ipynb"}
+# 读取社区边界后立即检查坐标系、几何类型、有效性和空间范围
 import geopandas as gpd
 
 communities = gpd.read_file(RAW / "communities.gpkg", layer="communities")
@@ -100,6 +105,7 @@ communities.plot(figsize=(7, 7), edgecolor="white")
 ### 连接前后都要核对记录数
 
 ```{.python filename="07_06_join_audit.ipynb"}
+# 连接前后保存记录数，并检查未匹配主键和关系基数
 n_before = len(communities)
 analysis = communities.merge(
     population,
@@ -120,6 +126,7 @@ print("未匹配社区:", unmatched.tolist()[:20])
 ### 计算指标并保留分母检查
 
 ```{.python filename="07_07_indicator.ipynb"}
+# 先保留分子与分母，再计算老龄化率并处理零分母
 analysis["elderly_rate"] = analysis["elderly"].div(
     analysis["population"].replace(0, pd.NA)
 )
@@ -137,6 +144,7 @@ display(
 ### 输出GeoPackage并重新读取验证
 
 ```{.python filename="07_08_write_and_verify.ipynb"}
+# 输出后重新读取文件，以验证记录数、主键和坐标系未被破坏
 out_file = PROCESSED / "community_demography.gpkg"
 analysis.drop(columns="_merge").to_file(
     out_file,
@@ -170,6 +178,7 @@ GeoPackage支持较长字段名、统一坐标系信息和多个图层，适合�
 下面的代码先计算每个网格的有效记录覆盖率，再把结果连接回网格。`observed`表示实际取得的记录数，`expected`表示依据抽样设计或业务台账应当取得的记录数。分母必须来自明确的数据生成过程；如果`expected`只是估计值，报告中应说明估计规则。
 
 ```{.python filename="07_spatial_coverage_audit.py"}
+# 以抽样框中的应有记录数为分母，计算每个网格的有效覆盖率
 coverage = (
     records.groupby("grid_id")
     .agg(observed=("record_id", "nunique"))

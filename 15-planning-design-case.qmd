@@ -169,6 +169,8 @@ for _, candidate in scenarios.iterrows():
 - 稳健方案、分期路径和监测计划使设计能够面对不确定性。
 :::
 
+{{< include _units/15-nanjing-case.qmd >}}
+
 {{< include _units/15-guided-lab.qmd >}}
 
 ## 延伸阅读

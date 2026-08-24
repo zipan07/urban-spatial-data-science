@@ -139,6 +139,8 @@ scores = cross_validate(
 - 因果证据来自研究设计，模拟用于探索规则和情景而非宣告唯一未来。
 :::
 
+{{< include _units/03-nanjing-case.qmd >}}
+
 {{< include _units/03-guided-lab.qmd >}}
 
 ## 延伸阅读
