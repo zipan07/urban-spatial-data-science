@@ -1,0 +1,10 @@
+/.quarto/
+/_book/
+/_site/
+__pycache__/
+.ipynb_checkpoints/
+.DS_Store
+*.pyc
+.env
+data/raw/*
+!data/raw/.gitkeep
