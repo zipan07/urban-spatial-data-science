@@ -43,6 +43,7 @@ GLOBAL_FILES = [
     "all_grid_indicators.csv",
     "data_inventory.csv",
     "china_eight_city_course_data.zip",
+    "checksums.sha256",
 ]
 
 
@@ -268,6 +269,26 @@ def validate() -> dict[str, Any]:
                 checked("full_zip", "pass", f"{len(names)}个成员可解压且名称唯一")
         except Exception as error:
             finding("critical", "full_zip", f"八城合集无法读取：{error}")
+
+    checksum_manifest = DATA_ROOT / "checksums.sha256"
+    if checksum_manifest.exists():
+        checksum_errors: list[str] = []
+        manifest_rows = [line.strip() for line in checksum_manifest.read_text(encoding="utf-8").splitlines() if line.strip()]
+        for line in manifest_rows:
+            try:
+                expected_hash, relative_path = line.split(maxsplit=1)
+                target = DATA_ROOT / relative_path.strip()
+            except ValueError:
+                checksum_errors.append(f"无法解析：{line}")
+                continue
+            if not target.is_file() or sha256(target) != expected_hash:
+                checksum_errors.append(relative_path.strip())
+        if len(manifest_rows) != 9:
+            checksum_errors.append(f"清单应有9条，实际{len(manifest_rows)}条")
+        if checksum_errors:
+            finding("high", "download_checksums", "下载校验失败：" + ", ".join(checksum_errors))
+        else:
+            checked("download_checksums", "pass", "八个单城ZIP与八城合集SHA-256全部一致")
 
     severity_counts = {severity: sum(item["severity"] == severity for item in findings) for severity in ("critical", "high", "medium", "low")}
     publishable = severity_counts["critical"] == 0 and severity_counts["high"] == 0

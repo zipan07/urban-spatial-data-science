@@ -857,6 +857,17 @@ def main() -> None:
         if supporting_file.exists():
             package_members.append(supporting_file)
     write_zip(OUTPUT / "china_eight_city_course_data.zip", package_members)
+    checksum_targets = [
+        OUTPUT / "china_eight_city_course_data.zip",
+        *(OUTPUT / city["city_id"] / f"{city['city_id']}_course_data.zip" for city in CITIES),
+    ]
+    (OUTPUT / "checksums.sha256").write_text(
+        "".join(
+            f"{sha256(path)}  {path.relative_to(OUTPUT).as_posix()}\n"
+            for path in checksum_targets
+        ),
+        encoding="utf-8",
+    )
     print(f"Completed {len(CITIES)} city packages in {OUTPUT}")
 
 
