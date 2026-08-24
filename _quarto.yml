@@ -7,7 +7,12 @@ book:
   author:
     - "胡明星"
     - "蔡子攀"
+  date: today
   language: zh
+  search: true
+  page-navigation: true
+  reader-mode: true
+  downloads: [pdf]
   chapters:
     - index.qmd
     - part: "第二部分 计算工具与城市空间分析"
@@ -19,19 +24,24 @@ book:
         - 10-spatial-weights-autocorrelation.qmd
         - 11-urban-networks-accessibility.qmd
         - 12-machine-learning-spatial-intelligence.qmd
+    - references.qmd
   repo-url: https://github.com/zipan07/urban-spatial-data-science
   repo-actions: [edit, issue]
 
 format:
   html:
     theme: cosmo
+    css: styles.css
     toc: true
     toc-depth: 3
     number-sections: true
     code-copy: true
-    code-fold: false
+    code-fold: show
+    code-overflow: wrap
   pdf:
     documentclass: scrreprt
+    toc: true
+    number-sections: true
 
 execute:
   freeze: auto
@@ -39,3 +49,4 @@ execute:
   message: false
 
 bibliography: references.bib
+lang: zh-CN
