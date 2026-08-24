@@ -1,37 +1,40 @@
 ---
-title: "空间关系、空间权重与空间自相关"
+title: "第10章 城市为何相邻而相似：空间权重与空间自相关"
 ---
 
-# 学习目标
+# 本章导读
 
-完成本章后，学生应能够：
+地图常常呈现成片的高值与低值。房价高值区彼此相邻，空气污染跨越行政边界，公共服务不足也可能形成连续区域。这样的空间格局提示我们：城市中的观测对象并不总是相互独立。
 
-- 解释空间依赖与空间异质性的基本含义；
-- 根据研究问题构建邻接、距离和K近邻权重；
-- 计算和解释全局Moran’s I；
-- 使用局部空间自相关识别局部集聚与空间离群；
-- 理解随机置换、显著性和多重检验；
-- 比较不同权重定义对规划结论的影响。
+但是，“相邻”并不是唯一且天然的关系。共享边界、距离接近、道路相连、通勤频繁都可以形成不同意义的邻近。本章首先把空间关系表示为空间权重，然后使用全局与局部空间自相关判断地图中的空间集聚。
 
-# 10.1 为什么空间对象不能被视为独立样本
+## 学习目标
 
-城市现象经常跨越行政边界。相邻社区共享道路、公共设施、房地产市场、环境暴露和社会网络。因此，一个地区的观测值可能与周边地区相关。
+完成本章后，你应当能够根据城市问题构建邻接、距离和K近邻权重，解释空间滞后、全局Moran’s I和局部Moran统计量，并通过权重敏感性和随机置换审慎判断空间集聚。
 
-空间分析需要明确两件事：
+# 10.1 空间依赖从何而来
 
-1. 哪些空间对象被认为存在关系？
-2. 这种关系在计算中如何表达？
+城市现象出现空间相似，可能有多种原因。邻近地区共享自然环境和基础设施；居民、企业和信息会跨界流动；相邻行政区可能受到相同政策；地图本身的空间聚合也会制造相似性。
 
-空间权重矩阵\(W\)就是对空间关系的形式化表达。它不是数据自动提供的客观事实，而是研究者依据问题做出的模型设定。
+因此，空间自相关描述的是一种空间配置，而不是形成机制。发现相邻高值之后，研究者仍需区分：
 
-本章综合参考原书的[Spatial Weights](https://geographicdata.science/book/spatial-weights.html)、[Global Spatial Autocorrelation](https://geographicdata.science/book/global_spatial_autocorrelation.html)和[Local Spatial Autocorrelation](https://geographicdata.science/book/local_spatial_autocorrelation.html)，并压缩为一个适合课堂的连续分析流程。
+- 真实的扩散或溢出；
+- 共同环境或共同政策；
+- 人口和功能结构相似；
+- 空间单元划分；
+- 数据测量和遗漏变量。
 
-# 10.2 邻接权重
+# 10.2 用矩阵表达空间关系
 
-对于面状空间单元，常见邻接定义包括：
+设城市被划分为\(n\)个空间单元。空间权重矩阵\(W\)包含\(n\times n\)个元素，其中\(w_{ij}\)表达地区\(i\)与地区\(j\)之间的关系。
 
-- **Rook邻接**：共享一段边界；
-- **Queen邻接**：共享边界或顶点。
+如果两个社区相邻，可以令\(w_{ij}=1\)，否则为0；如果关系取决于距离，可以让距离较近的对象具有更大权重；如果研究通勤，也可以直接使用通勤流量作为权重。
+
+空间权重并不是软件从地图中发现的“真实关系”，而是研究者对城市联系的形式化假设。
+
+# 10.3 邻接：共享边界意味着什么
+
+对于面状行政单元，最常用的是Rook和Queen邻接。Rook要求共享一段边界，Queen则允许共享边界或顶点。
 
 ~~~{python}
 from libpysal.weights import Rook, Queen
@@ -48,233 +51,215 @@ w_queen = Queen.from_dataframe(
     use_index=False
 )
 
-print("Rook平均邻居数:", w_rook.mean_neighbors)
-print("Queen平均邻居数:", w_queen.mean_neighbors)
+print(w_rook.mean_neighbors)
+print(w_queen.mean_neighbors)
 ~~~
 
-Queen邻接通常比Rook产生更多邻居。对于形状不规则或存在孤岛的行政单元，仅依赖邻接可能产生没有邻居的对象。
+Queen邻接通常产生更多邻居。在形状规整的网格中，两者差异清楚；在边界复杂的社区中，一个微小顶点接触是否代表真实社会联系，则需要进一步判断。
 
-# 10.3 距离与K近邻
+如果研究的是跨界环境影响，共享边界可能合理；如果研究设施使用，仅凭行政邻接可能不足，因为道路和入口会改变实际联系。
 
-距离权重适合表达一定范围内的潜在联系，K近邻则保证每个空间对象拥有相同数量的邻居。
+# 10.4 距离与K近邻
+
+距离权重把一定范围内的对象视为邻居，适合表达服务范围或局部影响。K近邻则为每个对象选择最近的\(k\)个邻居，能够避免孤立单元。
 
 ~~~{python}
 from libpysal.weights import DistanceBand, KNN
 
-centroids = communities.to_crs(communities.estimate_utm_crs())
-centroids["geometry"] = centroids.centroid
+projected = communities.to_crs(
+    communities.estimate_utm_crs()
+).copy()
+
+projected["geometry"] = projected.centroid
 
 w_distance = DistanceBand.from_dataframe(
-    centroids,
+    projected,
     threshold=2000,
-    binary=True,
-    silence_warnings=False
+    binary=True
 )
 
 w_knn = KNN.from_dataframe(
-    centroids,
+    projected,
     k=6
 )
 ~~~
 
-选择2公里或6个邻居都需要依据。可能的依据包括：
+2公里和6个邻居都不是默认真理。阈值可以依据步行范围、街区尺度、设施服务半径或数据连通性设定。更可靠的研究会比较多个合理设定，而不是选择显著性最高的参数。
 
-- 步行或服务范围；
-- 城市街区尺度；
-- 经验距离；
-- 保证网络连通；
-- 对多个参数进行敏感性比较。
+# 10.5 空间滞后：周边地区的水平
 
-# 10.4 行标准化与空间滞后
-
-通常将每行权重标准化，使每个地区邻居权重之和等于1：
-
-~~~{python}
-w_queen.transform = "R"
-~~~
-
-变量\(y\)的空间滞后可写为：
+通常将权重矩阵进行行标准化，使每个地区邻居权重之和等于1。变量\(y\)的空间滞后为：
 
 \[
-Wy_i = \sum_j w_{ij}y_j
+Wy_i=\sum_jw_{ij}y_j
 \]
 
-它可以理解为地区\(i\)周边地区的加权平均水平。
+它可以近似理解为地区\(i\)周边地区的加权平均值。
 
 ~~~{python}
 from libpysal.weights import lag_spatial
+
+w_queen.transform = "R"
 
 y = communities["ageing_rate"].fillna(
     communities["ageing_rate"].median()
 )
 
-communities["lag_ageing_rate"] = lag_spatial(w_queen, y)
+communities["lag_ageing_rate"] = (
+    lag_spatial(w_queen, y)
+)
 ~~~
 
-空间滞后是对“邻近环境”的一种概括，但其含义完全依赖权重矩阵。
+如果某社区老龄化率高，而且其空间滞后也高，它可能处于高值集聚区域。但“周边”完全由空间权重决定。
 
-# 10.5 全局Moran’s I
+# 10.6 全局Moran’s I：地图整体是否呈现空间结构
 
-Moran’s I检验一个变量在整个研究区域内是否呈现空间自相关：
+全局Moran’s I比较每个地区的偏离值与其邻居的偏离值：
 
 \[
-I =
+I=
 \frac{n}{S_0}
-\frac{\sum_i\sum_j w_{ij}(y_i-\bar y)(y_j-\bar y)}
-{\sum_i(y_i-\bar y)^2}
+\frac{
+\sum_i\sum_j
+w_{ij}(y_i-\bar y)(y_j-\bar y)
+}{
+\sum_i(y_i-\bar y)^2
+}
 \]
 
-直观上：
-
-- 正值：相似值倾向相邻；
-- 负值：不同值倾向相邻；
-- 接近随机期望：缺少明显全局空间结构。
+当相似值彼此邻近时，Moran’s I通常为正；当高值倾向与低值相邻时，统计量可能为负。
 
 ~~~{python}
 from esda.moran import Moran
 
-moran = Moran(y, w_queen, permutations=999)
+moran = Moran(
+    y,
+    w_queen,
+    permutations=999
+)
 
 print("Moran's I:", moran.I)
-print("置换p值:", moran.p_sim)
+print("Permutation p:", moran.p_sim)
 ~~~
 
-p值较小表示观测到的统计量在随机置换下较少出现，但不等于空间格局具有重要规划意义，也不说明形成原因。
+随机置换把变量值重新分配到空间单元，形成“空间位置与数值无关”情况下的参考分布。p值表示观测统计量在这些随机配置中有多罕见。
 
-# 10.6 Moran散点图
+p值较小不等于效应重要，也不证明空间过程。应同时报告Moran’s I、权重定义、置换次数和研究范围。
 
-标准化变量与其空间滞后的关系可以分为四个象限：
+# 10.7 Moran散点图：四种空间配置
 
-- HH：高值邻近高值；
-- LL：低值邻近低值；
-- HL：高值邻近低值；
-- LH：低值邻近高值。
+Moran散点图把标准化变量放在横轴，把空间滞后放在纵轴。四个象限分别表示：
+
+- 高值邻近高值（HH）；
+- 低值邻近低值（LL）；
+- 高值邻近低值（HL）；
+- 低值邻近高值（LH）。
 
 ~~~{python}
 from splot.esda import moran_scatterplot
 
-fig, ax = moran_scatterplot(moran, aspect_equal=True)
+fig, ax = moran_scatterplot(
+    moran,
+    aspect_equal=True
+)
 ax.set_xlabel("标准化指标")
 ax.set_ylabel("空间滞后")
 ~~~
 
-全局Moran’s I可以概括整体趋势，但不能告诉我们具体哪些地区形成集聚。
+散点图帮助理解整体空间关系，但它没有回答具体哪些地区构成显著集聚。
 
-# 10.7 局部空间自相关
+# 10.8 局部Moran：集聚与空间离群
 
-Local Moran为每个空间单元计算局部统计量：
+局部Moran为每个空间单元计算局部统计量：
 
 ~~~{python}
 from esda.moran import Moran_Local
 
-lisa = Moran_Local(y, w_queen, permutations=999)
+lisa = Moran_Local(
+    y,
+    w_queen,
+    permutations=999
+)
 
-communities["lisa_I"] = lisa.Is
-communities["lisa_p"] = lisa.p_sim
-communities["lisa_q"] = lisa.q
+communities["local_I"] = lisa.Is
+communities["local_p"] = lisa.p_sim
+communities["quadrant"] = lisa.q
 ~~~
 
-可以仅对达到指定显著性水平的空间单元标注类型：
+显著的HH和LL地区可被理解为局部高值或低值集聚，HL和LH则是空间离群：一个地区与周边呈现不同水平。
 
-~~~{python}
-import numpy as np
+以养老服务不足为例，HH地区可以表述为：
 
-labels = np.array(["NS", "HH", "LH", "LL", "HL"])
-significant = lisa.p_sim < 0.05
+> 若干相邻社区同时表现出较高服务不足，形成需要进一步核查的连续问题区域。
 
-communities["lisa_cluster"] = "NS"
-communities.loc[significant, "lisa_cluster"] = labels[
-    lisa.q[significant]
-]
-~~~
+不能直接表述为：
 
-需要注意，PySAL的象限编码顺序应结合所用版本文档核对，不能凭记忆直接赋值。
+> 社区之间相互影响，导致了服务危机。
 
-# 10.8 集聚图的规划解释
+局部统计识别位置，但没有建立因果机制。
 
-如果养老服务不足指标出现HH集聚，可以表述为：
+# 10.9 多重检验与“热点过多”
 
-> 若干相邻社区同时表现出较高的服务不足水平，形成需要进一步核查的连续问题区域。
+局部Moran对每个空间单元进行一次检验。当单元很多时，即使完全随机，也可能出现一些小p值。研究者可以采用更严格阈值或FDR校正，并同时报告校正前后结果。
 
-不宜直接表述为：
+更重要的是，局部集聚图应被视为探索性证据。它适合帮助选择进一步调查的地区，不宜单独决定资源配置。
 
-> 这些地区因为相互影响而形成养老服务危机。
-
-局部集聚只描述空间配置，不能证明扩散、溢出或因果机制。进一步研究应检查：
-
-- 人口结构；
-- 设施容量；
-- 道路可达性；
-- 土地与建设条件；
-- 历史投入；
-- 行政管理边界。
-
-# 10.9 权重敏感性
-
-使用Queen、KNN和距离权重重复计算：
+# 10.10 权重敏感性：空间关系改变会发生什么
 
 ~~~{python}
 weights = {
     "queen": w_queen,
     "knn6": w_knn,
-    "distance": w_distance
+    "distance_2km": w_distance
 }
 
-results = []
+comparison = []
 
-for name, w in weights.items():
-    w.transform = "R"
-    mi = Moran(y, w, permutations=999)
-    results.append({
+for name, weight in weights.items():
+    weight.transform = "R"
+    result = Moran(
+        y,
+        weight,
+        permutations=999
+    )
+    comparison.append({
         "weight": name,
-        "I": mi.I,
-        "p_sim": mi.p_sim
+        "I": result.I,
+        "p": result.p_sim
     })
 
-results
+comparison
 ~~~
 
-如果总体结论或局部热点随权重定义大幅变化，应将这种敏感性报告为研究限制，而不是选择“效果最显著”的一个结果。
+如果不同合理权重都显示稳定正向空间自相关，整体结论较为稳健；如果热点位置随权重剧烈变化，应明确说明结果依赖空间关系设定。
 
-# 10.10 多重检验
+不要为了获得显著结果反复试验权重后只报告最理想的一组。
 
-局部统计为每个空间单元执行一次检验。地区数量较多时，即使完全随机，也可能出现部分小p值。可以：
+# 10.11 贯穿案例：养老服务不足是否形成连续片区
 
-- 使用更严格的显著性阈值；
-- 进行FDR校正；
-- 同时报告未经校正和校正后的结果；
-- 将LISA作为探索性识别，而非最终政策依据。
+使用第9章构建的服务不足指标，依次建立Queen、6近邻和2公里距离权重，计算全局Moran’s I和局部Moran，制作集聚类型地图。
 
-# 10.11 课堂实验
+实验报告应回答：
 
-围绕一个社区指标：
+1. 不同权重表达了什么城市联系？
+2. 全局集聚是否稳定？
+3. 哪些地区在多种权重下都被识别为HH？
+4. 哪些局部结果对参数敏感？
+5. 这些结果可以支持什么规划判断，又不能支持什么判断？
 
-1. 构建Queen、Rook、KNN和距离权重；
-2. 比较平均邻居数与孤立单元；
-3. 计算空间滞后；
-4. 计算全局Moran’s I；
-5. 绘制Moran散点图；
-6. 计算Local Moran并制作集聚图；
-7. 比较至少三种权重下的结果；
-8. 写出一段不超过200字的审慎规划解释。
+# 10.12 本章小结
 
-# 10.12 常见误区
+空间自相关把地图中的视觉印象转化为可以检验的空间关系。但统计量并不会替研究者定义“相邻”，也不会自动解释集聚为何形成。真正重要的是把权重设定、随机参照、局部位置和结果敏感性放在同一证据链中。
 
-- 将空间权重视为唯一正确答案；
-- 为获得显著结果反复调整参数；
-- 把空间集聚解释为因果机制；
-- 忽略孤岛和无邻居单元；
-- 只报告p值，不报告效应和空间位置；
-- 不处理局部检验的多重比较；
-- 用同一权重解释所有城市过程。
+# 章末思考
 
-# 10.13 本章小结
+1. 邻接、距离和通勤流分别适合表达哪些城市过程？
+2. Moran’s I显著但数值很小，应该怎样解释？
+3. 为什么局部热点不能直接作为政策优先区？
+4. 如果社区边界调整，空间自相关结果可能发生什么变化？
 
-空间自相关分析将地图观察转化为可检验的空间关系。其核心不只是计算Moran’s I，而是明确空间关系假设、检查结果敏感性并谨慎解释局部集聚。
+# 来源与延伸阅读
 
-# 延伸阅读
-
-- [原书：Spatial Weights](https://geographicdata.science/book/spatial-weights.html)
-- [原书：Global Spatial Autocorrelation](https://geographicdata.science/book/global_spatial_autocorrelation.html)
-- [原书：Local Spatial Autocorrelation](https://geographicdata.science/book/local_spatial_autocorrelation.html)
-- [PySAL文档](https://pysal.org/)
+- Rey, Arribas-Bel, & Wolf: [Spatial Weights](https://geographicdata.science/book/spatial-weights.html)、[Global Spatial Autocorrelation](https://geographicdata.science/book/global_spatial_autocorrelation.html)、[Local Spatial Autocorrelation](https://geographicdata.science/book/local_spatial_autocorrelation.html)。这些页面作为英文指定阅读，本章为原创中文重组。
+- 翁敏、李霖、苏世亮：《空间数据分析案例式实验教程》。
+- [PySAL Documentation](https://pysal.org/)
