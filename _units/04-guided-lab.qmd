@@ -1,0 +1,55 @@
+## 三小时课堂：审计一份多源城市数据
+
+本单元模拟把官方人口、平台POI和街景评价连接到社区。学生需要找出覆盖差异、时间错位和空间偏差，并形成一份可以随数据发布的质量说明。
+
+### 第一小时：建立数据来源卡
+
+每种数据先填写来源卡：生产者、原始目的、采集方式、覆盖对象、空间精度、更新时间、许可、敏感字段和已知盲区。官方人口服务于行政统计，POI服务于搜索与商业展示，街景服务于导航；三者的“缺失”具有不同含义。
+
+```{.python filename="04_step1_source_inventory.py"}
+import pandas as pd
+
+inventory = pd.DataFrame([
+    {"source": "population", "year": 2025, "unit": "community",
+     "purpose": "administration", "sensitive": False},
+    {"source": "poi", "year": 2026, "unit": "point",
+     "purpose": "platform search", "sensitive": False},
+    {"source": "streetview", "year": 2023, "unit": "road sample",
+     "purpose": "navigation", "sensitive": True},
+])
+inventory["age_years"] = 2026 - inventory["year"]
+print(inventory)
+```
+
+### 第二小时：把缺失结构画出来
+
+假设社区表包含 `district`、`population`、`poi_count`、`streetview_n`。缺失检查需要同时看总体比例和空间分组。若外围街景样本系统性较少，全市平均缺失率会掩盖问题。
+
+```{.python filename="04_step2_coverage_audit.py"}
+fields = ["population", "poi_count", "streetview_n"]
+overall = communities[fields].isna().mean().rename("missing_share")
+by_district = communities.groupby("district")[fields].agg(
+    lambda s: s.isna().mean()
+)
+
+communities["streetview_density"] = (
+    communities["streetview_n"] / communities.geometry.length * 1000
+)
+communities["low_coverage"] = communities["streetview_density"].lt(
+    communities["streetview_density"].quantile(.2)
+)
+print(overall)
+print(by_district)
+```
+
+学生将 `low_coverage` 制图，并与道路等级、中心—外围位置和社区收入比较。任务重点在于判断低值来自真实缺乏设施，还是来自平台未收录、道路未采样或匹配失败。
+
+### 第三小时：形成质量结论和补救策略
+
+每组为三项主要问题选择补救方式：补充采集、改变研究范围、使用权重、分层报告、敏感性分析或降低结论强度。任何填补都要说明模型假设，任何删除都要报告被删除对象的空间分布。
+
+质量说明应具体到使用场景，例如：“2023年街景适合描述稳定的街道断面条件；对2026年施工变化和小区内部道路覆盖不足。外围地区每公里样本量较中心区低42%，跨区比较将同时报告覆盖密度，并在低覆盖地区进行人工抽样复核。”
+
+::: {.lab-brief}
+**课堂提交**：三张数据来源卡、分区缺失表、覆盖偏差图、补救策略表和150字质量声明。声明必须说明数据适合回答的问题和不宜支持的判断。
+:::

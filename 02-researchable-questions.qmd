@@ -133,6 +133,8 @@ for key, value in question_contract.items():
 3. 一个空间缓冲区如何同时定义研究范围并制造处理组污染？
 4. 选择一个规划指标，写出它没有覆盖的构念维度。
 
+{{< include _units/02-guided-lab.qmd >}}
+
 ## 延伸阅读
 
 - Huntington-Klein, N. [Research Questions](https://theeffectbook.net/ch-ResearchQuestions.html) 与 [Causal Diagrams](https://theeffectbook.net/ch-CausalDiagrams.html)。

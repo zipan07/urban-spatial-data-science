@@ -1,0 +1,45 @@
+## 三小时课堂：生成并评价凉爽步行网络方案
+
+本单元把热风险、步行网络、脆弱人群和公共服务组织成空间干预方案。学生比较节点降温、连续遮阴和公共服务连接三类策略。
+
+### 第一小时：建立问题图层和基础指标
+
+```{.python filename="15_step1_priority_segments.py"}
+segments["heat_z"] = (segments["lst_c"] - segments["lst_c"].mean()) / segments["lst_c"].std()
+segments["elderly_z"] = (segments["elderly_500m"] - segments["elderly_500m"].mean()) / segments["elderly_500m"].std()
+segments["shade_deficit"] = 1 - segments["tree_cover"].clip(0, 1)
+segments["priority"] = (
+    .4 * segments["heat_z"]
+    + .35 * segments["elderly_z"]
+    + .25 * segments["shade_deficit"]
+)
+```
+
+标准化使变量可组合，却不能替代权重讨论。学生分别采用健康优先、可实施优先和服务连接优先三组权重。
+
+### 第二小时：在预算约束下形成方案
+
+```{.python filename="15_step2_scenarios.py"}
+scenarios = {
+    "health_first": {"heat": .5, "elderly": .4, "cost": .1},
+    "feasible_first": {"heat": .3, "elderly": .2, "cost": .5},
+    "service_link": {"heat": .3, "elderly": .3, "service": .4},
+}
+
+for name, w in scenarios.items():
+    score = w.get("heat", 0) * segments["heat_z"]
+    score += w.get("elderly", 0) * segments["elderly_z"]
+    score += w.get("service", 0) * segments["service_link_z"]
+    score -= w.get("cost", 0) * segments["cost_z"]
+    segments[name] = score
+```
+
+高分路段还需检查连续性。孤立降温节点适合短时停留，连续遮阴线路则应连接住宅、公交站、医院和公园。学生用网络连通性检查方案是否形成可用路径。
+
+### 第三小时：情景、维护与适应性路径
+
+比较正常年份、极端热浪、预算下降和树木成活率偏低四种情景。每组提出近期低成本节点、中期连线和长期片区治理，并设置监测指标：夏季体感温度、遮阴连续长度、脆弱人口覆盖、设施使用和养护成本。
+
+::: {.lab-brief}
+**课堂提交**：三套权重方案、网络连续性检查、四种情景评价和分阶段实施图。最终选择需要说明受益群体、放弃的目标和失败时的调整方式。
+:::

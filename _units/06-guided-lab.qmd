@@ -1,0 +1,60 @@
+## 三小时课堂：从空文件夹到可复现项目
+
+本单元建立一套能够由同伴重新运行的课程仓库。课堂完成后，项目应在新终端中通过一条命令完成数据检查、指标计算和图表输出。
+
+### 第一小时：环境与项目骨架
+
+学生创建独立环境并核对解释器。VS Code 状态栏、终端中的 `which python` 或 `where python`、Notebook Kernel 必须指向同一环境。
+
+```{.bash filename="06_step1_environment.sh"}
+conda create -n urban-data python=3.12 -y
+conda activate urban-data
+python -m pip install pandas geopandas matplotlib jupyter pytest
+python -c "import sys; print(sys.executable)"
+python -m pip freeze > requirements-lock.txt
+```
+
+项目采用 `data/raw`、`data/processed`、`src`、`notebooks`、`outputs` 和 `tests`。原始数据只读，派生数据由脚本生成，图表进入 `outputs/figures`。
+
+### 第二小时：把探索代码整理成函数
+
+Notebook先帮助理解字段，稳定步骤随后移入函数。函数明确输入列、单位和错误条件。
+
+```{.python filename="src/indicators.py"}
+import pandas as pd
+
+def elderly_rate(df: pd.DataFrame) -> pd.Series:
+    required = {"elderly", "population"}
+    missing = required.difference(df.columns)
+    if missing:
+        raise KeyError(f"缺少字段: {sorted(missing)}")
+    if (df["population"] < 0).any() or (df["elderly"] < 0).any():
+        raise ValueError("人口字段不能为负")
+    rate = df["elderly"].div(df["population"].replace(0, pd.NA))
+    return rate
+```
+
+### 第三小时：测试、重跑与交接
+
+测试覆盖正常值、零人口和非法负值。随后关闭所有Notebook，用命令行从头执行流程，并由另一组仅依据README复现。
+
+```{.python filename="tests/test_indicators.py"}
+import pandas as pd
+import pytest
+from src.indicators import elderly_rate
+
+def test_elderly_rate_and_zero_population():
+    df = pd.DataFrame({"elderly": [20, 0], "population": [100, 0]})
+    result = elderly_rate(df)
+    assert result.iloc[0] == pytest.approx(.2)
+    assert pd.isna(result.iloc[1])
+
+def test_negative_population_fails():
+    df = pd.DataFrame({"elderly": [2], "population": [-1]})
+    with pytest.raises(ValueError):
+        elderly_rate(df)
+```
+
+::: {.lab-brief}
+**课堂提交**：环境锁定文件、项目树、一个可测试函数、测试结果和同伴复现记录。教师评价以“他人能否从零得到相同输出”为核心。
+:::

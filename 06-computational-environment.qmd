@@ -177,6 +177,8 @@ validate_communities(communities)
 3. 如果原始数据因隐私不能公开，研究仍然可以怎样提高可重复性？
 4. 你会如何记录AI参与代码编写的过程？
 
+{{< include _units/06-guided-lab.qmd >}}
+
 ## 来源与延伸阅读
 
 本章关于城市信息学体系的表述参考并改写自开放获取著作 *Urban Informatics*（CC BY 4.0）：  

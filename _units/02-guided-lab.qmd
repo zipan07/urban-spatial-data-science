@@ -1,0 +1,57 @@
+## 三小时课堂：把“轨道促进活力”改写成研究设计
+
+本单元以新建轨道站为情境。学生需要把一句宽泛判断拆成研究问题、变量表、比较策略和可运行的数据检查。课堂成果是一份研究设计卡，而不是回归结果。
+
+### 第一小时：写出对象、处理、结果和比较
+
+教师提供四类材料：站点开通日期、社区边界、年度商业登记和建成环境指标。学生先回答：研究对象是站点、社区还是商铺；“开通”从施工、试运营还是正式运营计算；活力用商铺数量、开业率、客流还是夜间活动表示；比较组如何选择。
+
+将决定写进分析契约，任何空白字段都表示设计尚未完成。
+
+```{.python filename="02_step1_design_contract.py"}
+design = {
+    "population": "2020—2026年主城区社区",
+    "treatment": "2023年正式开通轨道站800米步行服务区",
+    "outcome": "每千平方米沿街商业新增登记数",
+    "pre_period": [2020, 2021, 2022],
+    "post_period": [2024, 2025, 2026],
+    "comparison": "基线条件相近且未受新站影响的社区",
+    "main_confounders": ["既有中心性", "人口密度", "同期更新项目"],
+    "spillover_check": "排除距处理区800—1600米的社区",
+}
+
+missing = [key for key, value in design.items() if value in (None, "", [])]
+assert not missing, f"设计仍有空白字段: {missing}"
+```
+
+### 第二小时：检查处理前可比性
+
+假设已有社区—年份面板 `panel`，包含 `community_id`、`year`、`treated`、`business_rate` 和若干基线变量。分析先检查每个社区是否拥有完整年份，再比较处理前趋势。
+
+```{.python filename="02_step2_pretrend_check.py"}
+required_years = {2020, 2021, 2022, 2024, 2025, 2026}
+year_coverage = panel.groupby("community_id")["year"].agg(set)
+complete_ids = year_coverage[year_coverage.apply(required_years.issubset)].index
+balanced = panel[panel["community_id"].isin(complete_ids)].copy()
+
+pre = balanced[balanced["year"] <= 2022]
+pretrend = (
+    pre.groupby(["year", "treated"])["business_rate"]
+    .mean().unstack("treated")
+    .rename(columns={False: "comparison", True: "treated"})
+)
+pretrend["gap"] = pretrend["treated"] - pretrend["comparison"]
+print(pretrend)
+```
+
+趋势相近不能证明平行趋势必然成立，但明显分叉足以提醒研究者重新选择比较组、缩短时间窗口或降低因果陈述强度。课堂不允许跳过这一步直接运行双重差分。
+
+### 第三小时：绘制因果结构并压力测试
+
+小组用节点卡片表示轨道开通、既有中心性、更新政策、人口变化、人流和商业活动。箭头需要用一句城市机制解释。随后进行三项压力测试：处理区外溢是否污染比较组；商业登记制度是否在研究期变化；站点是否优先布局在本来就会上升的地区。
+
+最后将研究问题改写为带条件的版本：“在处理前趋势具有可比性、同期更新政策得到控制且外溢范围经过敏感性检查的条件下，新站开通后社区沿街商业新增率发生了多大变化？”
+
+::: {.lab-brief}
+**课堂提交**：完整分析契约、处理前趋势表、因果图、三项主要威胁及应对方式。若无法建立可信比较，应改为描述性或关联性研究，并在标题中准确标明。
+:::

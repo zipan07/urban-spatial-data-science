@@ -1,0 +1,54 @@
+## 三小时课堂：从道路网络到供需可达性
+
+本单元计算社区到基层医疗设施的网络可达性，并加入设施容量与人口竞争。课堂从图结构检查开始，逐步进入最短路和两步移动搜寻法。
+
+### 第一小时：检查网络与出行成本
+
+```{.python filename="11_step1_network.py"}
+import osmnx as ox
+import networkx as nx
+
+G = ox.graph_from_polygon(study_area.geometry.iloc[0], network_type="walk")
+G = ox.project_graph(G)
+G = ox.add_edge_speeds(G, fallback=4.5)
+G = ox.add_edge_travel_times(G)
+
+print({"nodes": len(G.nodes), "edges": len(G.edges),
+       "components": nx.number_weakly_connected_components(G)})
+```
+
+道路缺口、立交过街和小区内部路径会影响结果。学生在地图上抽查十个关键连接，并说明固定步速对老年人估计的局限。
+
+### 第二小时：计算设施时间矩阵
+
+```{.python filename="11_step2_od_matrix.py"}
+origins = ox.distance.nearest_nodes(G, residents.geometry.x, residents.geometry.y)
+destinations = ox.distance.nearest_nodes(G, clinics.geometry.x, clinics.geometry.y)
+
+records = []
+for oid, onode in zip(residents["community_id"], origins):
+    times = nx.single_source_dijkstra_path_length(
+        G, onode, cutoff=30 * 60, weight="travel_time"
+    )
+    for did, dnode in zip(clinics["clinic_id"], destinations):
+        if dnode in times:
+            records.append((oid, did, times[dnode] / 60))
+od = pd.DataFrame(records, columns=["community_id", "clinic_id", "minutes"])
+```
+
+### 第三小时：加入容量和竞争
+
+第一步对每个诊所计算30分钟范围内的需求与供需比，第二步对每个社区汇总可到达诊所的供需比。再分别使用15、30、45分钟阈值，并针对老年人降低步速。
+
+```{.python filename="11_step3_two_step_fca.py"}
+od30 = od[od["minutes"] <= 30]
+demand = od30.merge(residents[["community_id", "elderly"]], on="community_id")
+clinic_demand = demand.groupby("clinic_id")["elderly"].sum()
+ratio = clinics.set_index("clinic_id")["capacity"].div(clinic_demand).rename("ratio")
+access = od30.join(ratio, on="clinic_id").groupby("community_id")["ratio"].sum()
+residents["access_2sfca"] = residents["community_id"].map(access).fillna(0)
+```
+
+::: {.lab-brief}
+**课堂提交**：网络质量检查、OD时间矩阵、最近设施时间、2SFCA结果和三种阈值敏感性。规划讨论应同时考虑交通改善、基层扩容和服务组织调整。
+:::

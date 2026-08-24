@@ -1,0 +1,50 @@
+## 三小时课堂：综合答辩与复现审查
+
+最后一章采用工作坊形式。每组展示一项完整城市数据研究，另一组承担复现者和评议者角色。课堂成果同时评价研究质量、计算透明度和规划表达。
+
+### 第一小时：证据链自检
+
+项目组依次检查问题、数据、方法、验证、判断和表达。下面的清单可作为提交前的机器检查入口。
+
+```{.python filename="16_step1_submission_check.py"}
+from pathlib import Path
+
+required = [
+    "README.md", "environment.yml", "src", "notebooks",
+    "outputs/figures", "outputs/tables", "report.qmd",
+]
+missing = [item for item in required if not Path(item).exists()]
+if missing:
+    raise FileNotFoundError(f"缺少项目组成: {missing}")
+
+assert Path("README.md").read_text(encoding="utf-8").strip(), "README为空"
+print("仓库结构检查通过")
+```
+
+### 第二小时：七分钟展示与十分钟质询
+
+展示按问题与重要性、数据表征、研究设计、两项关键证据、方案比较、限制与下一步组织。评议者不询问“用了多少算法”，重点追问比较基准、空间尺度、样本遗漏、参数敏感性和错误后果。
+
+### 第三小时：干净环境复现
+
+复现组只使用仓库和README，在新环境中安装依赖、获取允许共享的数据、运行入口命令并比较输出。问题按环境、数据、执行、数值和解释五类记录。
+
+```{.python filename="16_step3_reproduction_log.py"}
+import pandas as pd
+
+log = pd.DataFrame(columns=[
+    "stage", "command", "expected", "observed",
+    "severity", "resolved", "note",
+])
+log.loc[len(log)] = [
+    "environment", "conda env create -f environment.yml",
+    "successful install", "", "high", False, "",
+]
+log.to_csv("reproduction_log.csv", index=False)
+```
+
+课程结束前，项目组依据复现记录完成一次修订，并在版本说明中列出修改内容、仍未解决的问题和结论是否发生变化。
+
+::: {.lab-brief}
+**最终提交**：可运行仓库、研究报告、七分钟展示、复现日志、修改说明和个人反思。优秀项目应当让读者清楚看见证据如何形成，也能定位尚未解决的不确定性。
+:::

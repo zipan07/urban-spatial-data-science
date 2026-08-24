@@ -1,0 +1,60 @@
+## 三小时课堂：城市功能类型识别与空间预测
+
+本单元以网格为分析单元，使用设施构成、建筑形态、道路和活动强度识别城市功能类型，再训练监督模型预测未标注网格。全过程强调空间标准化、聚类解释和空间验证。
+
+### 第一小时：构造可解释特征
+
+```{.python filename="12_step1_features.py"}
+feature_cols = [
+    "residential_share", "office_share", "retail_share",
+    "building_coverage", "mean_height", "intersection_density",
+    "day_activity", "night_activity",
+]
+X = grid[feature_cols].copy()
+print(X.describe().T)
+print(X.corr().round(2))
+```
+
+比例变量检查总和，密度变量核对分母，活动变量进行对数转换。高度相关特征可能重复表达同一城市属性。
+
+### 第二小时：聚类、命名和空间连续性
+
+```{.python filename="12_step2_cluster.py"}
+from sklearn.pipeline import make_pipeline
+from sklearn.impute import SimpleImputer
+from sklearn.preprocessing import StandardScaler
+from sklearn.cluster import KMeans
+
+clusterer = make_pipeline(
+    SimpleImputer(strategy="median"),
+    StandardScaler(),
+    KMeans(n_clusters=6, n_init=50, random_state=42),
+)
+grid["cluster"] = clusterer.fit_predict(X)
+profile = grid.groupby("cluster")[feature_cols].median()
+print(profile.round(2))
+```
+
+类别命名依据特征剖面、典型地点和街景抽查完成。聚类编号本身没有语义。学生检查孤立斑块，区分真实混合地区与噪声。
+
+### 第三小时：监督预测与空间验证
+
+```{.python filename="12_step3_spatial_prediction.py"}
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import classification_report
+
+train = grid[grid["label"].notna() & (grid["spatial_fold"] != 4)]
+test = grid[grid["label"].notna() & (grid["spatial_fold"] == 4)]
+
+clf = RandomForestClassifier(n_estimators=500, min_samples_leaf=5,
+                             class_weight="balanced", random_state=42)
+clf.fit(train[feature_cols], train["label"])
+pred = clf.predict(test[feature_cols])
+print(classification_report(test["label"], pred))
+```
+
+课堂比较随机划分和空间留出结果，制图显示错误集中区与最大预测概率。低置信度网格进入人工复核，不直接赋予规划用地含义。
+
+::: {.lab-brief}
+**课堂提交**：特征字典、聚类剖面、典型样本核查、空间测试报告和概率地图。报告要区分数据驱动类型、实际使用和法定规划类别。
+:::

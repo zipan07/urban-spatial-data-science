@@ -1,0 +1,52 @@
+## 三小时课堂：从变量分布到可解释地图
+
+本单元使用社区养老设施供需指标，逐步完成分布检查、分类比较、双变量表达和地图审查。每幅地图都必须回答一个明确问题。
+
+### 第一小时：先看分布，再决定分类
+
+```{.python filename="09_step1_distribution.py"}
+import matplotlib.pyplot as plt
+import mapclassify
+
+value = communities["facilities_per_1000_elderly"].dropna()
+print(value.describe(percentiles=[.1, .25, .5, .75, .9, .95]))
+
+fig, axes = plt.subplots(1, 2, figsize=(10, 4))
+value.plot.hist(bins=25, ax=axes[0], title="设施供给率分布")
+value.plot.box(ax=axes[1], title="异常值与偏态")
+plt.tight_layout()
+```
+
+若分布高度右偏，等距分类可能把多数社区挤在最低一档。学生比较Quantiles、Natural Breaks和基于规划标准的固定阈值。
+
+### 第二小时：并列三种地图
+
+```{.python filename="09_step2_classification.py"}
+schemes = {
+    "quantiles": mapclassify.Quantiles(value, k=5),
+    "natural_breaks": mapclassify.NaturalBreaks(value, k=5),
+    "policy_bins": mapclassify.UserDefined(value, bins=[.5, 1, 1.5, 2]),
+}
+for name, classifier in schemes.items():
+    print(name, classifier.bins, classifier.counts)
+
+fig, axes = plt.subplots(1, 3, figsize=(15, 5))
+for ax, (name, _) in zip(axes, schemes.items()):
+    scheme = "UserDefined" if name == "policy_bins" else (
+        "Quantiles" if name == "quantiles" else "NaturalBreaks"
+    )
+    kwargs = {"classification_kwds": {"bins": [0.5, 1, 1.5, 2]}} \
+        if name == "policy_bins" else {}
+    communities.plot(column="facilities_per_1000_elderly", scheme=scheme,
+                     k=5, cmap="YlGnBu", legend=True, ax=ax, **kwargs)
+    ax.set_title(name); ax.set_axis_off()
+plt.tight_layout()
+```
+
+### 第三小时：供需错配与地图审查
+
+将老年人口比例和设施供给率各分为高低两组，构造“高需求—低供给”等四类。学生检查双变量分类阈值、缺失值颜色、边界、比例尺、数据日期和色盲可读性，并为主图写一个带发现的标题。
+
+::: {.lab-brief}
+**课堂提交**：分布图、三种分类地图、双变量供需错配图和地图审查表。报告应解释为何选择最终分类，并列出至少一个会改变地图叙事的备选方案。
+:::

@@ -142,6 +142,8 @@ print("Bounds:", gdf.total_bounds)
 - 隐私保护应从最小必要粒度开始，并贯穿数据获取、处理和发布全过程。
 :::
 
+{{< include _units/04-guided-lab.qmd >}}
+
 ## 延伸阅读
 
 - Kitchin, R. *The Data Revolution*。

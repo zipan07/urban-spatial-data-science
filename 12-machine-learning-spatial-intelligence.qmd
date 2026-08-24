@@ -284,6 +284,8 @@ importance = pd.concat(fold_importance, ignore_index=True)
 4. 特征重要性与可干预的规划因素有什么区别？
 5. 什么时候应优先使用空间回归而不是复杂机器学习？
 
+{{< include _units/12-guided-lab.qmd >}}
+
 ## 来源与延伸阅读
 
 - Shi et al. (Eds.). [Urban Informatics](https://link.springer.com/book/10.1007/978-981-15-8983-6), CC BY 4.0。相关开放章节涉及城市计算、机器学习、城市感知与应用。

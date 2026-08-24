@@ -283,6 +283,8 @@ print(areas[["lisa_raw", "lisa_fdr"]].sum())
 3. 为什么局部热点不能直接作为政策优先区？
 4. 如果社区边界调整，空间自相关结果可能发生什么变化？
 
+{{< include _units/10-guided-lab.qmd >}}
+
 ## 来源与延伸阅读
 
 - Rey, Arribas-Bel, & Wolf: [Spatial Weights](https://geographicdata.science/book/spatial-weights.html)、[Global Spatial Autocorrelation](https://geographicdata.science/book/global_spatial_autocorrelation.html)、[Local Spatial Autocorrelation](https://geographicdata.science/book/local_spatial_autocorrelation.html)。这些页面作为英文指定阅读，本章为原创中文重组。

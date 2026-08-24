@@ -1,0 +1,54 @@
+## 三小时课堂：审计一个城市预测模型
+
+本单元以热风险预测为例，把评价扩展为基线、空间交叉验证、误差分组、概率校准和模型卡。课堂结束时，学生需要回答模型可以部署到哪里、在哪些地区必须人工复核。
+
+### 第一小时：建立基线和空间折
+
+```{.python filename="13_step1_spatial_cv.py"}
+from sklearn.model_selection import GroupKFold, cross_validate
+from sklearn.dummy import DummyRegressor
+from sklearn.ensemble import RandomForestRegressor
+
+X = samples[feature_cols]
+y = samples["heat_risk"]
+groups = samples["spatial_block"]
+cv = GroupKFold(n_splits=5)
+
+models = {
+    "mean": DummyRegressor(strategy="mean"),
+    "forest": RandomForestRegressor(n_estimators=400,
+                                     min_samples_leaf=8,
+                                     random_state=42),
+}
+for name, model in models.items():
+    score = cross_validate(model, X, y, groups=groups, cv=cv,
+                           scoring=["neg_mean_absolute_error",
+                                    "neg_root_mean_squared_error"])
+    print(name, -score["test_neg_mean_absolute_error"])
+```
+
+学生报告每一折误差而非单一平均值，并在地图上定位最差折。若模型只在中心区表现良好，整体平均值无法说明外围风险。
+
+### 第二小时：误差地图与群体差异
+
+```{.python filename="13_step2_error_audit.py"}
+test_result["abs_error"] = (test_result["observed"] - test_result["predicted"]).abs()
+error_by_area = test_result.groupby("area_type")["abs_error"].agg(
+    ["count", "mean", "median", "max"]
+)
+error_by_vulnerability = test_result.groupby(
+    pd.qcut(test_result["elderly_share"], 4, duplicates="drop")
+)["abs_error"].mean()
+print(error_by_area)
+print(error_by_vulnerability)
+```
+
+检查模型是否在高老龄化、高贫困或低传感器覆盖地区系统失准。公平审计同时报告样本量，避免用极小分组得出过度结论。
+
+### 第三小时：稳健性矩阵与模型卡
+
+依次改变空间块尺度、时间窗口、缺失处理、特征集合和模型参数。将主要结论记录为稳定、方向稳定但幅度变化、方向变化三类。最终模型卡包含预期用途、禁止用途、训练数据、空间时间范围、评价方式、主要误差、已知偏差、人工复核和更新条件。
+
+::: {.lab-brief}
+**课堂提交**：基线比较、五折空间误差、误差地图、群体审计、稳健性矩阵和一页模型卡。模型分数不构成单独的部署理由。
+:::

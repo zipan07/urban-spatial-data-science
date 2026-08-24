@@ -197,6 +197,8 @@ Path("outputs/manifest.json").write_text(
 - 将分析结果转化为可比较、可实施、可质疑的规划选择。
 :::
 
+{{< include _units/16-guided-lab.qmd >}}
+
 ## 延伸阅读
 
 - [The Turing Way](https://the-turing-way.netlify.app/)：可重复、协作与开放研究。

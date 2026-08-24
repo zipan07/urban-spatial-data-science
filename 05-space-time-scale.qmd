@@ -134,6 +134,8 @@ profile = (
 - 稳健研究应跨至少一个备选空间尺度和时间窗口复核结论。
 :::
 
+{{< include _units/05-guided-lab.qmd >}}
+
 ## 延伸阅读
 
 - Rey, Arribas-Bel, & Wolf. [Spatial Data](https://geographicdata.science/book/notebooks/03_spatial_data.html)。

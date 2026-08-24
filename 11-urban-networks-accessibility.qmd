@@ -250,6 +250,8 @@ communities["medical_access"] = accessibility
 3. 网络中心性与城市活力之间需要哪些中间条件？
 4. 提高平均可达性是否一定改善空间公平？
 
+{{< include _units/11-guided-lab.qmd >}}
+
 ## 来源与延伸阅读
 
 - Shi et al. (Eds.). [Urban Informatics](https://link.springer.com/book/10.1007/978-981-15-8983-6), CC BY 4.0。相关章节提供了城市网络、移动行为和城市应用的开放框架。

@@ -1,0 +1,70 @@
+## 三小时课堂：从城市数字痕迹建立证据链
+
+这一单元把本章概念落实到一项可检查的城市研究。课堂围绕“夜间共享单车记录能否表示城市夜间活力”展开。三小时结束时，每组需要提交一份数据审计表、一幅覆盖偏差图和一段不超过200字的证据陈述。
+
+### 第一小时：区分现实活动、观测系统与数据记录
+
+先在白板上画出三层对象：城市中实际发生的活动、平台能够观测的活动、最终进入数据表的记录。学生逐项讨论注册用户、无手机人群、车辆调度、异常订单、天气和平台运营范围会在哪一层产生影响。随后把讨论整理为“观测机制表”。表中至少包含变量、生成主体、记录条件、遗漏对象、时间分辨率和空间误差六列。
+
+下面构造一份微型订单表。第一步只检查结构，不急于计算指标。
+
+```{.python filename="01_step1_observation.py"}
+import pandas as pd
+
+orders = pd.DataFrame({
+    "order_id": ["o1", "o2", "o3", "o4", "o5", "o6"],
+    "district": ["中心", "中心", "外围", "外围", "外围", "中心"],
+    "start_hour": [18, 22, 19, 23, 2, 21],
+    "duration_min": [18, 0, 34, 220, 12, 27],
+    "completed": [True, False, True, True, True, True],
+    "user_type": ["member", "member", "casual", "member", None, "casual"],
+})
+
+print(orders.info())
+print(orders.isna().sum())
+print(orders.groupby("district").size())
+```
+
+阅读输出时回答三个问题：零分钟订单是否代表没有活动；220分钟订单是异常值还是长时间使用；缺失的用户类型是否在外围地区更集中。每个判断都需要写出保留、修正或排除的理由。
+
+### 第二小时：把处理规则写成可复查代码
+
+第二步建立分析口径。课堂先提出规则，再运行代码比较规则造成的样本变化。有效订单暂定为已完成、持续1—180分钟且发生在18时至次日6时。夜间跨越零点，因此不能简单使用 `18 <= hour <= 6`。
+
+```{.python filename="01_step2_evidence_chain.py"}
+is_night = orders["start_hour"].ge(18) | orders["start_hour"].lt(6)
+is_valid = (
+    orders["completed"]
+    & orders["duration_min"].between(1, 180)
+    & is_night
+)
+
+analysis = orders.loc[is_valid].copy()
+audit = pd.Series({
+    "原始记录": len(orders),
+    "有效记录": len(analysis),
+    "排除比例": 1 - len(analysis) / len(orders),
+    "用户类型缺失比例": analysis["user_type"].isna().mean(),
+})
+print(audit)
+
+district_summary = (
+    analysis.groupby("district")
+    .agg(orders=("order_id", "count"),
+         median_duration=("duration_min", "median"),
+         missing_user=("user_type", lambda x: x.isna().mean()))
+)
+print(district_summary)
+```
+
+教师随后修改上限为120分钟，并把未完成订单纳入，要求学生比较结论是否改变。这个小实验说明，证据会随着口径变化。研究报告应保存主规则与备选规则的结果，而不只保留最终图。
+
+### 第三小时：从数据结果回到规划陈述
+
+最后一小时讨论证据强度。订单数量可以描述平台使用，却不能直接代表全部夜间人口活动。小组需要把结论写成三层：数据直接支持的描述、结合背景知识形成的解释、尚需其他数据验证的规划判断。
+
+合格的陈述应包含研究范围、数据来源、处理口径、主要结果和限制。例如：“在平台覆盖范围内，外围地区有效夜间订单持续时间较长；由于样本仅覆盖平台用户且存在用户类型缺失，该结果适合用于提出夜间接驳调查区域，尚不足以直接确定设施投资优先级。”
+
+::: {.lab-brief}
+**课堂提交**：一张观测机制表；一份由代码生成的质量摘要；主口径与备选口径的对照；一段分层证据陈述。评价重点是证据链是否清楚，不以订单数量大小判断答案优劣。
+:::

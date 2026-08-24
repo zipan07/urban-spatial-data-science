@@ -140,6 +140,8 @@ print(options.sort_values("score", ascending=False))
 - 多准则分析使权衡可见，但不能替代公共价值协商。
 :::
 
+{{< include _units/14-guided-lab.qmd >}}
+
 ## 延伸阅读
 
 - Tufte, E. *The Visual Display of Quantitative Information*。

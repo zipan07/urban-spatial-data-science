@@ -169,6 +169,8 @@ for _, candidate in scenarios.iterrows():
 - 稳健方案、分期路径和监测计划使设计能够面对不确定性。
 :::
 
+{{< include _units/15-guided-lab.qmd >}}
+
 ## 延伸阅读
 
 - Shi et al. [*Urban Informatics*](https://link.springer.com/book/10.1007/978-981-15-8983-6) 中城市系统与应用案例。

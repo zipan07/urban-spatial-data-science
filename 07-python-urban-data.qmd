@@ -276,6 +276,8 @@ assert population["older_population"].le(population["population"]).all()
 3. 什么情况下空间连接比属性连接更可靠？什么情况下相反？
 4. 如果设施容量缺失，你会怎样限制研究结论？
 
+{{< include _units/07-guided-lab.qmd >}}
+
 ## 来源与延伸阅读
 
 本章关于城市感知、城市数据与数据基础设施的讨论参考并改写自开放获取著作：

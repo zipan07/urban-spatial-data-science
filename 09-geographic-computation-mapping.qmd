@@ -223,6 +223,8 @@ for ax, year in zip(axes, years):
 3. 更细空间尺度是否一定意味着更准确？
 4. 当地图分类方法改变重点地区时，研究者应怎样报告？
 
+{{< include _units/09-guided-lab.qmd >}}
+
 ## 来源与延伸阅读
 
 - Rey, Arribas-Bel, & Wolf. [Choropleth Mapping](https://geographicdata.science/book/visualization.html)，作为英文指定阅读。本章采用原创中文组织，不构成该章译文。
