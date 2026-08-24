@@ -1,0 +1,33 @@
+name: urban-data
+channels:
+  - conda-forge
+dependencies:
+  - python=3.12
+  - jupyterlab
+  - ipykernel
+  - numpy
+  - pandas
+  - scipy
+  - matplotlib
+  - seaborn
+  - geopandas
+  - shapely
+  - pyproj
+  - pyogrio
+  - rasterio
+  - contextily
+  - folium
+  - mapclassify
+  - libpysal
+  - esda
+  - splot
+  - pointpats
+  - spreg
+  - segregation
+  - scikit-learn
+  - statsmodels
+  - networkx
+  - osmnx
+  - momepy
+  - jupyter-cache
+  - pip
