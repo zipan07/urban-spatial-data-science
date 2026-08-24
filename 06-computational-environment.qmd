@@ -1,0 +1,156 @@
+---
+title: "Python、VS Code与可重复研究环境"
+---
+
+# 学习目标
+
+完成本章后，学生应能够：
+
+- 理解Python、Conda、VS Code、Jupyter与ArcGIS Pro在课程中的分工；
+- 使用统一的\`urban-data\`环境运行Notebook；
+- 按照“数据—代码—输出—说明”组织城市研究项目；
+- 记录软件环境、数据来源和分析过程，使结果可以复查与复现；
+- 合理使用AI辅助代码，同时保留人工验证责任。
+
+# 6.1 为什么首先建立研究环境
+
+城市数据研究通常同时包含表格、空间数据、地图、统计模型和文字解释。如果文件、软件版本和计算步骤缺少统一组织，即使某段代码曾经成功运行，其他人也可能无法得到相同结果。
+
+可重复研究不等于把代码上传到网上。它至少要求回答四个问题：
+
+1. 使用了什么数据，数据从哪里获得？
+2. 使用了什么软件与包版本？
+3. 原始数据经过了哪些处理？
+4. 图表和结论能否由代码重新生成？
+
+本课程采用以下基本工具链：
+
+| 工具 | 主要作用 |
+|---|---|
+| Miniconda | 创建和管理独立Python环境 |
+| VS Code | 组织项目、编辑代码与文档 |
+| Jupyter | 分步骤运行代码并连接计算与解释 |
+| Python | 数据处理、空间分析、统计与机器学习 |
+| ArcGIS Pro | 空间数据检查、基础GIS分析和地图表达 |
+| Quarto | 将文字、代码和结果组织为在线教材或研究报告 |
+| Git/GitHub | 保存版本并记录修改过程 |
+
+工具本身不是课程目标。它们共同支持从城市问题到研究证据的工作流程。
+
+# 6.2 创建统一环境
+
+下载本项目后，在项目根目录运行：
+
+~~~{bash}
+conda env create -f environment.yml
+conda activate urban-data
+python --version
+~~~
+
+然后在VS Code中安装Microsoft提供的Python与Jupyter扩展，并将解释器选择为\`urban-data\`。
+
+可以用以下代码检查关键包：
+
+~~~{python}
+import sys
+import pandas as pd
+import geopandas as gpd
+import sklearn
+import libpysal
+
+print(sys.version)
+print("pandas:", pd.__version__)
+print("geopandas:", gpd.__version__)
+print("scikit-learn:", sklearn.__version__)
+print("libpysal:", libpysal.__version__)
+~~~
+
+::: {.callout-warning}
+“代码能够运行”只说明当前计算环境没有立即报错，并不代表数据、方法或结论正确。
+:::
+
+# 6.3 城市研究项目的文件结构
+
+建议每个课程项目采用统一结构：
+
+~~~{text}
+project/
+├── README.md
+├── environment.yml
+├── data/
+│   ├── raw/
+│   ├── interim/
+│   └── processed/
+├── notebooks/
+├── src/
+├── outputs/
+│   ├── figures/
+│   ├── maps/
+│   └── tables/
+└── report/
+~~~
+
+- \`raw\`保存未经修改的原始数据；
+- \`interim\`保存中间处理结果；
+- \`processed\`保存可以直接分析的数据；
+- \`notebooks\`用于探索和课堂实验；
+- \`src\`保存可以重复调用的函数；
+- \`outputs\`只保存可由代码重新生成的结果；
+- \`README.md\`说明问题、数据、方法和运行顺序。
+
+不要把原始数据、清洗结果和最终输出混放在同一文件夹，也不要用“最终版2”“最终版真的最终”等文件名管理版本。
+
+# 6.4 Notebook不是研究报告
+
+Jupyter Notebook适合把计算过程拆分为若干单元，但常见问题包括：
+
+- 单元格没有按顺序执行；
+- 中间变量来自已经删除的代码；
+- 大量尝试性代码残留；
+- 只有地图，没有解释；
+- 只有结论，没有生成结论的步骤。
+
+提交前应执行“Restart Kernel and Run All”，确认Notebook能从空白状态完整运行。每个主要结果之前，应解释为什么进行这一步；结果之后，应说明观察到了什么，以及它与研究问题有什么关系。
+
+# 6.5 AI辅助编程的使用边界
+
+AI可以协助：
+
+- 解释报错；
+- 生成函数框架；
+- 补充注释；
+- 比较不同实现；
+- 编写测试；
+- 将重复操作整理为函数。
+
+但学生必须检查：
+
+- 函数和参数是否真实存在；
+- 坐标系统是否正确；
+- 数据字段是否被错误理解；
+- 统计假设是否满足；
+- 结果是否存在数量级或空间位置异常；
+- 引用与数据来源是否准确。
+
+课程作业中应保留关键提示词和人工修改说明。AI输出不能替代方法理解和结果验证。
+
+# 6.6 课堂实验
+
+建立一个名为\`urban-study\`的项目：
+
+1. 创建上述目录；
+2. 建立\`README.md\`并写出一个城市研究问题；
+3. 在Notebook中导入Pandas、GeoPandas和Matplotlib；
+4. 创建一张示范表格和一幅简单图；
+5. 重新启动Kernel并运行全部单元；
+6. 将环境、数据和运行步骤写入README。
+
+# 6.7 本章小结
+
+可重复研究环境的价值不是“技术规范化”本身，而是使城市研究的证据链可以被教师、同学和未来的自己检查。后续各章都应在同一项目结构和环境中完成。
+
+# 延伸阅读
+
+- [原书：Computational Tools for Geographic Data Science](https://geographicdata.science/book/computational-tools.html)
+- [Quarto官方文档](https://quarto.org/docs/)
+- [GeoPandas文档](https://geopandas.org/)
