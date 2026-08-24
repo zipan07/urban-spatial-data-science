@@ -1,0 +1,41 @@
+project:
+  type: book
+
+book:
+  title: "数据科学与城市空间研究"
+  subtitle: "方法、计算与规划应用"
+  author:
+    - "胡明星"
+    - "蔡子攀"
+  language: zh
+  chapters:
+    - index.qmd
+    - part: "第二部分 计算工具与城市空间分析"
+      chapters:
+        - 06-computational-environment.qmd
+        - 07-python-urban-data.qmd
+        - 08-arcgis-spatial-analysis.qmd
+        - 09-geographic-computation-mapping.qmd
+        - 10-spatial-weights-autocorrelation.qmd
+        - 11-urban-networks-accessibility.qmd
+        - 12-machine-learning-spatial-intelligence.qmd
+  repo-url: https://github.com/zipan07/urban-spatial-data-science
+  repo-actions: [edit, issue]
+
+format:
+  html:
+    theme: cosmo
+    toc: true
+    toc-depth: 3
+    number-sections: true
+    code-copy: true
+    code-fold: false
+  pdf:
+    documentclass: scrreprt
+
+execute:
+  freeze: auto
+  warning: false
+  message: false
+
+bibliography: references.bib
