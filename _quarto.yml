@@ -13,20 +13,21 @@ book:
   language: zh
   site-url: https://zipan07.github.io/urban-spatial-data-science/
   repo-url: https://github.com/zipan07/urban-spatial-data-science
-  repo-actions: [edit, issue]
+  repo-actions: [issue]
+  license: "CC BY-NC-ND 4.0"
   search: true
   page-navigation: true
   reader-mode: true
+  page-footer:
+    left: "© 2026 蔡子攀 · CC BY-NC-ND 4.0"
+    right:
+      - text: "版权与使用"
+        href: copyright.qmd
+      - icon: github
+        href: https://github.com/zipan07/urban-spatial-data-science
   chapters:
     - index.qmd
     - contents.qmd
-    - part: "数据目录与下载"
-      chapters:
-        - data.qmd
-        - data-pages/nanjing-teaching.qmd
-        - data-pages/ghsl-china-cities.qmd
-        - data-pages/osm-nanjing-services.qmd
-        - data-pages/large-open-data.qmd
     - part: "第一部分 城市问题、数据与研究设计"
       chapters:
         - 01-urban-informatics.qmd
@@ -52,6 +53,14 @@ book:
         - 15-planning-design-case.qmd
         - 16-capstone-critique.qmd
     - references.qmd
+    - copyright.qmd
+    - part: "数据目录与下载"
+      chapters:
+        - data.qmd
+        - data-pages/nanjing-teaching.qmd
+        - data-pages/ghsl-china-cities.qmd
+        - data-pages/osm-nanjing-services.qmd
+        - data-pages/large-open-data.qmd
 
 format:
   html:
@@ -66,6 +75,11 @@ format:
     code-overflow: scroll
     smooth-scroll: true
     link-external-newwindow: true
+    include-in-header:
+      text: |
+        <meta name="copyright" content="Copyright © 2026 蔡子攀">
+        <meta name="license" content="CC BY-NC-ND 4.0">
+        <meta name="rights" content="Non-commercial sharing of unmodified material with attribution; no public distribution of derivatives.">
 
 execute:
   enabled: false

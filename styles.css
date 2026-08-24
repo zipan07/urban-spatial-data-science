@@ -4,8 +4,8 @@
   --book-navy: #173f50;
   --book-teal: #28766f;
   --book-coral: #c96852;
-  --book-sand: #f3efe6;
-  --book-paper: #fffefb;
+  --book-sand: #f8f5ee;
+  --book-paper: #fffefc;
   --book-rule: #d9e2df;
   --book-code: #f6f7f8;
   --book-code-head: #e9edef;
@@ -77,7 +77,7 @@ a { text-underline-offset: 0.18em; }
   margin: 1.7rem 0 2rem;
   padding: 1.25rem 1.45rem;
   border: 1px solid var(--book-rule);
-  background: #fbfaf6;
+  background: #fdfcf9;
 }
 .learning-objectives { border-top: 4px solid var(--book-teal); }
 .concept-card { border-left: 5px solid #d4a44f; }
@@ -100,7 +100,7 @@ table {
 }
 thead { background: var(--book-navy); color: white; }
 th, td { padding: 0.7rem 0.8rem !important; vertical-align: top; }
-tbody tr:nth-child(even) { background: #f6f4ee; }
+tbody tr:nth-child(even) { background: #faf8f3; }
 caption, figcaption { color: var(--book-muted); font-size: 0.88rem; }
 
 .callout {
@@ -194,6 +194,19 @@ pre code {
 }
 .sidebar-title { color: var(--book-navy); }
 .chapter-number { color: var(--book-coral); font-weight: 700; }
+
+#quarto-sidebar,
+.quarto-secondary-nav,
+.navbar {
+  background-color: #fffefc;
+}
+
+.nav-footer {
+  background: #fffdf9;
+  border-top-color: #ebe6da;
+  color: #65716e;
+  font-size: 0.82rem;
+}
 
 .key-takeaways {
   margin: 2.8rem 0;
