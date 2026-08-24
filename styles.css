@@ -7,7 +7,9 @@
   --book-sand: #f3efe6;
   --book-paper: #fffefb;
   --book-rule: #d9e2df;
-  --book-code: #142e35;
+  --book-code: #f6f7f8;
+  --book-code-head: #e9edef;
+  --book-code-ink: #23343a;
 }
 
 body {
@@ -108,15 +110,15 @@ caption, figcaption { color: var(--book-muted); font-size: 0.88rem; }
 }
 .callout .callout-body { font-size: 0.98rem; }
 
-/* Code is presented as a reading object rather than console debris. */
+/* Light code panels keep long examples readable alongside the main text. */
 div.sourceCode {
   position: relative;
   margin: 1.55rem 0 2.1rem;
   padding-top: 1.9rem;
-  border: 0 !important;
+  border: 1px solid #d9e0e3 !important;
   border-radius: 7px;
   background: var(--book-code) !important;
-  box-shadow: 0 10px 24px rgba(16, 42, 48, 0.16);
+  box-shadow: 0 7px 18px rgba(31, 45, 43, 0.08);
   overflow: hidden;
 }
 div.sourceCode::before {
@@ -129,8 +131,8 @@ div.sourceCode::before {
   display: flex;
   align-items: center;
   padding-left: 0.9rem;
-  background: #0d242a;
-  color: #9fb5b1;
+  background: var(--book-code-head);
+  color: #52666d;
   font: 600 0.68rem/1 "SFMono-Regular", Consolas, monospace;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -138,7 +140,7 @@ div.sourceCode::before {
 div.sourceCode pre.sourceCode,
 div.sourceCode code {
   background: transparent !important;
-  color: #e8efed;
+  color: var(--book-code-ink) !important;
 }
 pre code {
   font-family: "SFMono-Regular", "Cascadia Code", Consolas, "Liberation Mono", monospace;
@@ -147,19 +149,26 @@ pre code {
   font-variant-ligatures: none;
 }
 .code-with-filename .code-with-filename-file {
-  background: #0d242a;
-  color: #dbe6e3;
-  border: 0;
+  background: var(--book-code-head);
+  color: #314a53;
+  border: 1px solid #d9e0e3;
+  border-bottom: 0;
   font-family: "SFMono-Regular", Consolas, monospace;
   font-size: 0.76rem;
 }
 .code-with-filename div.sourceCode { margin-top: 0; border-radius: 0 0 7px 7px; }
 .code-with-filename div.sourceCode::before { display: none; }
-.code-copy-button { color: #c9d7d4 !important; }
-.sourceCode .fu, .sourceCode .kw { color: #84d1c7; }
-.sourceCode .st { color: #e9c178; }
-.sourceCode .co { color: #8ba39f; font-style: italic; }
-.sourceCode .dv, .sourceCode .fl { color: #e79887; }
+.code-copy-button { color: #536970 !important; }
+.sourceCode .fu, .sourceCode .kw { color: #006d68 !important; font-weight: 600; }
+.sourceCode .st { color: #8b4b12 !important; }
+.sourceCode .co { color: #66777c !important; font-style: italic; }
+.sourceCode .dv, .sourceCode .fl { color: #a13f32 !important; }
+.sourceCode .op { color: #344b53 !important; }
+.sourceCode .bu { color: #215d88 !important; }
+.sourceCode .im { color: #6a4b93 !important; }
+.sourceCode .va { color: #253f47 !important; }
+.sourceCode a { color: inherit !important; text-decoration: none; }
+.code-annotation-anchor { color: #9b4f3f !important; }
 
 .sidebar nav[role="doc-toc"] ul > li > a.active,
 .sidebar-item-container .active {
