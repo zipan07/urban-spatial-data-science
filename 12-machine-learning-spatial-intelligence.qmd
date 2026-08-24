@@ -1,0 +1,280 @@
+---
+title: "机器学习与城市空间智能"
+---
+
+# 学习目标
+
+完成本章后，学生应能够：
+
+- 区分监督学习、无监督学习、解释与预测；
+- 将城市空间问题转化为特征、标签和分析单元；
+- 完成基础聚类、回归或分类流程；
+- 构建具有地理意义的空间特征；
+- 识别空间数据泄漏和随机验证偏差；
+- 理解机器学习结果进入规划判断之前仍需模型评价。
+
+# 12.1 机器学习在城市研究中回答什么问题
+
+机器学习常用于：
+
+- 根据多项指标识别城市区域类型；
+- 预测客流、活力、房价或环境风险；
+- 识别影像、街景或建筑功能；
+- 从大量变量中提取重要特征；
+- 发现非线性关系和复杂交互。
+
+但“使用机器学习”不是研究问题。应先明确目标属于：
+
+- **描述**：城市空间呈现什么格局？
+- **解释**：哪些因素与结果相关？
+- **预测**：对未观测地区或未来情景能否准确预测？
+- **分类**：对象属于哪一类型？
+- **决策**：结果如何支持资源配置或规划选择？
+
+本章借鉴原书关于[Clustering and Regionalization](https://geographicdata.science/book/geosilhouettes.html)、[Spatial Regression](https://geographicdata.science/book/models.html)和[Spatial Feature Engineering](https://geographicdata.science/book/feature_engineering.html)的知识顺序，但只建立课程所需的入门框架。
+
+# 12.2 分析单元、特征与标签
+
+以社区活力预测为例：
+
+- 分析单元：社区或规则网格；
+- 标签\(y\)：活动人口、夜间灯光或消费活跃度；
+- 特征\(X\)：人口、设施密度、道路网络、公共交通、功能混合度、绿地和中心可达性。
+
+必须检查每项特征的时间：
+
+> 用预测发生之后形成的数据作为特征，会造成时间泄漏。
+
+还应检查空间信息是否通过重复样本、邻近对象或聚合过程泄漏到训练集和测试集。
+
+# 12.3 数据预处理
+
+~~~{python}
+from sklearn.compose import ColumnTransformer
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import StandardScaler, OneHotEncoder
+from sklearn.impute import SimpleImputer
+
+numeric_features = [
+    "population_density",
+    "poi_density",
+    "road_density",
+    "metro_access"
+]
+
+categorical_features = ["district_type"]
+
+numeric_pipeline = Pipeline([
+    ("imputer", SimpleImputer(strategy="median")),
+    ("scale", StandardScaler())
+])
+
+categorical_pipeline = Pipeline([
+    ("imputer", SimpleImputer(strategy="most_frequent")),
+    ("onehot", OneHotEncoder(handle_unknown="ignore"))
+])
+
+preprocess = ColumnTransformer([
+    ("num", numeric_pipeline, numeric_features),
+    ("cat", categorical_pipeline, categorical_features)
+])
+~~~
+
+Pipeline可以保证训练和预测采用一致处理，也能减少先在全部数据上标准化造成的信息泄漏。
+
+# 12.4 无监督学习：城市区域类型
+
+聚类没有预先给定标签，目标是依据特征相似性识别类型。
+
+~~~{python}
+from sklearn.cluster import KMeans
+from sklearn.pipeline import Pipeline
+
+cluster_model = Pipeline([
+    ("preprocess", preprocess),
+    ("cluster", KMeans(
+        n_clusters=4,
+        random_state=42,
+        n_init="auto"
+    ))
+])
+
+communities["cluster"] = cluster_model.fit_predict(
+    communities[numeric_features + categorical_features]
+)
+~~~
+
+聚类结果需要回答：
+
+- 为什么使用这些变量；
+- 为什么选择这个类别数；
+- 各类别如何解释；
+- 类别是否空间连续；
+- 结果是否对标准化和异常值敏感；
+- 类别是否具有规划意义。
+
+普通K-means不考虑空间连续性。若目标是形成连续规划区域，应进一步采用区域化方法或加入空间约束。
+
+# 12.5 监督学习：回归与分类
+
+以预测社区活力为例：
+
+~~~{python}
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.pipeline import Pipeline
+
+model = Pipeline([
+    ("preprocess", preprocess),
+    ("model", RandomForestRegressor(
+        n_estimators=300,
+        random_state=42,
+        min_samples_leaf=5
+    ))
+])
+~~~
+
+模型复杂度不等于研究质量。首先应建立简单基线，例如：
+
+- 使用总体均值；
+- 线性回归；
+- 少量理论明确的变量。
+
+只有当复杂模型在合理验证下获得稳定改善时，复杂度才可能具有价值。
+
+# 12.6 空间特征工程
+
+空间特征工程是把位置和空间关系转化为可供模型使用的变量，例如：
+
+- 到最近轨道站的距离；
+- 15分钟范围内设施数量；
+- 邻近社区人口或活力的平均值；
+- 道路网络中心性；
+- 功能混合度；
+- 距离城市中心的时间成本；
+- 周边绿地覆盖率；
+- 局部空间集聚类型。
+
+空间滞后特征示例：
+
+~~~{python}
+from libpysal.weights import lag_spatial
+
+w_queen.transform = "R"
+
+communities["lag_poi_density"] = lag_spatial(
+    w_queen,
+    communities["poi_density"]
+)
+~~~
+
+如果模型用于预测新地区，必须确保空间滞后特征在真实预测时可以获得。否则会形成不现实的信息条件。
+
+# 12.7 随机划分为什么可能过于乐观
+
+普通随机划分会把相邻空间单元分到训练集和测试集。由于相邻地区通常相似，模型可能通过空间邻近性间接“看到”测试集信息。
+
+~~~{python}
+from sklearn.model_selection import train_test_split
+
+train_idx, test_idx = train_test_split(
+    communities.index,
+    test_size=0.2,
+    random_state=42
+)
+~~~
+
+更严格的方案包括：
+
+- 按行政区或空间块分组；
+- 空间交叉验证；
+- 留一区域验证；
+- 跨城市验证；
+- 按时间先后验证。
+
+本章只建立这一意识，具体评价方法在第13章展开。
+
+# 12.8 模型解释
+
+常见方法包括：
+
+- 线性模型系数；
+- 特征重要性；
+- permutation importance；
+- 部分依赖；
+- SHAP值。
+
+但解释模型不等于解释现实机制。即使某变量对预测重要，也不代表改变该变量一定会导致结果变化。
+
+规划表达中应区分：
+
+- 模型使用了哪些变量；
+- 哪些变量提高了预测；
+- 哪些变量与结果存在稳定关联；
+- 哪些变量具有可干预意义；
+- 是否具备因果证据。
+
+# 12.9 城市功能区识别示例流程
+
+一个完整课堂案例可以包括：
+
+1. 将城市划分为规则网格；
+2. 计算设施、建筑、人口、道路和公共交通特征；
+3. 标准化变量；
+4. 使用聚类识别类型；
+5. 将聚类结果映射回空间；
+6. 检查类型的空间连续性；
+7. 使用已知地区进行解释；
+8. 比较不同类别数；
+9. 讨论“数据类型”与“规划功能”是否一致。
+
+聚类识别的是特征相似性，不应未经验证直接命名为“商业中心”“居住区”或“创新区”。
+
+# 12.10 课堂实验
+
+选择聚类或预测任务：
+
+1. 明确分析单元、目标和时间范围；
+2. 建立基线模型；
+3. 构建至少四项普通特征和两项空间特征；
+4. 使用Pipeline完成缺失值和标准化；
+5. 训练一个简单模型和一个复杂模型；
+6. 比较随机划分与空间分组结果；
+7. 绘制预测或聚类地图；
+8. 写出模型能够回答和不能回答的问题；
+9. 为第13章保留评价结果。
+
+# 12.11 常见误区
+
+- 先选择算法，再寻找问题；
+- 变量越多越好；
+- 在全数据上标准化后再划分；
+- 随机验证直接用于空间外推；
+- 将预测关系解释为因果关系；
+- 根据特征重要性直接提出政策；
+- 聚类后按主观印象命名；
+- 忽视模型对尺度和空间单元的敏感性；
+- 只展示最好模型，不报告基线。
+
+# 12.12 与下一章的衔接
+
+完成模型训练不等于完成研究。下一章需要进一步判断：
+
+- 模型是否比基线更好；
+- 结果是否能推广到其他地区；
+- 空间划分是否造成评价偏差；
+- 更换尺度、变量和参数后是否稳定；
+- 预测精度是否具有规划意义；
+- 不确定性应如何表达。
+
+因此，本章结束于模型构建，第13章从模型评价、稳健性和不确定性继续。
+
+# 12.13 本章小结
+
+城市空间智能不是算法列表，而是把城市问题、空间数据、地理特征和验证策略组织成完整建模流程。模型的价值必须通过严格评价和审慎解释来证明。
+
+# 延伸阅读
+
+- [原书：Clustering and Regionalization](https://geographicdata.science/book/geosilhouettes.html)
+- [原书：Spatial Regression](https://geographicdata.science/book/models.html)
+- [原书：Spatial Feature Engineering](https://geographicdata.science/book/feature_engineering.html)
+- [Scikit-learn用户指南](https://scikit-learn.org/stable/user_guide.html)
