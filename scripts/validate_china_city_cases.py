@@ -107,10 +107,17 @@ def validate() -> dict[str, Any]:
         try:
             with zipfile.ZipFile(city_dir / f"{city_id}_course_data.zip") as archive:
                 bad_members = archive.testzip()
-                names = set(archive.namelist())
+                member_names = archive.namelist()
+                names = set(member_names)
             expected_names = {f"{city_id}/{filename}" for filename in REQUIRED_FILES}
-            if bad_members or not expected_names.issubset(names):
-                finding("high", "city_zip", f"压缩包缺项或损坏：bad_member={bad_members}", city_id)
+            duplicate_names = len(member_names) - len(names)
+            if bad_members or not expected_names.issubset(names) or duplicate_names:
+                finding(
+                    "high",
+                    "city_zip",
+                    f"压缩包缺项、重复或损坏：bad_member={bad_members}, duplicates={duplicate_names}",
+                    city_id,
+                )
             else:
                 checked("city_zip", "pass", f"{len(names)}个成员可解压", city_id)
         except Exception as error:
@@ -226,6 +233,41 @@ def validate() -> dict[str, Any]:
             finding("high", "all_grid_rows", f"all_grid_indicators.csv应有512行，实际{len(grid_rows)}行")
         else:
             checked("all_grid_rows", "pass", "8×64=512条网格记录完整")
+
+    full_zip = DATA_ROOT / "china_eight_city_course_data.zip"
+    if full_zip.exists():
+        try:
+            with zipfile.ZipFile(full_zip) as archive:
+                bad_member = archive.testzip()
+                member_names = archive.namelist()
+                names = set(member_names)
+            expected_names = {
+                f"{city_id}/{filename}"
+                for city_id in CITY_IDS
+                for filename in REQUIRED_FILES
+            }
+            expected_names.update(
+                {
+                    "catalog.csv",
+                    "catalog.json",
+                    "city_profiles.csv",
+                    "all_grid_indicators.csv",
+                    "data_inventory.csv",
+                }
+            )
+            duplicate_names = len(member_names) - len(names)
+            missing_names = sorted(expected_names - names)
+            if bad_member or duplicate_names or missing_names:
+                finding(
+                    "high",
+                    "full_zip",
+                    "八城合集缺项、重复或损坏："
+                    f"bad_member={bad_member}, duplicates={duplicate_names}, missing={missing_names}",
+                )
+            else:
+                checked("full_zip", "pass", f"{len(names)}个成员可解压且名称唯一")
+        except Exception as error:
+            finding("critical", "full_zip", f"八城合集无法读取：{error}")
 
     severity_counts = {severity: sum(item["severity"] == severity for item in findings) for severity in ("critical", "high", "medium", "low")}
     publishable = severity_counts["critical"] == 0 and severity_counts["high"] == 0

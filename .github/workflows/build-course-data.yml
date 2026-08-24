@@ -24,7 +24,7 @@ permissions:
 
 concurrency:
   group: build-course-data
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   build-and-audit:

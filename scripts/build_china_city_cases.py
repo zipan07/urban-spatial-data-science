@@ -43,6 +43,7 @@ CACHE = Path(os.environ.get("COURSE_DATA_CACHE", ROOT / ".cache" / "course_data"
 
 EXTRACT_DATE = date.today().isoformat()
 REFRESH_SOURCES = os.environ.get("COURSE_DATA_REFRESH", "0") == "1"
+DATA_PIPELINE_VERSION = "0.13.1"
 GRID_ROWS = 8
 GRID_COLS = 8
 # 八城裁剪约为5—7 km见方；24×24像元对应约200—260 m的课堂栅格。
@@ -216,8 +217,49 @@ def haversine_m(lon1: float, lat1: float, lon2: float, lat2: float) -> float:
     return 2 * radius * math.asin(math.sqrt(a))
 
 
-def parse_osm(raw: dict[str, Any], city_id: str) -> tuple[list[dict[str, Any]], list[dict[str, Any]], list[dict[str, Any]]]:
+def clip_segment_to_bbox(
+    lon1: float,
+    lat1: float,
+    lon2: float,
+    lat2: float,
+    bbox: tuple[float, float, float, float],
+) -> tuple[float, float, float, float] | None:
+    """用Liang–Barsky算法把线段裁剪到south-west-north-east范围。"""
+    south, west, north, east = bbox
+    dx, dy = lon2 - lon1, lat2 - lat1
+    lower, upper = 0.0, 1.0
+    for p, q in (
+        (-dx, lon1 - west),
+        (dx, east - lon1),
+        (-dy, lat1 - south),
+        (dy, north - lat1),
+    ):
+        if p == 0:
+            if q < 0:
+                return None
+            continue
+        ratio = q / p
+        if p < 0:
+            lower = max(lower, ratio)
+        else:
+            upper = min(upper, ratio)
+        if lower > upper:
+            return None
+    return (
+        lon1 + lower * dx,
+        lat1 + lower * dy,
+        lon1 + upper * dx,
+        lat1 + upper * dy,
+    )
+
+
+def parse_osm(
+    raw: dict[str, Any],
+    city_id: str,
+    bbox: tuple[float, float, float, float],
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]], list[dict[str, Any]]]:
     """将Overpass响应整理为设施点、网络节点和网络边。"""
+    south, west, north, east = bbox
     facilities: list[dict[str, Any]] = []
     edges: list[dict[str, Any]] = []
     node_coordinates: dict[str, tuple[float, float]] = {}
@@ -225,6 +267,8 @@ def parse_osm(raw: dict[str, Any], city_id: str) -> tuple[list[dict[str, Any]], 
 
     for element in raw.get("elements", []):
         if element.get("type") == "node" and "lat" in element and "lon" in element:
+            if not (west <= element["lon"] <= east and south <= element["lat"] <= north):
+                continue
             tags = element.get("tags", {})
             category, category_zh = classify_facility(tags)
             if category == "other":
@@ -263,6 +307,15 @@ def parse_osm(raw: dict[str, Any], city_id: str) -> tuple[list[dict[str, Any]], 
             u, v = osm_nodes[index], osm_nodes[index + 1]
             lon1, lat1 = float(start["lon"]), float(start["lat"])
             lon2, lat2 = float(end["lon"]), float(end["lat"])
+            clipped = clip_segment_to_bbox(lon1, lat1, lon2, lat2, bbox)
+            if clipped is None:
+                continue
+            clipped_lon1, clipped_lat1, clipped_lon2, clipped_lat2 = clipped
+            if (clipped_lon1, clipped_lat1) != (lon1, lat1):
+                u = f"{city_id}_clip_{clipped_lon1:.7f}_{clipped_lat1:.7f}"
+            if (clipped_lon2, clipped_lat2) != (lon2, lat2):
+                v = f"{city_id}_clip_{clipped_lon2:.7f}_{clipped_lat2:.7f}"
+            lon1, lat1, lon2, lat2 = clipped
             length = haversine_m(lon1, lat1, lon2, lat2)
             if length <= 0:
                 continue
@@ -601,6 +654,8 @@ def load_existing_city(city: dict[str, Any]) -> dict[str, Any] | None:
     if len(profile_rows) != 1 or len(grid_records) != GRID_ROWS * GRID_COLS:
         return None
     metadata = json.loads((city_dir / "metadata.json").read_text(encoding="utf-8"))
+    if metadata.get("pipeline_version") != DATA_PIPELINE_VERSION:
+        return None
     return {"profile": profile_rows[0], "grid_records": grid_records, "metadata": metadata}
 
 
@@ -612,7 +667,7 @@ def build_city(city: dict[str, Any], ghsl: dict[str, Any]) -> dict[str, Any]:
     write_json(city_dir / "boundary.geojson", compact_geojson(f"{city['city_id']}_ghsl_boundary", [boundary]))
 
     osm_raw = fetch_overpass(city, bbox)
-    facilities, nodes, edges = parse_osm(osm_raw, city["city_id"])
+    facilities, nodes, edges = parse_osm(osm_raw, city["city_id"], bbox)
     if not facilities or not nodes or not edges:
         raise RuntimeError(f"{city['name_zh']}数据不足：facilities={len(facilities)}, nodes={len(nodes)}, edges={len(edges)}")
     write_json(city_dir / "facilities.geojson", compact_geojson(f"{city['city_id']}_facilities", facilities))
@@ -660,6 +715,7 @@ def build_city(city: dict[str, Any], ghsl: dict[str, Any]) -> dict[str, Any]:
         "elevation_250m.tif", "city_profile.csv",
     ]
     metadata = {
+        "pipeline_version": DATA_PIPELINE_VERSION,
         "city": city,
         "extract_date": EXTRACT_DATE,
         "teaching_extent_bbox_south_west_north_east": bbox,
