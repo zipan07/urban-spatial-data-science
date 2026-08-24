@@ -811,6 +811,9 @@ def build_city(city: dict[str, Any], ghsl: dict[str, Any]) -> dict[str, Any]:
 
 def main() -> None:
     OUTPUT.mkdir(parents=True, exist_ok=True)
+    partial_report = OUTPUT / "partial_build_report.json"
+    if partial_report.exists():
+        partial_report.unlink()
     ghsl = json.loads(SOURCE_GHSL.read_text(encoding="utf-8"))
     profiles: list[dict[str, Any]] = []
     all_grid_records: list[dict[str, Any]] = []

@@ -17,6 +17,7 @@ on:
       - "scripts/verify_course_samples.py"
       - "data/china_city_cases/README.md"
       - "data/china_city_cases/LICENSES.md"
+      - "data/china_city_cases/*/*_course_data.zip"
       - ".github/workflows/build-course-data.yml"
 
 permissions:
@@ -29,7 +30,7 @@ concurrency:
 jobs:
   build-and-audit:
     runs-on: ubuntu-latest
-    timeout-minutes: 55
+    timeout-minutes: 120
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
@@ -50,6 +51,22 @@ jobs:
           COURSE_DATA_CACHE: ${{ runner.temp }}/course-data-cache
           COURSE_DATA_REFRESH: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.refresh_sources == 'true' && '1' || '0' }}
         run: python scripts/build_china_city_cases.py
+
+      - name: Preserve completed city ZIP caches after a partial build
+        if: failure()
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          find data/china_city_cases -mindepth 2 -maxdepth 2 -name '*_course_data.zip' -print0 | xargs -0 -r git add
+          if [ -f data/china_city_cases/partial_build_report.json ]; then
+            git add data/china_city_cases/partial_build_report.json
+          fi
+          if git diff --cached --quiet; then
+            echo "No new city cache is available."
+          else
+            git commit -m "data: preserve completed city package caches"
+            git push
+          fi
 
       - name: Validate files, joins, raster metadata and checksums
         run: python scripts/validate_china_city_cases.py
