@@ -816,14 +816,23 @@ def main() -> None:
     all_grid_records: list[dict[str, Any]] = []
     catalog: list[dict[str, Any]] = []
     inventory: list[dict[str, Any]] = []
+    failures: list[dict[str, str]] = []
 
     for index, city in enumerate(CITIES, start=1):
         print(f"[{index}/{len(CITIES)}] {city['name_zh']} / {city['name_en']}", flush=True)
-        result = load_existing_city(city)
-        if result is None:
-            result = build_city(city, ghsl)
-        else:
-            print("  复用仓库中已发布的课程裁剪；手动刷新可设置COURSE_DATA_REFRESH=1", flush=True)
+        try:
+            result = load_existing_city(city)
+            if result is None:
+                result = build_city(city, ghsl)
+            else:
+                print("  复用仓库中已发布的课程裁剪；手动刷新可设置COURSE_DATA_REFRESH=1", flush=True)
+        except Exception as error:
+            failures.append({"city_id": city["city_id"], "error": str(error)})
+            print(
+                f"  {city['name_zh']}本轮未完成，继续处理其余城市：{error}",
+                flush=True,
+            )
+            continue
         profile = result["profile"]
         metadata = result["metadata"]
         profiles.append(profile)
@@ -863,6 +872,20 @@ def main() -> None:
                 }
             )
         time.sleep(2)
+
+    if failures:
+        write_json(
+            OUTPUT / "partial_build_report.json",
+            {
+                "status": "PARTIAL",
+                "pipeline_version": DATA_PIPELINE_VERSION,
+                "completed_city_ids": [row["city_id"] for row in catalog],
+                "failures": failures,
+            },
+            pretty=True,
+        )
+        failed_ids = ", ".join(item["city_id"] for item in failures)
+        raise RuntimeError(f"本轮仍有城市未完成：{failed_ids}；成功城市已保留在构建产物中")
 
     write_csv(OUTPUT / "catalog.csv", catalog)
     write_csv(OUTPUT / "city_profiles.csv", profiles)
